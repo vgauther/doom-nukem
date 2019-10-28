@@ -6,11 +6,11 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 17:12:07 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/13 14:00:26 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:42 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void		init_a_b_alpha(t_pos *a, t_pos *b, double *alpha)
 {

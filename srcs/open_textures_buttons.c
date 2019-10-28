@@ -6,11 +6,11 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 18:15:58 by vgauther          #+#    #+#             */
-/*   Updated: 2019/10/13 19:04:40 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:11 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 static int	open_img_opt_button_num(t_var *var, int i)
 {

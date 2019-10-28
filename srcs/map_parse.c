@@ -6,11 +6,11 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/12 11:53:51 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/02 14:22:35 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:28 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 static void	init_var(t_var *var)
 {

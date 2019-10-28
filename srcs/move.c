@@ -6,11 +6,11 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/23 15:30:53 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/09 16:33:10 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:18 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 static int	col(int **map, double x, double y)
 {

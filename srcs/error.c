@@ -6,11 +6,11 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 17:56:12 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/10/01 12:52:53 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:36 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	ft_error(int i)
 {

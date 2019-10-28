@@ -6,11 +6,11 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 17:18:45 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/09 17:23:40 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:45 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	intersec_1(t_pos *a, t_var *var, t_player *player, double alpha)
 {

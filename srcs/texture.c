@@ -6,11 +6,11 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 12:08:36 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/13 18:18:35 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:00 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 t_rgb	set_color(int r, int g, int b, int a)
 {

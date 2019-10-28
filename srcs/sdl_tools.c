@@ -6,11 +6,11 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 12:08:36 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/01 13:43:10 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
 {

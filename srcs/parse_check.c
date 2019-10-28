@@ -6,11 +6,11 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 14:19:41 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/03 15:03:35 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:15 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 static void	put_wall_around_the_map(int hei, int len, t_var *var)
 {

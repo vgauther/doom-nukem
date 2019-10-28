@@ -6,11 +6,11 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/12 16:08:00 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/13 18:55:12 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:21 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	put_image(t_var *var, char *name, SDL_Rect dimensions)
 {

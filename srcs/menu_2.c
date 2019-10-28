@@ -6,11 +6,11 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 17:06:12 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/13 18:41:32 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:24 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	buttons_menu_options(t_var *var, int i)
 {

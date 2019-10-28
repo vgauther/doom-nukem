@@ -6,11 +6,11 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 12:41:27 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/14 11:47:23 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/16 12:57:32 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 #include <pthread.h>
 
 int		**fill_map_struct(t_var var)

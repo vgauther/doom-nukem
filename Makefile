@@ -6,13 +6,13 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/10/13 18:45:47 by vgauther         ###   ########.fr        #
+#    Updated: 2019/10/28 17:08:14 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .PHONY: all, $(NAME), clean, fclean, re
 
-NAME = wolf3d
+NAME = doom-nukem
 
 END=$'\x1b[0m
 BOLD=$'\x1b[1m'
@@ -38,15 +38,20 @@ INC_PATH = ./includes/
 OBJ_PATH = ./obj/
 LFT_PATH = ./libft/
 SDLHEADER_PATH = ./lib/SDL/include/SDL2/
+LIBSDL_ROOT = ./libSDL2/
+LIBSDL_PATH = ./libSDL2/lib/
+SDL_PATHO = ./SDL2-2.0.9/
 
-SDL_FLG = -I $(SDLHEADER_PATH) -L $(SDL_PATH)/lib -lSDL2
+
+SDL_FLG = -L$(LIBSDL_PATH) -lSDL2
 SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH),$(OBJ_NAME))
 INC = $(addprefix -I,$(INC_PATH))
+CURL_SDL = `curl https://www.libsdl.org/release/SDL2-2.0.9.zip -o sdl2.zip`
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
-INC_NAME = wolf.h
+INC_NAME = doom.h
 
 SRC_NAME = 	main.c\
 			move.c \
@@ -69,6 +74,7 @@ $(NAME): $(OBJ)
 	@make sdl_if
 	@echo "$(YELLOW)[...] Wolf 3D compilation$(END)"
 	@$(CC) -o $(NAME) $(OBJ) -lm -L $(LFT_PATH) -lft $(SDL_FLG)
+	@make draw
 	@echo "$(GREEN)[✓] Wolf 3D Done$(END)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
@@ -81,7 +87,13 @@ clean:
 	@echo "$(RED)[-] Wolf 3D .o cleaned$(END)"
 
 sdl_if:
-	@make -C ./lib
+	$(CURL_SDL)
+	unzip sdl2.zip
+	rm sdl2.zip
+	mkdir -p $(LIBSDL_ROOT)
+	cd $(SDL_PATHO) && ./configure --prefix=$(PWD)/$(LIBSDL_ROOT)
+	make -C $(SDL_PATHO)
+	make install -C $(SDL_PATHO)
 
 fclean:
 	@make clean
@@ -113,6 +125,10 @@ rr:
 	@make all
 clsdl:
 	@make -C ./lib sdl_clean
+
+draw:
+	cd makefile_sources && gcc drawing.c && ./a.out
+
 
 push:
 	@git add ./srcs/*
