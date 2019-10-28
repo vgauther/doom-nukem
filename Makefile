@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/10/28 17:08:14 by vgauther         ###   ########.fr        #
+#    Updated: 2019/10/28 17:40:56 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,8 +98,8 @@ sdl_if:
 fclean:
 	@make clean
 	@make -C $(LFT_PATH) fclean
+	@rm -rf SDL2-2.0.9
 	@rm -f $(NAME)
-	@make -C ./lib sdl_clean
 	@echo "$(RED)[-] Wolf 3D executable cleaned$(END)"
 
 
