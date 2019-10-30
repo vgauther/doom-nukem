@@ -6,7 +6,7 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 12:08:36 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/28 15:25:53 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/28 21:43:52 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,10 @@ typedef struct	s_weapon
 	int bullet;
 }				t_weapon;
 
-typedef struct		s_item
+typedef struct	s_inventory
 {
-	int type;
-	int pos_in_inventory;
-}				t_item;
-
+	int
+}				s_inventory;
 
 typedef struct	s_player
 {

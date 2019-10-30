@@ -6,67 +6,21 @@
 /*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 12:41:27 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/16 12:57:32 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/10/28 21:33:40 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/doom.h"
 #include <pthread.h>
 
-int		**fill_map_struct(t_var var)
+void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window)
 {
-	int		**map;
-	int		x_x2_y[3];
-
-	x_x2_y[2] = -1;
-	if (!(map = malloc(sizeof(int *) * var.y_max)))
-		ft_error(2);
-	while (++x_x2_y[2] != var.y_max)
-	{
-		if (!(map[x_x2_y[2]] = malloc(sizeof(int) * var.x_max)))
-			ft_error(2);
-	}
-	x_x2_y[2] = 0;
-	while (x_x2_y[2] != var.y_max)
-	{
-		x_x2_y[0] = 0;
-		x_x2_y[1] = 0;
-		while (x_x2_y[0] <= (var.x_max * 2))
-		{
-			map[x_x2_y[2]][x_x2_y[1]] = var.map[x_x2_y[2]][x_x2_y[0]] - 48;
-			x_x2_y[1] += 1;
-			x_x2_y[0] += 2;
-		}
-		x_x2_y[2]++;
-	}
-	return (map);
-}
-
-void	player_data_set(t_player *player, t_var *var)
-{
-	int x;
-	int y;
-
-	y = 0;
-	while (y != var->y_max)
-	{
-		x = 0;
-		while (x != var->x_max)
-		{
-			if (var->m[y][x] == 7)
-			{
-				var->spawn.x = BLOCK_SIZE * x + BLOCK_SIZE / 2;
-				var->spawn.y = BLOCK_SIZE * y + BLOCK_SIZE / 2;
-				player->pos.x = var->spawn.x;
-				player->pos.y = var->spawn.y;
-			}
-			x++;
-		}
-		y++;
-	}
-	player->height = BLOCK_SIZE / 2;
-	player->fov = 60;
-	player->angle = 210;
+	SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(render);
+	SDL_RenderPresent(render);
+	SDL_DestroyRenderer(render);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }
 
 void	ft_init_sdl(t_var *var)
@@ -120,9 +74,7 @@ void *thread_1(void *arg)
 
 int		main(int ac, char **av)
 {
-	//int				fd;
 	t_var			var;
-	//t_player		player;
 	int x;
 	int y;
 	pthread_t thread1;
@@ -160,13 +112,6 @@ int		main(int ac, char **av)
 		else if (var.sdl.event.key.keysym.sym == SDLK_ESCAPE)
 			ft_clean_quit(var.sdl.render, var.sdl.window);
 	}
-	//init_key_move(&var);
-	//parsing_map(fd, &var);
-	//var.m = fill_map_struct(var);
-	//player_data_set(&player, &var);
-	//open_wall_texture(&var);
-	//open_img_opt_button(&var);
-	//display(&var, &player);
 	(void)ac;
 	(void)av;
 	return (0);
