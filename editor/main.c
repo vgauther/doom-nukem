@@ -6,6 +6,15 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/02 23:40:45 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:42:47 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include "../editor.h"
+
+int main(int ac, char **av)
+{
+	if (ac != 1)
+		return (0);
+	return (0);
+}
