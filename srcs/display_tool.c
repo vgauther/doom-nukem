@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/10/14 14:30:25 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:16:32 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void		init_a_b_alpha(t_pos *a, t_pos *b, double *alpha)
 ** inter->dist = (inter->dist == 0) ? 1 : inter->dist;
 */
 
-static void	calc_hei_column(t_var *var, t_inter *inter, t_player *player)
+static void	calc_hei_column(t_var *var, t_inter *inter)
 {
-	inter->dist = launch_ray(player, var, inter->alpha, inter->beta);
+	inter->dist = launch_ray(var, inter->alpha, inter->beta);
 	inter->hei = BS_INT * 931 / (inter->dist + 1);
 	inter->phw = SIZE_Y_2 - inter->hei / 2;
 	inter->y_img = 0;
@@ -61,15 +61,15 @@ static void	init_inter_variables(t_inter *inter, t_player *player)
 **	plw = pos_len_win
 */
 
-void		print_screen(t_var *var, t_player *player)
+void		print_screen(t_var *var)
 {
 	t_inter	inter;
 	int		y_tmp;
 
-	init_inter_variables(&inter, player);
+	init_inter_variables(&inter, &var->player);
 	while (inter.plw != SIZE_X)
 	{
-		calc_hei_column(var, &inter, player);
+		calc_hei_column(var, &inter);
 		while (inter.phw < SIZE_Y_2 + inter.hei / 2 && inter.phw < SIZE_Y - 1)
 		{
 			y_tmp = (double)inter.y_img / (double)inter.hei * BS;

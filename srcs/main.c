@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/02 22:53:06 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 22:57:49 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void quit_free(SDL_Renderer *render, SDL_Window *win, t_var *var, int free_who)
 	(void)free_who;
 }
 
-void	player_data_set(t_player *player, t_var *var)
+void	player_data_set(t_var *var)
 {
 	int x;
 	int y;
@@ -106,16 +106,16 @@ void	player_data_set(t_player *player, t_var *var)
 			{
 				var->spawn.x = BLOCK_SIZE * x + BLOCK_SIZE / 2;
 				var->spawn.y = BLOCK_SIZE * y + BLOCK_SIZE / 2;
-				player->pos.x = var->spawn.x;
-				player->pos.y = var->spawn.y;
+				var->player.pos.x = var->spawn.x;
+				var->player.pos.y = var->spawn.y;
 			}
 			x++;
 		}
 		y++;
 	}
-	player->height = BLOCK_SIZE / 2;
-	player->fov = 60;
-	player->angle = 210;
+	var->player.height = BLOCK_SIZE / 2;
+	var->player.fov = 60;
+	var->player.angle = 210;
 }
 
 void	ft_init_sdl(t_var *var)
@@ -161,7 +161,6 @@ int		main(int ac, char **av)
 {
 	int				fd;
 	t_var			var;
-	t_player		player;
 
 	if ((fd = open(av[1], O_RDONLY)) < 0 || ac != 2)
 		ft_error(5);
@@ -170,10 +169,10 @@ int		main(int ac, char **av)
 	init_key_move(&var);
 	parsing_map(fd, &var);
 	var.m = fill_map_struct(var);
-	player_data_set(&player, &var);
+	player_data_set(&var);
 	open_wall_texture(&var);
 	open_img_opt_button(&var);
-	display(&var, &player);
+	display(&var);
 	close(fd);
 	return (0);
 }

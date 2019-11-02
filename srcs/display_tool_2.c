@@ -6,22 +6,22 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/10/14 14:30:37 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:19:54 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/wolf.h"
 
-void	intersec_1(t_pos *a, t_var *var, t_player *player, double alpha)
+void	intersec_1(t_pos *a, t_var *var, double alpha)
 {
 	double xa;
 	double ya;
 
-	a->y = sin(alpha) > 0 ? (int)(player->pos.y / BSD) * BSD :
-	(int)(player->pos.y / BSD) * BSD + BSD;
+	a->y = sin(alpha) > 0 ? (int)(var->player.pos.y / BSD) * BSD :
+	(int)(var->player.pos.y / BSD) * BSD + BSD;
 	xa = sin(alpha) > 0 ? 1.00 : -1.00;
 	ya = sin(alpha) > 0 ? -BSD : BSD;
-	a->x = (player->pos.y - a->y) / tan(alpha) + player->pos.x;
+	a->x = (var->player.pos.y - a->y) / tan(alpha) + var->player.pos.x;
 	xa *= BSD / tan(alpha);
 	a->y = sin(alpha) > 0 ? a->y - 1 : a->y;
 	while (a->y / BSD < var->y_max && a->x / BSD < var->x_max && a->y / BSD > 0
@@ -34,16 +34,16 @@ void	intersec_1(t_pos *a, t_var *var, t_player *player, double alpha)
 	a->y = sin(alpha) > 0 ? a->y + 1 : a->y + 0;
 }
 
-void	intersec_2(t_pos *b, t_var *var, t_player *player, double alpha)
+void	intersec_2(t_pos *b, t_var *var, double alpha)
 {
 	double xa;
 	double ya;
 
-	b->x = cos(alpha) > 0 ? (int)(player->pos.x / BSD) * BSD + BSD : \
-			(int)(player->pos.x / BSD) * BSD;
+	b->x = cos(alpha) > 0 ? (int)(var->player.pos.x / BSD) * BSD + BSD : \
+			(int)(var->player.pos.x / BSD) * BSD;
 	xa = cos(alpha) > 0 ? BSD : -BSD;
 	ya = cos(alpha) > 0 ? -1.00 : 1.00;
-	b->y = player->pos.y + (player->pos.x - b->x) * tan(alpha);
+	b->y = var->player.pos.y + (var->player.pos.x - b->x) * tan(alpha);
 	ya *= BSD * tan(alpha);
 	b->x = cos(alpha) > 0 ? b->x : b->x - 1;
 	while (b->y / BSD < var->y_max && b->x / BSD < var->x_max && b->y / BSD > 0
@@ -69,7 +69,7 @@ void	calc_dist(double *dist, t_player *player, t_pos a, t_pos b)
 	dist[1] = sqrt((f1 * f1) + (f2 * f2));
 }
 
-int		launch_ray(t_player *player, t_var *var, double alpha, double beta)
+int		launch_ray(t_var *var, double alpha, double beta)
 {
 	double		dist[2];
 	t_pos		a;
@@ -77,10 +77,10 @@ int		launch_ray(t_player *player, t_var *var, double alpha, double beta)
 
 	init_a_b_alpha(&a, &b, &alpha);
 	if (sin(alpha))
-		intersec_1(&a, var, player, alpha);
+		intersec_1(&a, var, alpha);
 	if (cos(alpha))
-		intersec_2(&b, var, player, alpha);
-	calc_dist(dist, player, a, b);
+		intersec_2(&b, var, alpha);
+	calc_dist(dist, &var->player, a, b);
 	if (dist[0] >= 0 && dist[1] >= 0)
 	{
 		if (dist[0] > dist[1])

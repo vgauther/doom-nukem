@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   menu.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: esmoreau <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:53:53 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/10/14 14:53:57 by esmoreau         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:08:12 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	move_key_edit(t_var *var, int *x_y)
 	move_key_edit_button(var, x_y, 4, 370);
 }
 
-void	option_menu(int *x_y, t_var *var, t_player *player)
+void	option_menu(int *x_y, t_var *var)
 {
 	put_image(var, "./assets/dirt_bg.bmp", create_sdl_rect(0, 0, 0, 0));
 	if (x_y[0] > 20 && x_y[0] < 199 && x_y[1] > 500 && x_y[1] < 550)
@@ -49,7 +49,7 @@ void	option_menu(int *x_y, t_var *var, t_player *player)
 		{
 			var->menu_is_act = 0;
 			sdl_clean_screen(var->sdl.render);
-			print_button(x_y, var, player);
+			print_button(x_y, var);
 		}
 	}
 	else
@@ -62,7 +62,7 @@ void	option_menu(int *x_y, t_var *var, t_player *player)
 	move_key_edit(var, x_y);
 }
 
-void	print_button(int *x_y, t_var *var, t_player *player)
+void	print_button(int *x_y, t_var *var)
 {
 	put_image(var, "./assets/main_menu.bmp", create_sdl_rect(0, 0, 0, 0));
 	if (x_y[0] >= 180 && x_y[0] <= 780 && x_y[1] >= 260 && x_y[1] <= 310)
@@ -72,7 +72,7 @@ void	print_button(int *x_y, t_var *var, t_player *player)
 		{
 			var->menu_is_act = 1;
 			sdl_clean_screen(var->sdl.render);
-			print_screen(var, player);
+			print_screen(var);
 		}
 	}
 	else
@@ -84,23 +84,23 @@ void	print_button(int *x_y, t_var *var, t_player *player)
 		if (var->on == 0 && (var->menu_is_act = 2))
 		{
 			sdl_clean_screen(var->sdl.render);
-			option_menu(x_y, var, player);
+			option_menu(x_y, var);
 		}
 	}
 	else if (var->menu_is_act == 0)
 		buttons_menu_options(var, 0);
 }
 
-void	ft_menu(t_var *var, t_player *player)
+void	ft_menu(t_var *var)
 {
 	int			x_y[2];
 
 	x_y[0] = var->sdl.event.button.x;
 	x_y[1] = var->sdl.event.button.y;
 	if (var->menu_is_act == 0)
-		print_button(x_y, var, player);
+		print_button(x_y, var);
 	if (var->menu_is_act == 2)
-		option_menu(x_y, var, player);
+		option_menu(x_y, var);
 	if (var->menu_is_act == 0 || var->menu_is_act == 2)
 		SDL_RenderPresent(var->sdl.render);
 }

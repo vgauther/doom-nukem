@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/10/14 14:29:46 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:14:13 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,16 @@ static void	backward(t_player *pl, double angle, int speed, int **map)
 	}
 }
 
-void		ft_move(int key, t_player *player, SDL_Renderer *render, t_var *var)
+void		ft_move(int key, SDL_Renderer *render, t_var *var)
 {
 	if (key == var->key.forw)
-		forward(player, player->angle, 25, var->m);
+		forward(&var->player, var->player.angle, 25, var->m);
 	else if (key == var->key.back)
-		backward(player, player->angle, 25, var->m);
+		backward(&var->player, var->player.angle, 25, var->m);
 	else if (key == var->key.left)
-		player->angle += DIV_60_SIZE * 75.00;
+		var->player.angle += DIV_60_SIZE * 75.00;
 	else if (key == var->key.right)
-		player->angle -= DIV_60_SIZE * 75.00;
+		var->player.angle -= DIV_60_SIZE * 75.00;
 	sdl_clean_screen(render);
-	print_screen(var, player);
+	print_screen(var);
 }
