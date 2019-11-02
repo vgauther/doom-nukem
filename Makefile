@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/10/31 13:48:20 by vgauther         ###   ########.fr        #
+#    Updated: 2019/11/02 22:52:57 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,13 +52,34 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 
 INC_NAME = doom.h
 
-SRC_NAME = 	main.c
+SRC_NAME = 	main.c\
+			move.c \
+			menu.c \
+			error.c \
+			menu_2.c \
+			menu_3.c \
+			display.c \
+			texture.c \
+			sdl_tools.c \
+			map_parse.c \
+			parse_check.c \
+			display_tool.c \
+			display_tool_2.c \
+			open_textures_buttons.c \
+
+ifneq ("$(wildcard $(SDL_PATHO))","")
+	SDL = 1
+else
+	SDL = 0
+endif
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C $(LFT_PATH)
-	@make sdl
+	@if [ $(SDL) = 0 ]; then \
+	@make sdl; \
+	fi
 	@echo "$(YELLOW)[...] Wolf 3D compilation$(END)"
 	@$(CC) -o $(NAME) $(OBJ) -lm -L $(LFT_PATH) -lft $(SDL_FLG)
 	@make draw
