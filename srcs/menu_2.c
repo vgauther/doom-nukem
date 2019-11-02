@@ -6,11 +6,11 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:54:11 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/02 23:10:11 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:29:17 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	buttons_menu_options(t_var *var, int i)
 {

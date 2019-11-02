@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/11 12:08:36 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/28 21:43:52 by vgauther         ###   ########.fr       */
+/*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
+/*   Updated: 2019/11/02 23:28:39 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,14 @@ typedef struct	s_inter
 
 }				t_inter;
 
+typedef struct	s_player
+{
+	t_pos		pos;
+	double		fov;
+	int			height;
+	double		angle;
+}				t_player;
+
 typedef struct	s_var
 {
 	int			x_max;
@@ -94,58 +102,39 @@ typedef struct	s_var
 	int			**m;
 	int			select_key;
 	SDL_Surface	*key_texture[41];
-	int 		key_id[4];
-
+	int			key_id[4];
+	t_player	player;
 }				t_var;
 
-typedef struct	s_weapon
-{
-	int type;
-	int	capa_bullet;
-	int bullet;
-}				t_weapon;
-
-typedef struct	s_inventory
-{
-	int
-}				s_inventory;
-
-typedef struct	s_player
-{
-	t_pos		pos;
-	double		fov;
-	int			height;
-	double		angle;
-	int			coin;
-}				t_player;
-
-void			parsing_map(int fd, t_var *var);
 void			buttons_menu_options(t_var *var, int i);
 void			buttons_menu_play(t_var *var, int i);
+void			change_key(t_var *var);
+int				change_texture_key(int nk);
 void			check_map(t_var *var, int ret, size_t nb_char, char *str);
-void			print_screen(t_var *var, t_player *player);
-void			ft_sdl(t_var *var, SDL_Renderer *render, t_player *player);
-void			ft_move(int key, t_player *pla, SDL_Renderer *ren, t_var *var);
-void			ft_menu(t_var *v, t_player *p);
-void			ft_error(int i);
-t_rgb			set_color(int r, int g, int b, int a);
-Uint32			set_pixel_color(t_rgb c);
-t_rgb			get_color_from_surface(Uint32 x);
-void			open_wall_texture(t_var *var);
-void			sdl_clean_screen(SDL_Renderer *rend);
+void			choose_key(t_var *var);
 SDL_Rect		create_sdl_rect(int x, int y, int w, int h);
-void			ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
-int				launch_ray(t_player *pl, t_var *var, double al, double beta);
-void			init_a_b_alpha(t_pos *a, t_pos *b, double *alpha);
-void			display(t_var *var, t_player *pl);
-void			option_menu(int *x_y, t_var *var, t_player *player);
-void			print_button(int *x_y, t_var *var, t_player *player);
-void			put_image(t_var *var, char *name, SDL_Rect dimensions);
+void			display(t_var *var);
 double			dist_0_1(t_var *var, double alpha, double beta, t_pos b);
 double			dist_1_0(t_var *var, double alpha, double beta, t_pos a);
-void			choose_key(t_var *var, t_player *player);
+void			ft_error(int i);
+void			ft_move(int key, SDL_Renderer *ren, t_var *var);
+void			ft_menu(t_var *v);
+void			ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
+t_rgb			get_color_from_surface(Uint32 x);
+void			init_a_b_alpha(t_pos *a, t_pos *b, double *alpha);
 void			init_key_move(t_var *var);
-void			change_key(t_var *var, t_player *player);
+int				launch_ray(t_var *var, double al, double beta);
 void			open_img_opt_button(t_var *var);
+void			open_wall_texture(t_var *var);
+void			option_menu(int *x_y, t_var *var);
+void			parsing_map(int fd, t_var *var);
+void			print_button(int *x_y, t_var *var);
+void			print_screen(t_var *var);
+void			put_image(t_var *var, char *name, SDL_Rect dimensions);
+void			put_image_opt(t_var *var, int id, SDL_Rect dimensions);
+void 			quit_free(SDL_Renderer *render, SDL_Window *win, t_var *var, int free_who);
+t_rgb			set_color(int r, int g, int b, int a);
+Uint32			set_pixel_color(t_rgb c);
+void			sdl_clean_screen(SDL_Renderer *rend);
 
 #endif

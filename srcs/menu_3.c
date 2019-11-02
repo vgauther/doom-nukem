@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   menu_3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: esmoreau <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:54:25 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/10/14 14:54:28 by esmoreau         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:29:53 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 double	dist_0_1(t_var *var, double alpha, double beta, t_pos b)
 {

@@ -6,11 +6,11 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:53:53 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/02 23:08:12 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:29:40 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/wolf.h"
+#include "../includes/doom.h"
 
 void	move_key_edit_button(t_var *var, int *x_y, int i, int pos_x)
 {
