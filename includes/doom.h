@@ -6,7 +6,7 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/02 23:28:39 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/02 23:36:29 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include "SDL2/SDL.h"
 # include "math.h"
 # include <math.h>
+# include <pthread.h>
 
 typedef struct	s_key
 {
