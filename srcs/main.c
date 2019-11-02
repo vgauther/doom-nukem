@@ -3,24 +3,119 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ravernhe <ravernhe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/02 12:41:27 by ravernhe          #+#    #+#             */
-/*   Updated: 2019/10/28 21:33:40 by vgauther         ###   ########.fr       */
+/*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
+/*   Updated: 2019/10/31 18:08:45 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/doom.h"
-#include <pthread.h>
+#include "../includes/wolf.h"
 
-void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window)
+int		**fill_map_struct(t_var var)
 {
-	SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(render);
-	SDL_RenderPresent(render);
+	int		**map;
+	int		x_x2_y[3];
+
+	x_x2_y[2] = -1;
+	if (!(map = malloc(sizeof(int *) * var.y_max)))
+		ft_error(2);
+	while (++x_x2_y[2] != var.y_max)
+	{
+		if (!(map[x_x2_y[2]] = malloc(sizeof(int) * var.x_max)))
+			ft_error(2);
+	}
+	x_x2_y[2] = 0;
+	while (x_x2_y[2] != var.y_max)
+	{
+		x_x2_y[0] = 0;
+		x_x2_y[1] = 0;
+		while (x_x2_y[0] <= (var.x_max * 2))
+		{
+			map[x_x2_y[2]][x_x2_y[1]] = var.map[x_x2_y[2]][x_x2_y[0]] - 48;
+			x_x2_y[1] += 1;
+			x_x2_y[0] += 2;
+		}
+		x_x2_y[2]++;
+	}
+	return (map);
+}
+
+void free_tab_char(char **tab)
+{
+	int j;
+
+	j = 0;
+	while (tab[j])
+	{
+		free(tab[j]);
+		j++;
+	}
+	free(tab);
+}
+
+void free_tab_int(int **tab, int hei)
+{
+	int j;
+
+	j = 0;
+	while (hei > j)
+	{
+		free(tab[j]);
+		printf("%s\n", "tea");
+		j++;
+	}
+	free(tab);
+}
+
+void free_texture_in_var(t_var *v)
+{
+	int i;
+
+	i = 0;
+	while (v->key_texture[i])
+	{
+		SDL_FreeSurface(v->key_texture[i]);
+		i++;
+	}
+}
+
+void quit_free(SDL_Renderer *render, SDL_Window *win, t_var *var, int free_who)
+{
+	free_tab_int(var->m, var->y_max);
+	free_texture_in_var(var);
+	free_tab_char(var->map);
 	SDL_DestroyRenderer(render);
-	SDL_DestroyWindow(window);
+	SDL_DestroyWindow(win);
 	SDL_Quit();
+	(void)free_who;
+}
+
+void	player_data_set(t_player *player, t_var *var)
+{
+	int x;
+	int y;
+
+	y = 0;
+	while (y != var->y_max)
+	{
+		x = 0;
+		while (x != var->x_max)
+		{
+			if (var->m[y][x] == 7)
+			{
+				var->spawn.x = BLOCK_SIZE * x + BLOCK_SIZE / 2;
+				var->spawn.y = BLOCK_SIZE * y + BLOCK_SIZE / 2;
+				player->pos.x = var->spawn.x;
+				player->pos.y = var->spawn.y;
+			}
+			x++;
+		}
+		y++;
+	}
+	player->height = BLOCK_SIZE / 2;
+	player->fov = 60;
+	player->angle = 210;
 }
 
 void	ft_init_sdl(t_var *var)
@@ -30,7 +125,7 @@ void	ft_init_sdl(t_var *var)
 		return ;
 	var->sdl.window = SDL_CreateWindow("WOLFCRAFT", SDL_WINDOWPOS_CENTERED, \
 			SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, 0);
-	var->sdl.render = SDL_CreateRenderer(var->sdl.window, -1, 0);
+	var->sdl.render = SDL_CreateRenderer(var->sdl.window, -1, 1);
 	if (!var->sdl.window || !var->sdl.render)
 		return ;
 }
@@ -48,71 +143,37 @@ void	init_key_move(t_var *var)
 	var->key_id[3] = 18;
 }
 
-void *thread_1(void *arg)
+void is_first_char_zero(char *str)
 {
-	int x;
-	int y;
-	t_var *var;
+	int fd;
+	int ret;
+	char buff[2];
 
-	var = (t_var *)arg;
-	x = 0;
-	y = 100;
-
-	while (x < 100)
-	{
-		y = 0;
-		while (y < SIZE_Y)
-		{
-			SDL_SetRenderDrawColor(var->sdl.render, 0, 0, 255, 255);
-			SDL_RenderDrawPoint(var->sdl.render, x, y);
-			y++;
-		}
-		x++;
-	}
-	pthread_exit(NULL);
+	fd = open(str, O_RDONLY);
+	ret = read(fd, buff, 2);
+	buff[ret] = 0;
+	close(fd);
+	if (buff[0] == 0)
+		ft_error(44);
 }
 
 int		main(int ac, char **av)
 {
+	int				fd;
 	t_var			var;
-	int x;
-	int y;
-	pthread_t thread1;
+	t_player		player;
 
-	x = 100;
-	y = 0;
+	if ((fd = open(av[1], O_RDONLY)) < 0 || ac != 2)
+		ft_error(5);
+	is_first_char_zero(av[1]);
 	ft_init_sdl(&var);
-	if(pthread_create(&thread1, NULL, thread_1, (void *)&var) == -1)
-	{
-		perror("pthread_create");
-		return EXIT_FAILURE;
-	}
-	if (pthread_join(thread1, NULL))
-	{
-		perror("pthread_join");
-		return EXIT_FAILURE;
-	}
-	while (x < SIZE_X)
-	{
-		y = 0;
-		while (y < SIZE_Y)
-		{
-			SDL_SetRenderDrawColor(var.sdl.render, 0, 200, 0, 255);
-			SDL_RenderDrawPoint(var.sdl.render, x, y);
-			y++;
-		}
-		x++;
-
-	}
-	SDL_RenderPresent(var.sdl.render);
-	while (SDL_WaitEvent(&var.sdl.event))
-	{
-		if (var.sdl.event.type == SDL_QUIT)
-			ft_clean_quit(var.sdl.render, var.sdl.window);
-		else if (var.sdl.event.key.keysym.sym == SDLK_ESCAPE)
-			ft_clean_quit(var.sdl.render, var.sdl.window);
-	}
-	(void)ac;
-	(void)av;
+	init_key_move(&var);
+	parsing_map(fd, &var);
+	var.m = fill_map_struct(var);
+	player_data_set(&player, &var);
+	open_wall_texture(&var);
+	open_img_opt_button(&var);
+	display(&var, &player);
+	close(fd);
 	return (0);
 }

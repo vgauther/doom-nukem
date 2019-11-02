@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/07 18:44:36 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/10/02 15:58:23 by mamisdra         ###   ########.fr       */
+/*   Created: 2018/11/07 18:44:36 by vgauther          #+#    #+#             */
+/*   Updated: 2019/10/30 17:07:48 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 
 # define BUFF_SIZE 2048
+# define ENDL '\n'
 
 # include <unistd.h>
 # include <stdlib.h>

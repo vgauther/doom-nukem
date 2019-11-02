@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+         #
+#    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/11/08 18:54:11 by mamisdra          #+#    #+#              #
-#    Updated: 2019/09/25 13:48:56 by vgauther         ###   ########.fr        #
+#    Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#              #
+#    Updated: 2019/10/14 14:27:50 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

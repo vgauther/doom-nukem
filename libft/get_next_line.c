@@ -3,83 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamisdra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/15 11:44:22 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/01/18 14:37:50 by mamisdra         ###   ########.fr       */
+/*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
+/*   Updated: 2019/10/30 16:42:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/libft.h"
 
-static int	ft_restring(const int fd, char **data)
+int			read_from_fd_into_stock(int const fd, char **stock)
 {
-	char *py;
+	static char	buff[BUFF_SIZE + 1] = { ENDL };
+	int			read_bytes;
+	char		*nstr;
 
-	if ((py = ft_strdup(ft_strchr(data[fd], '\n') + 1)))
-		free(data[fd]);
-	else
-		return (-1);
-	if ((data[fd] = ft_strdup(py)))
-		free(py);
-	else
-		return (-1);
-	return (0);
+	read_bytes = read(fd, buff, BUFF_SIZE);
+	if (read_bytes > 0)
+	{
+		buff[read_bytes] = '\0';
+		nstr = ft_strjoin(*stock, buff);
+		if (!nstr)
+			return (-1);
+		free(*stock);
+		*stock = nstr;
+	}
+	return (read_bytes);
 }
 
-static int	ft_redline(const int fd, char **data)
+static void	set_stock(char **stock, char **endl_index)
 {
-	int		ret;
-	char	*buf;
-	char	*tmp;
-
-	if (BUFF_SIZE <= 0)
-		return (0);
-	if (!(buf = (char *)malloc(sizeof(char) * BUFF_SIZE + 1)))
-		return (0);
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[ret] = '\0';
-		if (!(tmp = ft_strjoin(data[fd], buf)))
-			return (0);
-		free(data[fd]);
-		if (!(data[fd] = ft_strdup(tmp)))
-			return (0);
-		free(tmp);
-		if (ft_strchr(buf, '\n'))
-			break ;
-	}
-	free(buf);
-	if (ret < 0)
-		return (0);
-	return (1);
+	*endl_index = ft_strdup(*endl_index + 1);
+	free(*stock);
+	*stock = *endl_index;
 }
 
-int			get_next_line(const int fd, char **line)
+int			get_next_line(int const fd, char **line)
 {
-	static char	*data[OPEN_MAX];
-	int			i;
+	static char	*stock = NULL;
+	char		*endl_index;
+	int			ret;
 
-	if (!(fd < 0) && (OPEN_MAX > fd) && !data[fd])
-		data[fd] = ft_strnew(1);
-	i = 0;
-	if (fd < 0 || line == NULL || OPEN_MAX <= fd || \
-		(ft_redline(fd, data) == 0))
+	if (!stock && (stock = (char *)ft_memalloc(sizeof(char))) == NULL)
 		return (-1);
-	if (data[fd][0] == '\0')
-		return (0);
-	while (data[fd][i] != '\n' && data[fd][i] != '\0')
-		i++;
-	if (data[fd][i] == '\0' && data[fd][i - 1] == '\n')
+	endl_index = ft_strchr(stock, ENDL);
+	while (endl_index == NULL)
 	{
-		free(data[fd]);
-		return (0);
+		ret = read_from_fd_into_stock(fd, &stock);
+		if (ret == 0)
+		{
+			if ((endl_index = ft_strchr(stock, '\0')) == stock)
+				return (0);
+		}
+		else if (ret < 0)
+			return (-1);
+		else
+			endl_index = ft_strchr(stock, ENDL);
 	}
-	if (!(*line = ft_strsub(data[fd], 0, i)))
+	*line = ft_strsub(stock, 0, endl_index - stock);
+	if (!*line)
 		return (-1);
-	if (data[fd][i] == '\0' && (data[fd][0] = '\0') == 0)
-		return (1);
-	if (ft_restring(fd, data) == -1)
-		return (-1);
+	set_stock(&stock, &endl_index);
 	return (1);
 }
