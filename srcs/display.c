@@ -12,88 +12,35 @@
 
 #include "../includes/doom.h"
 
-void	init_var_display(t_var *var, int *token)
+void	fill_red(t_var *var)
 {
-	*token = 0;
-	var->menu_is_act = 0;
-	var->on = 0;
-}
+	int x;
+	int y;
 
-void	menu_button_in_game(t_var *var)
-{
-	int			x_y[2];
-
-	x_y[0] = var->sdl.event.button.x;
-	x_y[1] = var->sdl.event.button.y;
-	sdl_clean_screen(var->sdl.render);
-	print_screen(var);
-	if (x_y[0] >= 750 && x_y[0] <= 929 && x_y[1] >= 30 && x_y[1] <= 80)
+	SDL_SetRenderDrawColor(var->sdl.render, 0, 0, 93, 0);
+	y = 0;
+	while (y < SIZE_Y)
 	{
-		put_image(var, "./assets/menu_o.bmp", create_sdl_rect(750, 30, 0, 0));
-		SDL_RenderPresent(var->sdl.render);
-		if (var->on == 0)
+		x = 0;
+		while (x < SIZE_X)
 		{
-			var->menu_is_act = 0;
-			sdl_clean_screen(var->sdl.render);
-			ft_menu(var);
+			SDL_RenderDrawPoint(var->sdl.render, x, y);
+			x++;
 		}
+		y++;
 	}
-	else
-		put_image(var, "./assets/menu.bmp", create_sdl_rect(750, 30, 0, 0));
-}
-
-void	display_3(t_var *var)
-{
-	if (var->sdl.event.type == SDL_QUIT)
-		ft_clean_quit(var->sdl.render, var->sdl.window);
-	else if (var->sdl.event.key.keysym.sym == SDLK_ESCAPE)
-		ft_clean_quit(var->sdl.render, var->sdl.window);
-	else if (var->sdl.event.type == SDL_KEYDOWN && var->menu_is_act == 1)
-		ft_move(var->sdl.event.key.keysym.sym, var->sdl.render, var);
-	if (var->sdl.event.type == SDL_MOUSEMOTION && (var->menu_is_act == 1))
-	{
-		var->on = 1;
-		menu_button_in_game(var);
-	}
-	else if (var->sdl.event.type == SDL_MOUSEBUTTONDOWN \
-					&& (var->menu_is_act == 1))
-	{
-		var->on = 0;
-		menu_button_in_game(var);
-	}
-}
-
-void	display_2(t_var *var, int *token)
-{
-	init_var_display(var, token);
-	ft_menu(var);
+	SDL_RenderPresent(var->sdl.render);
 }
 
 void	display(t_var *var)
 {
-	int token;
-
-	display_2(var, &token);
 	while (SDL_WaitEvent(&var->sdl.event))
 	{
-		if (var->sdl.event.type == SDL_MOUSEMOTION \
-				&& (var->menu_is_act == 0 || var->menu_is_act == 2))
-		{
-			var->on = 1;
-			ft_menu(var);
-		}
-		else if (var->sdl.event.type == SDL_MOUSEBUTTONDOWN \
-						&& (var->menu_is_act == 0 || var->menu_is_act == 2))
-		{
-			var->on = 0;
-			ft_menu(var);
-		}
-		else
-			display_3(var);
-		if (var->menu_is_act == 2)
-		{
-			change_key(var);
-			choose_key(var);
-		}
+		if (var->sdl.event.type == SDL_QUIT)
+			ft_clean_quit(var->sdl.render, var->sdl.window);
+		else if (var->sdl.event.key.keysym.sym == SDLK_ESCAPE)
+			ft_clean_quit(var->sdl.render, var->sdl.window);
+		else if (var->sdl.event.key.keysym.sym == SDLK_p)
+			fill_red(var);
 	}
 }

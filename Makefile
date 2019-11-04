@@ -52,20 +52,10 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 
 INC_NAME = doom.h
 
-SRC_NAME = 	main.c\
-			move.c \
-			menu.c \
-			error.c \
-			menu_2.c \
-			menu_3.c \
-			display.c \
-			texture.c \
-			sdl_tools.c \
-			map_parse.c \
-			parse_check.c \
-			display_tool.c \
-			display_tool_2.c \
-			open_textures_buttons.c \
+SRC_NAME =	main.c \
+						error.c \
+						display.c \
+						sdl_tools.c \
 
 ifneq ("$(wildcard $(SDL_PATHO))","")
 	SDL = 1
@@ -78,12 +68,12 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@make -C $(LFT_PATH)
 	@if [ $(SDL) = 0 ]; then \
-	@make sdl; \
+	make sdl; \
 	fi
-	@echo "$(YELLOW)[...] Wolf 3D compilation$(END)"
+	@echo "$(YELLOW)[...] DOOM compilation$(END)"
 	@$(CC) -o $(NAME) $(OBJ) -lm -L $(LFT_PATH) -lft $(SDL_FLG)
 	@make draw
-	@echo "$(GREEN)[✓] Wolf 3D Done$(END)"
+	@echo "$(GREEN)[✓] DOOM Done$(END)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
@@ -92,7 +82,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 clean:
 	@make -C $(LFT_PATH) clean
 	@rm -rf $(OBJ_PATH)
-	@echo "$(RED)[-] Wolf 3D .o cleaned$(END)"
+	@echo "$(RED)[-] DOOM .o cleaned$(END)"
 
 sdl:
 	$(CURL_SDL)
@@ -114,14 +104,14 @@ fclean:
 	@make -C $(LFT_PATH) fclean
 	@rm -rf SDL2-2.0.9
 	@rm -f $(NAME)
-	@echo "$(RED)[-] Wolf 3D executable cleaned$(END)"
+	@echo "$(RED)[-] DOOM executable cleaned$(END)"
 
 
 fcleanr:
 	@make clean
 	@make -C $(LFT_PATH) fclean
 	@rm -f $(NAME)
-	@echo "$(RED)[-] Wolf 3D executable cleaned$(END)"
+	@echo "$(RED)[-] DOOM executable cleaned$(END)"
 
 fclean_all:
 	@make fclean

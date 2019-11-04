@@ -12,17 +12,6 @@
 
 #include "../includes/doom.h"
 
-SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
-{
-	SDL_Rect r;
-
-	r.x = x;
-	r.y = y;
-	r.w = w;
-	r.h = h;
-	return (r);
-}
-
 void		sdl_clean_screen(SDL_Renderer *rend)
 {
 	SDL_SetRenderDrawColor(rend, 0, 0, 0, SDL_ALPHA_OPAQUE);
