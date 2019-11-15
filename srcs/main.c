@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/02 23:29:11 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/15 18:59:24 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,24 @@ void	ft_init_sdl(t_var *var)
 	if (!var->sdl.window || !var->sdl.render)
 		return ;
 }
+void init_player(t_var *var)
+{
+		var->player.pos.x = 50;
+		var->player.pos.y = 60;
+		var->player.pos.z = 6;
+		var->player.angle = 0 * RAD;
+		var->player.pcos = cos(var->player.angle);
+		var->player.psin = sin(var->player.angle);
+}
 
-int		main()
+int		main(void)
 {
 	t_var			var;
 
 	ft_init_sdl(&var);
+	init_player(&var);
+
+	printf("%f\n%f\n", hfov, vfov);
 	display(&var);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/02 22:52:57 by vgauther         ###   ########.fr        #
+#    Updated: 2019/11/14 19:25:10 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ CYAN=$'\x1b[36m
 WHITE=$'\x1b[37m
 
 CC = gcc
-CC_FLAGS = -g3 -Wall -Wextra -Werror
+CC_FLAGS = -g3 
 
 SDL_PATH = $(shell pwd)/lib/SDL
 SRC_PATH = ./srcs/
@@ -56,6 +56,7 @@ SRC_NAME =	main.c \
 						error.c \
 						display.c \
 						sdl_tools.c \
+						math.c
 
 ifneq ("$(wildcard $(SDL_PATHO))","")
 	SDL = 1
