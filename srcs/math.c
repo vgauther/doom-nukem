@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 15:34:03 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/14 20:55:36 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/16 14:57:40 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 double pythagore(double a, double b)
 {
 	return(sqrt(a * a + b + b));
-}
-
-float yaw(int x, int y, int player_yaw)
-{
-	return (x + y * player_yaw);
 }
 
 float max(float a, float b)

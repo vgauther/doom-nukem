@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/14 19:25:10 by vgauther         ###   ########.fr        #
+#    Updated: 2019/11/16 14:57:14 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ CYAN=$'\x1b[36m
 WHITE=$'\x1b[37m
 
 CC = gcc
-CC_FLAGS = -g3 
+CC_FLAGS = -g3 -Wall -Wextra -Werror
 
 SDL_PATH = $(shell pwd)/lib/SDL
 SRC_PATH = ./srcs/
@@ -53,10 +53,10 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_NAME = doom.h
 
 SRC_NAME =	main.c \
-						error.c \
-						display.c \
-						sdl_tools.c \
-						math.c
+			error.c \
+			display.c \
+			sdl_tools.c \
+			math.c \
 
 ifneq ("$(wildcard $(SDL_PATHO))","")
 	SDL = 1

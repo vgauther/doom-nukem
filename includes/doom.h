@@ -6,7 +6,7 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/15 18:17:49 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/16 15:55:52 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 
 typedef struct s_coor
 {
-	double x;
-	double y;
-	double z;
+	double 			x;
+	double 			y;
+	double 			z;
 }				t_coor;
 
 typedef struct	s_sdl
@@ -41,26 +41,24 @@ typedef struct	s_sdl
 
 typedef struct	s_player
 {
-	t_coor pos;
-	// double hfov;
-	// double vfov;
-	double angle;
-	double psin;
-	double pcos;
+	t_coor 			pos;
+	double 			angle;
+	double 			psin;
+	double 			pcos;
 }				t_player;
 
 typedef struct	s_color
 {
-	int r;
-	int v;
-	int b;
+	int 			r;
+	int 			v;
+	int 			b;
 }				t_color;
 
 typedef struct	s_var
 {
 	t_sdl			sdl;
-	t_coor			map[4];
-	t_player player;
+	t_coor			map[6];
+	t_player		player;
 }				t_var;
 
 void	display(t_var *var);
@@ -69,7 +67,6 @@ void	ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
 void	sdl_clean_screen(SDL_Renderer *rend);
 void	ft_init_sdl(t_var *var);
 double 	pythagore(double a, double b);
-float 	yaw(int x, int y, int player_yaw);
 float 	max(float a, float b);
 float 	min(float a, float b);
 float 	clamp(int a, int b, int c);
