@@ -184,9 +184,9 @@ void forward(t_var *var, double speed, double angle)
 	if (cos(angle) > 0)
 		var->player.pos.x += speed * cos(angle);
 	else if (cos(angle) < 0)
-		var->player.pos.x += -1 * (speed * cos(angle));
+		var->player.pos.x += 1 * (speed * cos(angle));
 	if (sin(angle) > 0)
-		var->player.pos.y += -1 * (speed * sin(angle));
+		var->player.pos.y += 1 * (speed * sin(angle));
 	else if (sin(angle) < 0)
 		var->player.pos.y += speed * sin(angle);
 }
@@ -197,9 +197,9 @@ void	backward(t_var *var, double speed, double angle)
 	if (cos(angle) > 0)
 		var->player.pos.x -= speed * cos(angle);
 	else if (cos(angle) < 0)
-		var->player.pos.x -= -1 * (speed * cos(angle));
+		var->player.pos.x -= 1 * (speed * cos(angle));
 	if (sin(angle) > 0)
-		var->player.pos.y -= -1 * (speed * sin(angle));
+		var->player.pos.y -= 1 * (speed * sin(angle));
 	else if (sin(angle) < 0)
 		var->player.pos.y -= speed * sin(angle);
 }
