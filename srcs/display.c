@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/16 16:24:37 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/17 11:09:54 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void vline(t_var *var, int x, int y1, int y2, int r, int v, int bb)
 	if (bb == -1)
 		SDL_SetRenderDrawColor(var->sdl.render, r, v, 0, 0);
 	else
-		SDL_SetRenderDrawColor(var->sdl.render, 200, 200, 200, 0);
+		SDL_SetRenderDrawColor(var->sdl.render, r, v, 200, 0);
     y1 = (int)clamp(y1, 0, SIZE_Y-1);
     y2 = (int)clamp(y2, 0, SIZE_Y-1);
     if(y2 == y1)
@@ -96,7 +96,7 @@ void neo_display(t_var *var)
 
 	pyaw = 0;
     for(unsigned x=0; x < SIZE_X; ++x) ybottom[x] = SIZE_Y-1;
-	for (unsigned nb_wall = 0; nb_wall != 6; nb_wall++)
+	for (unsigned nb_wall = 0; nb_wall != 5; nb_wall++)
 	{
 		v1.x = var->map[0 + nb_wall].x - var->player.pos.x;
 		v1.y = var->map[0 + nb_wall].y - var->player.pos.y;
@@ -163,58 +163,19 @@ void neo_display(t_var *var)
             vline(var, x, ytop[x], cya-1, 200, 0, -1);
             vline(var, x, cyb+1, ybottom[x], 0, 200, -1);
             unsigned r = 0x010101 * (255-z);
-            vline(var, x, cya, cyb, 100, 100, x==x1||x==x2 ? 0 : r);
+			if (nb_wall == 0)
+				vline(var, x, cya, cyb, 255, 70, x==x1||x==x2 ? 0 : r);
+			else if (nb_wall == 1)
+				vline(var, x, cya, cyb, 70, 255, x==x1||x==x2 ? 0 : r);
+			else if (nb_wall == 2)
+				vline(var, x, cya, cyb, 100, 100, x==x1||x==x2 ? 0 : r);
+			else if (nb_wall == 3)
+				vline(var, x, cya, cyb, 0, 150, x==x1||x==x2 ? 0 : r);
+			else
+				vline(var, x, cya, cyb, 0, 0, x==x1||x==x2 ? 0 : r);
         }
 	}
 	SDL_RenderPresent(var->sdl.render);
-}
-
-static void	forward(t_player *pl, double angle, int speed)
-{
-	if (cosf(angle) > 0)
-	{
-		//if (col(map, pl->pos.x + (speed * fabs(cos(angle))), pl->pos.y))
-			pl->pos.x += speed * fabs(cos(angle));
-	}
-	else if (cosf(angle) < 0)
-	{
-		//if (col(map, pl->pos.x + (-1 * (speed * fabs(cos(angle)))), pl->pos.y))
-			pl->pos.x += -1 * (speed * fabs(cos(angle)));
-	}
-	if (sinf(angle) > 0)
-	{
-		//if (col(map, pl->pos.x, pl->pos.y + (-1 * (speed * fabs(sin(angle))))))
-			pl->pos.y += -1 * (speed * fabs(sin(angle)));
-	}
-	else if (sinf(angle) < 0)
-	{
-		//if (col(map, pl->pos.x, pl->pos.y + (speed * fabs(sin(angle)))))
-			pl->pos.y += speed * fabs(sin(angle));
-	}
-}
-
-static void	backward(t_player *pl, double angle, int speed)
-{
-	if (cosf(angle) > 0)
-	{
-		//if (col(map, pl->pos.x - (speed * fabs(cos(angle))), pl->pos.y))
-			pl->pos.x -= speed * fabs(cos(angle));
-	}
-	else if (cosf(angle) < 0)
-	{
-		//if (col(map, pl->pos.x - (-1 * (speed * fabs(cos(angle)))), pl->pos.y))
-			pl->pos.x -= -1 * (speed * fabs(cos(angle)));
-	}
-	if (sinf(angle) > 0)
-	{
-		//if (col(map, pl->pos.x, pl->pos.y - (-1 * (speed * fabs(sin(angle))))))
-			pl->pos.y -= -1 * (speed * fabs(sin(angle)));
-	}
-	else if (sinf(angle) < 0)
-	{
-		//if (col(map, pl->pos.x, pl->pos.y - (speed * fabs(sin(angle)))))
-			pl->pos.y -= speed * fabs(sin(angle));
-	}
 }
 
 void	display(t_var *var)
@@ -241,44 +202,5 @@ void	display(t_var *var)
 			var->player.pcos = cos(var->player.angle * RAD);
 			var->player.psin = sin(var->player.angle * RAD);
 		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_v)
-		{
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-			var->player.pos.x++;
-		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_UP)
-		{
-			forward(&var->player, var->player.angle * RAD, 2);
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_DOWN)
-		{
-			backward(&var->player, var->player.angle * RAD, 2);
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_LEFTBRACKET)
-		{
-			var->player.angle = var->player.angle + 10;
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_RIGHTBRACKET)
-		{
-			var->player.angle = var->player.angle - 10;
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-		}
-
 	}
 }

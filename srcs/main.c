@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/16 15:55:47 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/17 11:01:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	ft_init_sdl(t_var *var)
 }
 void init_player(t_var *var)
 {
-		var->player.pos.x = 10;
-		var->player.pos.y = 10;
+		var->player.pos.x = 50;
+		var->player.pos.y = 50;
 		var->player.pos.z = 6;
 		var->player.angle = 0;
 		var->player.pcos = cos(var->player.angle * RAD);
@@ -44,20 +44,17 @@ void init_map(t_var *var)
 		var->map[1].x = 80;
 		var->map[1].y = 0;
 
-		// var->map[2].x = 80;
-		// var->map[2].y = 20;
+		var->map[2].x = 100;
+		var->map[2].y = 20;
 
-		var->map[3 - i].x = 20;
-		var->map[3 - i].y = 100;
+		var->map[3].x = 100;
+		var->map[3].y = 100;
 
-		var->map[4 - i].x = 100;
-		var->map[4 - i].y = 100;
+		var->map[4].x = 0;
+		var->map[4].y = 100;
 
-		var->map[5 - i].x = 0;
-		var->map[5 - i].y = 100;
-
-		var->map[6 - i].x = 0;
-		var->map[6 - i].y = 0;
+		var->map[5].x = 0;
+		var->map[5].y = 0;
 }
 
 int		main(void)
