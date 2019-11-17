@@ -178,29 +178,73 @@ void neo_display(t_var *var)
 	SDL_RenderPresent(var->sdl.render);
 }
 
+void forward(t_var *var, double speed, double angle)
+{
+	angle = angle * RAD;
+	if (cos(angle) > 0)
+		var->player.pos.x += speed * cos(angle);
+	else if (cos(angle) < 0)
+		var->player.pos.x += -1 * (speed * cos(angle));
+	if (sin(angle) > 0)
+		var->player.pos.y += -1 * (speed * sin(angle));
+	else if (sin(angle) < 0)
+		var->player.pos.y += speed * sin(angle);
+}
+
+void	backward(t_var *var, double speed, double angle)
+{
+	angle = angle * RAD;
+	if (cos(angle) > 0)
+		var->player.pos.x -= speed * cos(angle);
+	else if (cos(angle) < 0)
+		var->player.pos.x -= -1 * (speed * cos(angle));
+	if (sin(angle) > 0)
+		var->player.pos.y -= -1 * (speed * sin(angle));
+	else if (sin(angle) < 0)
+		var->player.pos.y -= speed * sin(angle);
+}
+
 void	display(t_var *var)
 {
+	sdl_clean_screen(var->sdl.render);
+	neo_display(var);
 	while (SDL_WaitEvent(&var->sdl.event))
 	{
 		if (var->sdl.event.type == SDL_QUIT)
 			ft_clean_quit(var->sdl.render, var->sdl.window);
 		else if (var->sdl.event.key.keysym.sym == SDLK_ESCAPE)
 			ft_clean_quit(var->sdl.render, var->sdl.window);
-		else if (var->sdl.event.key.keysym.sym == SDLK_d)
+		else if (var->sdl.event.type == SDL_KEYDOWN)
 		{
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-			var->player.angle += 6;
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
-		}
-		else if (var->sdl.event.key.keysym.sym == SDLK_a)
-		{
-			sdl_clean_screen(var->sdl.render);
-			neo_display(var);
-			var->player.angle -= 6;
-			var->player.pcos = cos(var->player.angle * RAD);
-			var->player.psin = sin(var->player.angle * RAD);
+			if (var->sdl.event.key.keysym.sym == SDLK_d)
+			{
+				var->player.angle += 6;
+				var->player.pcos = cos(var->player.angle * RAD);
+				var->player.psin = sin(var->player.angle * RAD);
+				sdl_clean_screen(var->sdl.render);
+				neo_display(var);
+			}
+			else if (var->sdl.event.key.keysym.sym == SDLK_a)
+			{
+				var->player.angle -= 6;
+				var->player.pcos = cos(var->player.angle * RAD);
+				var->player.psin = sin(var->player.angle * RAD);
+				sdl_clean_screen(var->sdl.render);
+				neo_display(var);
+			}
+			else if (var->sdl.event.key.keysym.sym == SDLK_w)
+			{
+				printf("YO\n");
+				forward(var, 4, var->player.angle);
+				sdl_clean_screen(var->sdl.render);
+				neo_display(var);
+			}
+			else if (var->sdl.event.key.keysym.sym == SDLK_s)
+			{
+				backward(var, 4, var->player.angle);
+				sdl_clean_screen(var->sdl.render);
+				neo_display(var);
+			}
 		}
 	}
 }
