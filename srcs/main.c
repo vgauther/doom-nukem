@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/17 11:01:07 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/17 12:07:24 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ void init_player(t_var *var)
 
 void init_map(t_var *var)
 {
-	int i;
-
-	i = 1;
 		var->map[0].x = 0;
 		var->map[0].y = 0;
 
@@ -63,6 +60,7 @@ int		main(void)
 
 	ft_init_sdl(&var);
 	init_player(&var);
+	parser_data_main(&var);
 	init_map(&var);
 	display(&var);
 	return (0);

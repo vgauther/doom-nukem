@@ -1,0 +1,8 @@
+# nb of point, nb of sector, nb of texture, nb of map
+[5,1,0,1]
+# p means point, coor x, coor y
+[p,0,0]
+[p,0,0]
+[p,0,0]
+[p,0,0]
+[p,0,0]

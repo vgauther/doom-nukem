@@ -6,7 +6,7 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/17 10:59:34 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/17 13:31:35 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,15 @@ double 	pythagore(double a, double b);
 float 	max(float a, float b);
 float 	min(float a, float b);
 float 	clamp(int a, int b, int c);
+
+/* parser func */
+int parser_data_main(t_var *var);
+void parser_data_messages(int id);
+
+/* free_tab.c*/
+void free_tab_char(char **tab);
+void free_2_tab_char(char **tab, char **tab1);
+void free_3_tab_char(char **tab, char **tab1, char **tab2);
+int free_tab_char_with_ret_1(char **tab);
 
 #endif
