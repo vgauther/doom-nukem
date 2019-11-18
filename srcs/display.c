@@ -178,6 +178,35 @@ void neo_display(t_var *var)
 	SDL_RenderPresent(var->sdl.render);
 }
 
+<<<<<<< HEAD
+=======
+void forward(t_var *var, double speed, double angle)
+{
+	angle = angle * RAD;
+	if (cos(angle) > 0)
+		var->player.pos.x += speed * cos(angle);
+	else if (cos(angle) < 0)
+		var->player.pos.x += 1 * (speed * cos(angle));
+	if (sin(angle) > 0)
+		var->player.pos.y += 1 * (speed * sin(angle));
+	else if (sin(angle) < 0)
+		var->player.pos.y += speed * sin(angle);
+}
+
+void	backward(t_var *var, double speed, double angle)
+{
+	angle = angle * RAD;
+	if (cos(angle) > 0)
+		var->player.pos.x -= speed * cos(angle);
+	else if (cos(angle) < 0)
+		var->player.pos.x -= 1 * (speed * cos(angle));
+	if (sin(angle) > 0)
+		var->player.pos.y -= 1 * (speed * sin(angle));
+	else if (sin(angle) < 0)
+		var->player.pos.y -= speed * sin(angle);
+}
+
+>>>>>>> db2079c288f66f36c89908c463aa074cee352e81
 void	display(t_var *var)
 {
 	sdl_clean_screen(var->sdl.render);
