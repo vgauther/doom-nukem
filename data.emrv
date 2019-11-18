@@ -1,8 +1,21 @@
-# nb of point, nb of sector, nb of texture, nb of map
-[5,1,0,1]
+# nb of point, nb of sector, nb of texture, nb of map, nb of weapon, nb of ennemies
+[5,1,0,1,4,2]
 # p means point, coor x, coor y
 [p,0,0]
 [p,0,0]
 [p,0,0]
 [p,0,0]
 [p,0,0]
+# w means weapon, name, capacity
+[w,ak47,20]
+[w,gun1,8]
+[w,muak,50]
+[w,mugu,40]
+# e means ennemy
+[e,en1,100,100]
+[e,en2,100,100]
+# s means sector, point num | floor, ceilling
+[s,0,1,2,3,4|0,20]
+# m means map, sectors list | weapon number | weapon coor | ennemies number | ennemies coor
+[m,1|0|.|0|.]
+[m,1|2|0,10,10,2,12,12|2|0,5,5,1,20,20]

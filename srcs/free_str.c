@@ -1,53 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_tab.c                                         :+:      :+:    :+:   */
+/*   free_str.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 17:17:06 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/17 19:41:37 by vgauther         ###   ########.fr       */
+/*   Created: 2019/11/17 19:33:52 by vgauther          #+#    #+#             */
+/*   Updated: 2019/11/17 19:43:29 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/doom.h"
 
-void free_tab_char(char **tab)
+int free_ret_1(char *str)
 {
-	int i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
+	free(str);
+	return (1);
 }
 
-void free_2_tab_char(char **tab, char **tab1)
+int free_2_str(char *str)
+{
+	free(str);
+	return (1);
+}
+
+int free_2_tab_char_ret_1(char **tab, char **tab1)
 {
 	free_tab_char(tab);
 	free_tab_char(tab1);
+	return (1);
 }
 
-void free_3_tab_char(char **tab, char **tab1, char **tab2)
+int free_3_tab_char_ret_1(char **tab, char **tab1, char **tab2)
 {
 	free_tab_char(tab);
 	free_tab_char(tab1);
 	free_tab_char(tab2);
+	return (1);
 }
 
-void free_4_tab_char(char **tab, char **tab1, char **tab2, char **tab3)
+int free_4_tab_char_ret_1(char **tab, char **tab1, char **tab2, char **tab3)
 {
 	free_tab_char(tab);
 	free_tab_char(tab1);
 	free_tab_char(tab2);
 	free_tab_char(tab3);
-}
-
-int free_tab_char_with_ret_1(char **tab)
-{
-	free_tab_char(tab);
 	return (1);
 }

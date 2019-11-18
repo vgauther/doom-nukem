@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/17 13:36:56 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/17 18:36:22 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ static void vline(t_var *var, int x, int y1, int y2, int r, int v, int bb)
 
 	if (bb == -1)
 		SDL_SetRenderDrawColor(var->sdl.render, r, v, 0, 0);
+	else if (bb == -4)
+		SDL_SetRenderDrawColor(var->sdl.render, 0, 0, 0, 0);
+	else if (bb == -5)
+		SDL_SetRenderDrawColor(var->sdl.render, 50, 50, 50, 0);
 	else
 		SDL_SetRenderDrawColor(var->sdl.render, r, v, 200, 0);
     y1 = (int)clamp(y1, 0, SIZE_Y-1);
@@ -65,143 +69,113 @@ static void vline(t_var *var, int x, int y1, int y2, int r, int v, int bb)
     }
 }
 
-double yaw(double a, double b, double c)
+void init_wall_calcul(t_render *r, t_var *var, int nb_wall)
 {
-	return (a + b * c);
+	r->v1.x = var->map[0 + nb_wall].x - var->player.pos.x;
+	r->v1.y = var->map[0 + nb_wall].y - var->player.pos.y;
+	r->v2.x = var->map[1 + nb_wall].x - var->player.pos.x;
+	r->v2.y = var->map[1 + nb_wall].y - var->player.pos.y;
+	r->t1.x = r->v1.x * var->player.psin - r->v1.y * var->player.pcos;
+	r->t1.z = r->v1.x * var->player.pcos + r->v1.y * var->player.psin;
+	r->t2.x = r->v2.x * var->player.psin - r->v2.y * var->player.pcos;
+	r->t2.z = r->v2.x * var->player.pcos + r->v2.y * var->player.psin;
 }
 
 void neo_display(t_var *var)
 {
-	t_coor v1;
-	t_coor v2;
-	t_coor t1;
-	t_coor t2;
 	t_coor i1;
 	t_coor i2;
 	float pyaw;
-	float xscale1;
-	float yscale1;
-	float xscale2;
-	float yscale2;
 	int beginx;
 	int endx;
-	float nearz = 1e-4f;
-	float farz = 5;
-	float nearside = 1e-5f;
-	float farside = 20.f;
 	int ytop[SIZE_X]={0};
 	int ybottom[SIZE_X];
-	int x1;
-	int x2;
+	t_render r;
 
 	pyaw = 0;
+	r.nearz = 1e-4f;
+	r.farz = 5;
+	r.nearside = 1e-5f;
+	r.farside = 20.f;
     for(unsigned x=0; x < SIZE_X; ++x) ybottom[x] = SIZE_Y-1;
-	for (unsigned nb_wall = 0; nb_wall != 5; nb_wall++)
+	for (unsigned nb_wall = 0; nb_wall != 12; nb_wall++)
 	{
-		v1.x = var->map[0 + nb_wall].x - var->player.pos.x;
-		v1.y = var->map[0 + nb_wall].y - var->player.pos.y;
-		v2.x = var->map[1 + nb_wall].x - var->player.pos.x;
-		v2.y = var->map[1 + nb_wall].y - var->player.pos.y;
-		t1.x = v1.x * var->player.psin - v1.y * var->player.pcos;
-		t1.z = v1.x * var->player.pcos + v1.y * var->player.psin;
-		t2.x = v2.x * var->player.psin - v2.y * var->player.pcos;
-		t2.z = v2.x * var->player.pcos + v2.y * var->player.psin;
-		if(t1.z <= 0 && t2.z <= 0)
+		init_wall_calcul(&r, var, nb_wall);
+		if(r.t1.z <= 0 && r.t2.z <= 0)
 			continue;
-		if(t1.z <= 0 || t2.z <= 0)
+		if(r.t1.z <= 0 || r.t2.z <= 0)
 		{
-			i1 = intersect(t1.x, t1.z, t2.x, t2.z, -nearside, nearz, -farside, farz);
-			i2 = intersect(t1.x, t1.z, t2.x, t2.z, nearside, nearz, farside, farz);
-			if(t1.z < nearz)
+			i1 = intersect(r.t1.x, r.t1.z, r.t2.x, r.t2.z, -r.nearside, r.nearz, -r.farside, r.farz);
+			i2 = intersect(r.t1.x, r.t1.z, r.t2.x, r.t2.z, r.nearside, r.nearz, r.farside, r.farz);
+			if(r.t1.z < r.nearz)
 			{
 				if(i1.y > 0)
 				{
-					t1.x = i1.x; t1.z = i1.y;
+					r.t1.x = i1.x;
+					r.t1.z = i1.y;
 				}
 				else
 				{
-					t1.x = i2.x;
-					t1.z = i2.y;
+					r.t1.x = i2.x;
+					r.t1.z = i2.y;
 				}
 			}
-            if(t2.z < nearz)
+            if(r.t2.z < r.nearz)
 			{
 				if(i1.y > 0)
 				{
-					t2.x = i1.x;
-					t2.z = i1.y;
+					r.t2.x = i1.x;
+					r.t2.z = i1.y;
 				}
 				else
 				{
-					t2.x = i2.x;
-					t2.z = i2.y;
+					r.t2.x = i2.x;
+					r.t2.z = i2.y;
 				}
 			}
 		}
-		xscale1 = hfov / t1.z;
-		yscale1 = vfov / t1.z;
-		x1 = SIZE_X/2 - (int)(t1.x * xscale1);
-    	xscale2 = hfov / t2.z;
-		yscale2 = vfov / t2.z;
-		x2 = SIZE_X/2 - (int)(t2.x * xscale2);
-		if(x1 >= x2 || x2 < 0 || x1 > SIZE_X - 1) continue; // Only render if it's visible
-		float yceil  = 12;
+		r.xscale1 = hfov / r.t1.z;
+		r.yscale1 = vfov / r.t1.z;
+		r.x1 = SIZE_X/2 - (int)(r.t1.x * r.xscale1);
+    	r.xscale2 = hfov / r.t2.z;
+		r.yscale2 = vfov / r.t2.z;
+		r.x2 = SIZE_X/2 - (int)(r.t2.x * r.xscale2);
+		if(r.x1 >= r.x2 || r.x2 < 0 || r.x1 > SIZE_X - 1) continue; // Only render if it's visible
+		float yceil  = 32;
 		float yfloor = 0 - var->player.pos.z;
-		int y1a = SIZE_Y/2 - (int)(yaw(yceil, t1.z, pyaw) * yscale1);
-		int y1b = SIZE_Y/2 - (int)(yaw(yfloor, t1.z, pyaw) * yscale1);
-        int y2a = SIZE_Y/2 - (int)(yaw(yceil, t2.z, pyaw) * yscale2);
-		int y2b = SIZE_Y/2 - (int)(yaw(yfloor, t2.z, pyaw) * yscale2);
-		beginx = max(x1, 0);
-		endx = min(x2, SIZE_X - 1);
+		int y1a = SIZE_Y/2 - (int)(yaw(yceil, r.t1.z, pyaw) * r.yscale1);
+		int y1b = SIZE_Y/2 - (int)(yaw(yfloor, r.t1.z, pyaw) * r.yscale1);
+        int y2a = SIZE_Y/2 - (int)(yaw(yceil, r.t2.z, pyaw) * r.yscale2);
+		int y2b = SIZE_Y/2 - (int)(yaw(yfloor, r.t2.z, pyaw) * r.yscale2);
+		beginx = max(r.x1, 0);
+		endx = min(r.x2, SIZE_X - 1);
 		for(int x = beginx; x <= endx; ++x)
         {
-            int z = ((x - x1) * (t2.z-t1.z) / (x2-x1) + t1.z) * 8;
-            int ya = (x - x1) * (y2a-y1a) / (x2-x1) + y1a;
+            int z = ((x - r.x1) * (r.t2.z-r.t1.z) / (r.x2-r.x1) + r.t1.z) * 8;
+            int ya = (x - r.x1) * (y2a-y1a) / (r.x2-r.x1) + y1a;
 			int cya = clamp(ya, ytop[x],ybottom[x]); // top
-            int yb = (x - x1) * (y2b-y1b) / (x2-x1) + y1b;
+            int yb = (x - r.x1) * (y2b-y1b) / (r.x2-r.x1) + y1b;
 			int cyb = clamp(yb, ytop[x],ybottom[x]); // bottom
-            vline(var, x, ytop[x], cya-1, 200, 0, -1);
-            vline(var, x, cyb+1, ybottom[x], 0, 200, -1);
+            vline(var, x, ytop[x], cya-1, 200, 0, -4);
+            vline(var, x, cyb+1, ybottom[x], 0, 200, -5);
             unsigned r = 0x010101 * (255-z);
 			if (nb_wall == 0)
-				vline(var, x, cya, cyb, 255, 70, x==x1||x==x2 ? 0 : r);
+				vline(var, x, cya, cyb, 255, 70, r);
 			else if (nb_wall == 1)
-				vline(var, x, cya, cyb, 70, 255, x==x1||x==x2 ? 0 : r);
+				vline(var, x, cya, cyb, 70, 255, r);
 			else if (nb_wall == 2)
-				vline(var, x, cya, cyb, 100, 100, x==x1||x==x2 ? 0 : r);
+				vline(var, x, cya, cyb, 100, 100, r);
 			else if (nb_wall == 3)
-				vline(var, x, cya, cyb, 0, 150, x==x1||x==x2 ? 0 : r);
+				vline(var, x, cya, cyb, 0, 150, r);
+			else if (nb_wall == 4)
+				vline(var, x, cya, cyb, 30, 150, r);
+			else if (nb_wall == 5)
+				vline(var, x, cya, cyb, 200, 150, r);
 			else
-				vline(var, x, cya, cyb, 0, 0, x==x1||x==x2 ? 0 : r);
+				vline(var, x, cya, cyb, 0, 0, -1);
         }
 	}
 	SDL_RenderPresent(var->sdl.render);
-}
-
-void forward(t_var *var, double speed, double angle)
-{
-	angle = angle * RAD;
-	if (cos(angle) > 0)
-		var->player.pos.x += speed * cos(angle);
-	else if (cos(angle) < 0)
-		var->player.pos.x += -1 * (speed * cos(angle));
-	if (sin(angle) > 0)
-		var->player.pos.y += -1 * (speed * sin(angle));
-	else if (sin(angle) < 0)
-		var->player.pos.y += speed * sin(angle);
-}
-
-void	backward(t_var *var, double speed, double angle)
-{
-	angle = angle * RAD;
-	if (cos(angle) > 0)
-		var->player.pos.x -= speed * cos(angle);
-	else if (cos(angle) < 0)
-		var->player.pos.x -= -1 * (speed * cos(angle));
-	if (sin(angle) > 0)
-		var->player.pos.y -= -1 * (speed * sin(angle));
-	else if (sin(angle) < 0)
-		var->player.pos.y -= speed * sin(angle);
 }
 
 void	display(t_var *var)
@@ -234,7 +208,6 @@ void	display(t_var *var)
 			}
 			else if (var->sdl.event.key.keysym.sym == SDLK_w)
 			{
-				printf("YO\n");
 				forward(var, 4, var->player.angle);
 				sdl_clean_screen(var->sdl.render);
 				neo_display(var);
