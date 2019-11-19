@@ -6,7 +6,7 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/18 12:08:07 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/19 16:44:55 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,6 @@ typedef struct	s_render
 	int 	x2;
 }				t_render;
 
-typedef struct	s_sector
-{
-	int 		*pts;
-	int 		floor;
-	int 		ceilling;
-}				t_sector;
-
 typedef struct	s_ennemy
 {
 	int 		x;
@@ -101,6 +94,13 @@ typedef struct	s_weapon
 	int			type;
 	int 		capa;
 }				t_weapon;
+
+typedef struct	s_sector
+{
+	int 		*pts;
+	int 		floor;
+	int 		ceilling;
+}				t_sector;
 
 typedef struct	s_map
 {
@@ -125,8 +125,6 @@ typedef struct	s_data_file
 	int 		sector_count;
 	int			weapon_count;
 	int			ennemy_count;
-	t_point  	*points;
-	t_sector 	*sectors;
 	t_ennemy 	*ennemies;
 	t_map 		*maps;
 	t_weapon 	*weapons;
@@ -135,8 +133,10 @@ typedef struct	s_data_file
 typedef struct	s_var
 {
 	t_data_file 	data;
-	t_sdl			sdl;
-	t_coor			map[13];
+	t_sdl				sdl;
+	t_point  	*points;
+	t_sector 	*sectors;
+	t_map			map[1];
 	t_player		player;
 }				t_var;
 
