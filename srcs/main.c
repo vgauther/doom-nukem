@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/19 17:07:16 by math             ###   ########.fr       */
+/*   Updated: 2019/11/21 22:08:05 by mamisdra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ void init_player(t_var *var)
 		var->player.pcos = cos(var->player.angle * RAD);
 		var->player.psin = sin(var->player.angle * RAD);
 }
-
+/*
 void init_map(t_var *var)
 {
+	var->maps = malloc(sizeof(t_map) * 1);
+
 	var->points = malloc(sizeof(t_point) * 14);
 
 
@@ -106,20 +108,20 @@ void init_map(t_var *var)
 	var->sectors[1].floor = 0;
 	var->sectors[1].ceilling = 30;
 
-	var->map[0].sectors = malloc(sizeof(int) * 2);
+	var->maps[0].sectors = malloc(sizeof(int) * 2);
 
-	var->map[0].sectors[0] = 0;
-	var->map[0].sectors[1] = 1;
+	var->maps[0].sectors[0] = 0;
+	var->maps[0].sectors[1] = 1;
 }
-
+*/
 int		main(void)
 {
 	t_var			var;
 
 	ft_init_sdl(&var);
 	init_player(&var);
-//	parser_data_main(&var);
-	init_map(&var);
+	fill_data_struct(&var);
+//	init_map(&var);
 	display(&var);
 	return (0);
 }

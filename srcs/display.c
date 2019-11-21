@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/19 17:16:22 by math             ###   ########.fr       */
+/*   Updated: 2019/11/21 22:07:58 by mamisdra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ static void vline(t_var *var, int x, int y1, int y2, int r, int v, int bb)
 
 void init_wall_calcul(t_render *r, t_var *var, int nb_wall)
 {
-	r->v1.x = var->points[var->sectors[var->map[0].sectors[0]].pts[0 + nb_wall]].x - var->player.pos.x;
-	r->v1.y = var->points[var->sectors[var->map[0].sectors[0]].pts[0 + nb_wall]].y - var->player.pos.y;
-	r->v2.x = var->points[var->sectors[var->map[0].sectors[0]].pts[1 + nb_wall]].x - var->player.pos.x;
-	r->v2.y = var->points[var->sectors[var->map[0].sectors[0]].pts[1 + nb_wall]].y - var->player.pos.y;
+	r->v1.x = var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].x - var->player.pos.x;
+	r->v1.y = var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].y - var->player.pos.y;
+	r->v2.x = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].x - var->player.pos.x;
+	r->v2.y = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].y - var->player.pos.y;
 	r->t1.x = r->v1.x * var->player.psin - r->v1.y * var->player.pcos;
 	r->t1.z = r->v1.x * var->player.pcos + r->v1.y * var->player.psin;
 	r->t2.x = r->v2.x * var->player.psin - r->v2.y * var->player.pcos;
@@ -98,7 +98,7 @@ void neo_display(t_var *var)
 	r.nearside = 1e-5f;
 	r.farside = 20.f;
     for(unsigned x=0; x < SIZE_X; ++x) ybottom[x] = SIZE_Y-1;
-	for (unsigned nb_wall = 0; nb_wall != 6; nb_wall++)
+	for (unsigned nb_wall = 0; nb_wall != var->sectors[0].nb_pts - 1; nb_wall++)
 	{
 		init_wall_calcul(&r, var, nb_wall);
 		if(r.t1.z <= 0 && r.t2.z <= 0)

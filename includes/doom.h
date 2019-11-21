@@ -6,7 +6,7 @@
 /*   By: esmoreau <esmoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 15:01:29 by esmoreau          #+#    #+#             */
-/*   Updated: 2019/11/19 16:44:55 by math             ###   ########.fr       */
+/*   Updated: 2019/11/21 21:56:19 by mamisdra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ typedef struct	s_player
 	double 			angle;
 	double 			psin;
 	double 			pcos;
+	int				xp;
+	int 			lvl;
 }				t_player;
 
 typedef struct	s_color
@@ -82,62 +84,52 @@ typedef struct	s_ennemy
 {
 	int 		x;
 	int 		y;
-	int			type;
-	int 		xp;
+	char 		name[5];
 	int			hp;
+	int 		xp;
 }				t_ennemy;
 
 typedef struct	s_weapon
 {
 	int 		x;
 	int 		y;
-	int			type;
-	int 		capa;
+	char 		name[5];
+	int 		maga;
+	int 		ammo;
 }				t_weapon;
 
 typedef struct	s_sector
 {
-	int 		*pts;
-	int 		floor;
-	int 		ceilling;
+	int 			*pts; // num points du secteur
+	unsigned int	nb_pts; // nombre de point du secteur
+	int 			floor;
+	int 			ceilling;
+	int				*neighbors;	// num des secteurs voisins
 }				t_sector;
 
 typedef struct	s_map
 {
-	int 		*sectors;
+	int 		*sectors; // num des secteur sur la map
 	int			nb_ennemies;
-	t_ennemy	*ennemies;
+	int			*ennemies;
 	int 		nb_weapons;
-	t_weapon 	*weapons;
-
+	int			*weapons;
 }				t_map;
-
-typedef struct	s_data_file
-{
-	int 		nb_sectors;
-	int 		nb_textures;
-	int	 		nb_points;
-	int 		nb_maps;
-	int 		nb_weapons;
-	int 		nb_ennemies;
-	int 		point_count;
-	int 		map_count;
-	int 		sector_count;
-	int			weapon_count;
-	int			ennemy_count;
-	t_ennemy 	*ennemies;
-	t_map 		*maps;
-	t_weapon 	*weapons;
-}				t_data_file;
 
 typedef struct	s_var
 {
-	t_data_file 	data;
-	t_sdl				sdl;
-	t_point  	*points;
-	t_sector 	*sectors;
-	t_map			map[1];
+	t_sdl			sdl;
+	t_point  		*points; // liste de tous les points
+	t_sector 		*sectors; // liste de tous les secteurs
+	t_ennemy 		*ennemies;
+	t_map 			*maps; // liste de toutes les maps
+	t_weapon 		*weapons;
 	t_player		player;
+	int 			p_count;
+	int 			m_count;
+	int 			s_count;
+	int				w_count;
+	int				e_count;
 }				t_var;
 
 void	display(t_var *var);
@@ -160,6 +152,13 @@ void backward(t_var *var, double speed, double angle);
 /* parser func */
 int parser_data_main(t_var *var);
 void parser_data_messages(int id);
+
+/* filler_funct.c */
+void	fill_points(t_var *var, char *buff);
+void	fill_weapons(t_var *var, char *buff);
+void	fill_ennemies(t_var *var, char *buff);
+void	fill_sectors(t_var *var, char *buff);
+void	fill_data_struct(t_var *var);
 
 /* free_tab.c */
 void free_tab_char(char **tab);

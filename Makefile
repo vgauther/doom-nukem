@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/18 11:53:10 by vgauther         ###   ########.fr        #
+#    Updated: 2019/11/21 21:41:58 by mamisdra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,13 +57,12 @@ SRC_NAME =	main.c \
 			display.c \
 			sdl_tools.c \
 			math.c \
-			parser_data_messages.c \
-			parser_data_main.c \
 			free_tab.c \
 			free_str.c \
 			move.c \
 			messages.c \
-			parser_recup_data_map.c
+			parse_fill_struct.c\
+			filler_funct.c
 
 ifneq ("$(wildcard $(SDL_PATHO))","")
 	SDL = 1
