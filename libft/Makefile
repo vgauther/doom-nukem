@@ -3,120 +3,119 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
+#    By: nvienot <nvienot@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/10/14 14:19:01 by vgauther          #+#    #+#              #
-#    Updated: 2019/10/14 14:27:50 by vgauther         ###   ########.fr        #
+#    Created: 2014/01/19 18:35:47 by cglavieu          #+#    #+#              #
+#    Updated: 2019/07/25 17:42:51 by nvienot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-END=$'\x1b[0m
-BOLD=$'\x1b[1m'
-UNDER=$'\x1b[4m'
-REV=$'\x1b[7m'
+SHELL		= bash
+CC			= gcc
 
-# Colors
-GREY=$'\x1b[30m
-RED=$'\x1b[31m
-GREEN=$'\x1b[32m
-YELLOW=$'\x1b[33m
-BLUE=$'\x1b[34m
-PURPLE=$'\x1b[35m
-CYAN=$'\x1b[36m
-WHITE=$'\x1b[37m
+CFLAG		=	-Wall -Wextra -Werror -O2
+MESSAGE		= 	"\033[38;5;79m[$(NAME)] compiled on normal rules !\033[0m                  "
 
-SCR		= ft_atoi.c\
-		  ft_atoi_base.c\
-		  ft_atoi_i.c\
-		  ft_atoi_base_i.c\
-		  ft_split_whitespaces.c\
-		  ft_strjoin_free_s1s2_newline.c\
-		  ft_strjoin_free_s1s2.c\
-		  ft_strjoin_free_s1.c\
-		  ft_itoa.c\
-		  ft_sqrt.c\
-		  ft_memalloc.c\
-		  ft_memchr.c\
-		  ft_memcmp.c\
-		  ft_memdel.c\
-		  ft_strlcat.c\
-		  ft_memset.c\
-		  ft_memccpy.c\
-		  ft_memcpy.c\
-		  ft_memmove.c\
-		  ft_lstnew.c\
-		  ft_lstdelone.c\
-		  ft_lstdel.c\
-		  ft_lstadd.c\
-		  ft_lstiter.c\
-		  ft_lstmap.c\
-		  ft_bzero.c\
-		  ft_isdigit.c\
-		  ft_putendl.c\
-		  ft_putstr.c\
-		  ft_strchr.c\
-		  ft_strdel.c\
-		  ft_striteri.c\
-		  ft_strmapi.c\
-		  ft_strnequ.c\
-		  ft_strstr.c\
-		  ft_toupper.c\
-		  ft_isalnum.c\
-		  ft_isprint.c\
-		  ft_putendl_fd.c\
-		  ft_putstr_fd.c\
-		  ft_strclr.c\
-		  ft_strdup.c\
-		  ft_strjoin.c\
-		  ft_strncat.c\
-		  ft_strnew.c\
-		  ft_strsub.c\
-		  ft_isalpha.c\
-		  ft_putchar.c\
-		  ft_putnbr.c\
-		  ft_strsplit.c\
-		  ft_strcmp.c\
-		  ft_strequ.c\
-		  ft_strlen.c\
-		  ft_strncmp.c\
-		  ft_strnstr.c\
-		  ft_strtrim.c\
-		  ft_isascii.c\
-		  ft_putchar_fd.c\
-		  ft_putnbr_fd.c\
-		  ft_strcat.c\
-		  ft_strcpy.c\
-		  ft_striter.c\
-		  ft_strmap.c\
-		  ft_strncpy.c\
-		  ft_strrchr.c\
-		  ft_tolower.c\
-		  ft_getnbr.c\
-		  get_next_line.c\
-		  split.c\
+NAME		= libft.a
 
-OBJS	= $(SCR:.c=.o)
+SRC = ft_atoi.c\
+	ft_bzero.c\
+	ft_epur_str.c\
+	ft_epur_tabul.c\
+	ft_isalnum.c\
+	ft_isalpha.c\
+	ft_isascii.c\
+	ft_isdigit.c\
+	ft_isprint.c\
+	ft_itoa.c\
+	ft_memalloc.c\
+	ft_memccpy.c\
+	ft_memchr.c\
+	ft_memcmp.c\
+	ft_memcpy.c\
+	ft_memdel.c\
+	ft_memmove.c\
+	ft_memset.c\
+	ft_putchar.c\
+	ft_putchar_fd.c\
+	ft_putendl.c\
+	ft_putendl_fd.c\
+	ft_putnbr.c\
+	ft_putnbrendl.c\
+	ft_putnbr_fd.c\
+	ft_putstr.c\
+	ft_putstr_fd.c\
+	ft_strcat.c\
+	ft_strchr.c\
+	ft_strclr.c\
+	ft_strcmp.c\
+	ft_strcpy.c\
+	ft_strdel.c\
+	ft_strdup.c\
+	ft_strequ.c\
+	ft_striter.c\
+	ft_striteri.c\
+	ft_strjoin.c\
+	ft_strlcat.c\
+	ft_strlen.c\
+	ft_strmap.c\
+	ft_strmapi.c\
+	ft_strncat.c\
+	ft_strncmp.c\
+	ft_strncpy.c\
+	ft_strnequ.c\
+	ft_strnew.c\
+	ft_strnstr.c\
+	ft_strrchr.c\
+	ft_strsplit.c\
+	ft_strstr.c\
+	ft_strsub.c\
+	ft_strtrim.c\
+	ft_strctrim.c\
+	ft_tab_len.c\
+	ft_tolower.c\
+	ft_toupper.c\
+	precise_get_next_line.c\
+	get_next_line.c\
+	get_next_line_until.c\
+	ft_atof.c\
+	ft_memreg.c\
+	ft_uitoa_base.c\
+	ft_atoui_base.c\
+	ft_strjoinnfree.c\
+	ft_strisnone.c
 
-FLAGS	= -Wall -Wextra -Werror
+SRCDIR = ./src/
+SRCFILL = $(addprefix $(SRCDIR),$(SRC))
 
-NAME	= libft.a
+OBJ = $(SRC:.c=.o)
+OBJDIR = ./obj/
+OBJFILL = $(addprefix $(OBJDIR),$(OBJ))
 
-CC		= gcc -c $(FLAGS) $(SCR)
+INC = ./inc/
 
-all : $(NAME)
+T = $(words $(OBJ))
+N = 0
+C = $(words $N)$(eval N := x $N)
+PROGRESS = "[`expr $C  '*' 100 / $T`%]"
 
-$(NAME):
-	@echo "$(YELLOW)[...] libft compilation$(END)"
-	@$(CC)
-	@ar rc $(NAME) $(OBJS)
-	@ranlib $(NAME)
-	@echo "$(GREEN)[✓] libft compiled$(END)"
+all: 			$(NAME)
 
-clean :
-	@rm -f $(OBJS)
+$(NAME): 		$(OBJFILL)
+				@ar rc $@ $^
+				@echo -e $(MESSAGE)
 
-fclean : clean
-	@rm -f $(NAME)
-	@echo "$(RED)[-] libft cleaned$(END)"
+$(OBJDIR)%.o:	$(SRCDIR)%.c
+				@mkdir -p $(OBJDIR)
+				@$(CC) $(CFLAG) -I $(INC) -c $< -o $@
+				@echo -ne "[$(NAME)] progress : $(PROGRESS) | $@            \r"
 
-re : fclean all
+clean:
+				@rm -rf $(OBJDIR)
+
+fclean:			clean
+				@echo -ne "Cleaning [$(NAME)]... In progress...\r"
+				@rm -f $(NAME)
+				@echo -e "Cleaning [$(NAME)] done !              "
+
+re: 			fclean all

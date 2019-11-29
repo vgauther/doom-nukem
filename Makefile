@@ -5,139 +5,114 @@
 #                                                     +:+ +:+         +:+      #
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/02/18 20:24:21 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/21 21:41:58 by mamisdra         ###   ########.fr        #
+#    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
+#    Updated: 2019/11/30 00:04:36 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.PHONY: all, $(NAME), clean, fclean, re
-
-NAME = doom-nukem
-
-END=$'\x1b[0m
-BOLD=$'\x1b[1m'
-UNDER=$'\x1b[4m'
-REV=$'\x1b[7m'
-
-# Colors
-GREY=$'\x1b[30m
-RED=$'\x1b[31m
-GREEN=$'\x1b[32m
-YELLOW=$'\x1b[33m
-BLUE=$'\x1b[34m
-PURPLE=$'\x1b[35m
-CYAN=$'\x1b[36m
-WHITE=$'\x1b[37m
-
+SHELL = bash
 CC = gcc
-CC_FLAGS = -g3 -Wall -Wextra -Werror
 
-SDL_PATH = $(shell pwd)/lib/SDL
-SRC_PATH = ./srcs/
-INC_PATH = ./includes/
-OBJ_PATH = ./obj/
-LFT_PATH = ./libft/
-LIBSDL_ROOT = ./libSDL2/
-LIBSDL_PATH = ./libSDL2/lib/
-SDL_PATHO = ./SDL2-2.0.9/
+NAME                =   doom-nukem
+CFLAG       		=   -Wall -Wextra -Werror
+MESSAGE     		=   "\033[38;5;79m[$(NAME)] compiled on normal rules ! Have fun\033[0m                          "
 
+INCDIR              =   ./inc/
+OBJDIR              =   ./obj/
+LIBFTDIR            =   ./libft/
+SRCDIR              =   ./src/
 
-SDL_FLG = -L$(LIBSDL_PATH) -lSDL2
-SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
-OBJ = $(addprefix $(OBJ_PATH),$(OBJ_NAME))
-INC = $(addprefix -I,$(INC_PATH))
-CURL_SDL = `curl https://www.libsdl.org/release/SDL2-2.0.9.zip -o sdl2.zip`
+INCFIL              =   doom.h
+OBJFIL              =   $(SRCFIL:.c=.o)
+LIBFTFIL            =   libft.a
+SRCFIL				=	main.c \
 
-OBJ_NAME = $(SRC_NAME:.c=.o)
+SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))
+OBJ                 =   $(addprefix $(OBJDIR),$(OBJFIL))
+LIBFT               =   $(addprefix $(LIBFTDIR),$(LIBFTFIL))
+INC                 =   $(addprefix $(INCDIR),$(INCFIL))
+INCLIBFT            =   $(LIBFTDIR)inc
+LIBFT_FLAG          =   -L$(LIBFTDIR) -lft
 
-INC_NAME = doom.h
+SDL_PATH            =   ./SDL2-2.0.9/
+LIBSDL_ROOT         =   ./libSDL2/
+LIBSDL_PATH         =   ./libSDL2/lib/
+LIBSDL              =   libSDL2.a
+INCSDL              =   $(LIBSDL_ROOT)include/
+LIBSDL_FLAG         =   -L$(LIBSDL_PATH) -lSDL2 -lSDL2_mixer
+SDLBIN              =   $(addprefix $(LIBSDL_PATH),$(LIBSDL))
+SDL_CURL            =   `curl https://www.libsdl.org/release/SDL2-2.0.9.zip -o sdl2.zip`
 
-SRC_NAME =	main.c \
-			error.c \
-			display.c \
-			sdl_tools.c \
-			math.c \
-			free_tab.c \
-			free_str.c \
-			move.c \
-			messages.c \
-			parse_fill_struct.c\
-			filler_funct.c
+SDLMIX_PATH         =   ./SDL2_mixer-2.0.4/
+LIBSDLMIX_ROOT      =   ./libSDL2/
+LIBSDLMIX_PATH      =   ./libSDL2/lib/
+LIBSDLMIX           =   libSDL2_mixer.a
+INCSDLMIX           =   $(LIBSDLMIX_ROOT)include/
+SDLMIXBIN           =   $(addprefix $(LIBSDLMIX_PATH),$(LIBSDLMIX))
+CURL_MIX            =   `curl https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.zip -o sdl_mix.zip`
 
-ifneq ("$(wildcard $(SDL_PATHO))","")
-	SDL = 1
-else
-	SDL = 0
-endif
+T = $(words $(OBJ))
+N = 0
+C = $(words $N)$(eval N := x $N)
+PROGRESS = "[`expr $C '*' 100 / $T`%]"
 
-all: $(NAME)
+all                 :   libft sdl sdlmix $(NAME)
 
-$(NAME): $(OBJ)
-	@make -C $(LFT_PATH)
-	@if [ $(SDL) = 0 ]; then \
-	make sdl; \
-	fi
-	@echo "$(YELLOW)[...] DOOM compilation$(END)"
-	@$(CC) -o $(NAME) $(OBJ) -lm -L $(LFT_PATH) -lft $(SDL_FLG)
-	@make draw
-	@echo "$(GREEN)[✓] DOOM Done$(END)"
+$(NAME)             :   $(OBJ) $(LIBFT)
+						@$(CC) $(CFLAG) -lm $(LIBFT_FLAG) $(LIBSDL_FLAG) -o $@ $^ -lpthread
+						@echo -e $(MESSAGE)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p $(OBJ_PATH)
-	@$(CC) $(CC_FLAGS) $(INC) -o $@ -c $<
+$(OBJDIR)%.o        :   $(SRCDIR)%.c Makefile inc/defines.h inc/doom.h inc/structs.h
+						@mkdir -p $(OBJDIR)
+						@mkdir -p ./obj/src_game
+						@mkdir -p ./obj/src_game/menu
+						@mkdir -p ./obj/src_game/parser
+						@mkdir -p ./obj/src_game/draw
+						@mkdir -p ./obj/src_game/text
+						@$(CC) $(CFLAG) -I $(INCDIR) -I $(INCLIBFT) -I $(INCSDL) -o $@ -c $<
+						@echo -ne "[$(NAME)] progress : $(PROGRESS) | $@               \r"
 
-clean:
-	@make -C $(LFT_PATH) clean
-	@rm -rf $(OBJ_PATH)
-	@echo "$(RED)[-] DOOM .o cleaned$(END)"
+libft               :   $(LIBFT)
 
-sdl:
-	$(CURL_SDL)
-	@echo "$(GREEN)------------------------------$(END)"
-	@echo "$(GREEN)--SDL ZIP SOURCES DOWNLOADED--$(END)"
-	@echo "$(GREEN)------------------------------$(END)"
-	unzip sdl2.zip
-	rm sdl2.zip
-	mkdir -p $(LIBSDL_ROOT)
-	cd $(SDL_PATHO) && ./configure --prefix=$(PWD)/$(LIBSDL_ROOT)
-	make -C $(SDL_PATHO)
-	make install -C $(SDL_PATHO)
-	@echo "$(GREEN)------------------------------$(END)"
-	@echo "$(GREEN)---------SDL COMPILED---------$(END)"
-	@echo "$(GREEN)------------------------------$(END)"
+$(LIBFT)            :   $(LIBFTDIR)
+						@make -C $(LIBFTDIR)
 
-fclean:
-	@make clean
-	@make -C $(LFT_PATH) fclean
-	@rm -rf SDL2-2.0.9
-	@rm -f $(NAME)
-	@echo "$(RED)[-] DOOM executable cleaned$(END)"
+sdl                 :   $(SDLBIN)
 
+$(SDLBIN)           :
+						$(SDL_CURL)
+						unzip sdl2.zip
+						rm sdl2.zip
+						mkdir -p $(LIBSDL_ROOT)
+						cd $(SDL_PATH) && ./configure --prefix=$(PWD)/$(LIBSDL_ROOT)
+						make -C $(SDL_PATH)
+						make install -C $(SDL_PATH)
 
-fcleanr:
-	@make clean
-	@make -C $(LFT_PATH) fclean
-	@rm -f $(NAME)
-	@echo "$(RED)[-] DOOM executable cleaned$(END)"
+sdlmix              :   $(SDLMIXBIN)
 
-fclean_all:
-	@make fclean
-	@make cllib
+$(SDLMIXBIN)        :
+						$(CURL_MIX)
+						unzip sdl_mix.zip
+						rm sdl_mix.zip
+						cd $(SDLMIX_PATH) && ./configure --prefix=$(PWD)/$(LIBSDLMIX_ROOT)
+						make -C $(SDLMIX_PATH)
+						make install -C $(SDLMIX_PATH)
 
-clean_o:
-	@rm -f $(NAME)
-	@rm -rf $(OBJ_PATH)
+clean               :
+						@make -C $(LIBFTDIR) clean
+						@rm -Rf  $(OBJDIR)
 
-re:
-	@make fclean
-	@make all
+fclean              :
+						@make -C $(LIBFTDIR) fclean
+						@echo -ne "Cleaning [$(NAME)]... In progress...\r"
+						@rm -Rf  $(OBJDIR)
+						@rm -f $(NAME)
+						@echo -e "Cleaning [$(NAME)] done !                           "
 
-rr:
-	@make fcleanr
-	@make all
+sdlclean            :
+						rm -rf $(LIBSDL_ROOT)
+						rm -rf $(SDL_PATH)
+						rm -rf $(LIBSDLMIX_ROOT)
+						rm -rf $(SDLMIX_PATH)
 
-clsdl:
-	@make -C ./lib sdl_clean
-
-draw:
-	cd makefile_sources && gcc drawing.c && ./a.out
+re                  :   fclean all
