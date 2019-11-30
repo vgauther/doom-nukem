@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/30 00:04:36 by vgauther         ###   ########.fr        #
+#    Updated: 2019/11/30 22:55:59 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,9 @@ INCFIL              =   doom.h
 OBJFIL              =   $(SRCFIL:.c=.o)
 LIBFTFIL            =   libft.a
 SRCFIL				=	main.c \
+						sdl_tools.c \
+						min_max_clamp.c \
+						free_tab.c
 
 SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))
 OBJ                 =   $(addprefix $(OBJDIR),$(OBJFIL))

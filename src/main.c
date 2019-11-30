@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/30 00:01:08 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 00:04:03 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,44 +17,9 @@ double yaw(double a, double b, double c)
 	return (a + b * c);
 }
 
-float max(float a, float b)
-{
-	return (a < b ? b : a);
-}
-
-float min(float a, float b)
-{
-	return (a > b ? b : a);
-}
-
-float clamp(int a, int b, int c)
-{
-	return (min(max(a, b), c));
-}
-
-void		sdl_clean_screen(SDL_Renderer *rend)
-{
-	SDL_SetRenderDrawColor(rend, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(rend);
-}
-
-/*
-** destroy/free render + destroy/free window
-*/
-
-void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window)
-{
-	SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(render);
-	SDL_RenderPresent(render);
-	SDL_DestroyRenderer(render);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-}
-
 double v_c_p(double x1, double y1, double x2, double y2)
 {
-	return(x1 * y2 - x2 * y1);
+	return (x1 * y2 - x2 * y1);
 }
 
 t_coor	intersect(double x1, double y1, double x2, double y2,double x3, double y3,double x4, double y4)
@@ -81,19 +46,19 @@ t_coor	intersect(double x1, double y1, double x2, double y2,double x3, double y3
 	return (coor);
 }
 
-static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int cyb, t_player p, Uint32 **textur)
+static void draw_ceiling_floor(SDL_Renderer *ren, int x, int y1, int y2, int cya, int cyb, t_player p, Uint32 **textur)
 {
 
-	double cy1;
-	double cy2;
-	int side;
-	double map_y;
-	double map_x;
-	double rot_x;
-	double rot_y;
-	int x_tex;
-	int y_tex;
-	int tmp;
+	double	cy1;
+	double	cy2;
+	double	map_y;
+	double	map_x;
+	double	rot_x;
+	double	rot_y;
+	int		x_tex;
+	int		y_tex;
+	int		tmp;
+	int		side;
 
     cy1 = (int)clamp(y1, 0, SIZE_Y-1);
     cy2 = (int)clamp(y2, 0, SIZE_Y-1);
@@ -114,15 +79,14 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 			map_x = rot_x + p.pos.x;
 			map_y = rot_y + p.pos.y;
 			if (map_x > 0)
-				x_tex = (map_x * 128) /6;
+				x_tex = (map_x * 128) / 6;
 			else
 				x_tex = 0;
 			if (map_y > 0)
-				y_tex = (map_y * 128) /6;
+				y_tex = (map_y * 128) / 6;
 			else
 				y_tex = 0;
 			tmp = (y_tex % 128) * 128 + (x_tex % 128);
-
 			SDL_SetRenderDrawColor(ren, textur[0][tmp] >> 16 & 255, textur[0][tmp] >> 8 & 255, textur[0][tmp] >> 0 & 255, 0);
 			SDL_RenderDrawPoint(ren, x, cy1);
 			cy1++;
@@ -130,16 +94,47 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
     }
 }
 
+// void		special_line(int x)
+// {
+//
+// }
+//
+// void		normal_line(int x, int y1, int y2, t_render *r)
+// {
+//
+// 	int		wall_hei_from_bottom;
+// 	double 	wall_height_scale = (15 - 1) / 128;
+// 	wall_hei_from_bottom = r->yb - y1;
+//
+// }
+//
+// void 		draw_wall_line(SDL_Renderer *ren, int x, int y1, int y2, int *ytop, t_render *r)
+// {
+// 	int y_tex_pos;
+//
+// 	y1 = clamp(y1, 0, SIZE_Y - 1);
+// 	y2 = clamp(y2, 0, SIZE_Y - 1);
+// 	if (y2 > y1)
+// 	{
+// 		if (clamp(ytop[x], 0, SIZE_Y - 1) == y1 && clamp(ytop[x], 0, SIZE_Y - 1))
+// 		{
+// 			special_line();
+// 		}
+// 		else
+// 		{
+// 			normal_line();
+// 		}
+// 	}
+// }
+
 static void vline(SDL_Renderer *ren, int x, int y1, int y2, int r, int v, int b)
 {
 	int y;
 
 	SDL_SetRenderDrawColor(ren, r, v, b, 0);
-    y1 = (int)clamp(y1, 0, SIZE_Y-1);
-    y2 = (int)clamp(y2, 0, SIZE_Y-1);
-    if(y2 == y1)
-		SDL_RenderDrawPoint(ren, x, y1);
-    else if(y2 > y1)
+    y1 = (int)clamp(y1, 0, SIZE_Y - 1);
+    y2 = (int)clamp(y2, 0, SIZE_Y - 1);
+    if(y2 >= y1)
     {
 		y = y1;
         while(y <= y2)
@@ -209,10 +204,7 @@ void calc_scaling(t_render *r)
 void print_walls(t_render r, SDL_Renderer *render, int nb_wall, int *ytop, int *ybottom, t_var *var, Uint32 **wt)
 {
 	//int z;
-	int ya;
-	int cya;
-	int yb;
-	int cyb;
+
 	int beginx;
 	int endx;
 
@@ -221,50 +213,63 @@ void print_walls(t_render r, SDL_Renderer *render, int nb_wall, int *ytop, int *
 	for(int x = beginx; x <= endx; ++x)
 	{
 		//z = ((x - r.x1) * (r.t2.z - r.t1.z) / (r.x2 - r.x1) + r.t1.z) * 8;
-		ya = (x - r.x1) * (r.y2a - r.y1a) / (r.x2 - r.x1) + r.y1a;
-		cya = clamp(ya, ytop[x],ybottom[x]); // top
-		yb = (x - r.x1) * (r.y2b - r.y1b) / (r.x2 - r.x1) + r.y1b;
-		cyb = clamp(yb, ytop[x],ybottom[x]); // bottom
-		//vline(render, x, ytop[x], cya - 1, 30, 30, 30);
-		draw_ceiling(render, x, ytop[x], cya - 1, cya, cyb, var->player, wt);
-		//vline(render, x, cyb + 1, ybottom[x], 200, 200, 200);
-		draw_ceiling(render, x, cyb + 1, SIZE_Y -1, cya, cyb, var->player, wt);
-
+		r.ya = (x - r.x1) * (r.y2a - r.y1a) / (r.x2 - r.x1) + r.y1a;
+		r.cya = clamp(r.ya, ytop[x], ybottom[x]); // top
+		r.yb = (x - r.x1) * (r.y2b - r.y1b) / (r.x2 - r.x1) + r.y1b;
+		r.cyb = clamp(r.yb, ytop[x], ybottom[x]); // bottom
+		draw_ceiling_floor(render, x, ytop[x], r.cya - 1, r.cya, r.cyb, var->player, wt);
+		draw_ceiling_floor(render, x, r.cyb + 1, SIZE_Y -1, r.cya, r.cyb, var->player, wt);
 		//unsigned r = 0x010101 * (255 - z);
 		if (nb_wall == 0)
-			vline(render, x, cya, cyb, 255, 70, 20);
+			vline(render, x, r.cya, r.cyb, 255, 70, 20);
 		else if (nb_wall == 1)
-			vline(render, x, cya, cyb, 70, 255, 20);
+			vline(render, x, r.cya, r.cyb, 70, 255, 20);
 		else if (nb_wall == 2)
-			vline(render, x, cya, cyb, 100, 100, 20);
+			vline(render, x, r.cya, r.cyb, 100, 100, 20);
 		else if (nb_wall == 3)
-			vline(render, x, cya, cyb, 0, 150, 20);
+			vline(render, x, r.cya, r.cyb, 0, 150, 20);
 		else if (nb_wall == 4)
-			vline(render, x, cya, cyb, 30, 0, 20);
+			vline(render, x, r.cya, r.cyb, 30, 0, 20);
 		else if (nb_wall == 5)
-			vline(render, x, cya, cyb, 200, 150, 20);
+			vline(render, x, r.cya, r.cyb, 200, 150, 20);
 		else if (nb_wall == 6)
-			vline(render, x, cya, cyb, 66, 15, 20);
+			vline(render, x, r.cya, r.cyb, 66, 15, 20);
 		else if (nb_wall == 7)
-			vline(render, x, cya, cyb, 98, 7, 20);
+			vline(render, x, r.cya, r.cyb, 98, 7, 20);
 		else
-			vline(render, x, cya, cyb, 0, 0, 20);
+			vline(render, x, r.cya, r.cyb, 0, 0, 20);
 	}
+}
+
+void init_nearz_farz(t_render *r)
+{
+	r->nearz = 1e-4f;
+	r->farz = 5;
+	r->nearside = 1e-5f;
+	r->farside = 20.f;
 }
 
 void neo_display(t_var *var, SDL_Renderer *render, Uint32 **wt)
 {
 	double		pyaw;
+	double		yceil;
+	double		yfloor;
 	int			ytop[SIZE_X]={0};
 	int			ybottom[SIZE_X];
 	t_render	r;
+	int 		i;
 
+
+	yceil = 15;
+	yfloor = 1 - var->player.pos.z;
 	pyaw = 0;
-	r.nearz = 1e-4f;
-	r.farz = 5;
-	r.nearside = 1e-5f;
-	r.farside = 20.f;
-    for(unsigned x=0; x < SIZE_X; ++x) ybottom[x] = SIZE_Y-1;
+	init_nearz_farz(&r);
+	i = 0;
+	while (i < SIZE_X)
+	{
+		ybottom[i] = SIZE_Y - 1;
+		i++;
+	}
 	for (unsigned nb_wall = 0; nb_wall != var->sectors[0].nb_pts - 1; nb_wall++)
 	{
 		init_wall_calcul(&r, var, nb_wall);
@@ -273,13 +278,12 @@ void neo_display(t_var *var, SDL_Renderer *render, Uint32 **wt)
 		if(r.t1.z <= 0 || r.t2.z <= 0)
 			check_wall_cut_by_the_window(&r);
 		calc_scaling(&r);
-		if(r.x1 >= r.x2 || r.x2 < 0 || r.x1 > SIZE_X - 1) continue; // Only render if it's visible
-		float yceil  = 15;
-		float yfloor = 1 - var->player.pos.z;
-		r.y1a = SIZE_Y/2 - (int)(yaw(yceil, r.t1.z, pyaw) * r.yscale1);
-		r.y1b = SIZE_Y/2 - (int)(yaw(yfloor, r.t1.z, pyaw) * r.yscale1);
-        r.y2a = SIZE_Y/2 - (int)(yaw(yceil, r.t2.z, pyaw) * r.yscale2);
-		r.y2b = SIZE_Y/2 - (int)(yaw(yfloor, r.t2.z, pyaw) * r.yscale2);
+		if(r.x1 >= r.x2 || r.x2 < 0 || r.x1 > SIZE_X - 1)
+			continue;
+		r.y1a = SIZE_Y / 2 - (int)(yaw(yceil, r.t1.z, pyaw) * r.yscale1);
+		r.y1b = SIZE_Y / 2 - (int)(yaw(yfloor, r.t1.z, pyaw) * r.yscale1);
+        r.y2a = SIZE_Y / 2 - (int)(yaw(yceil, r.t2.z, pyaw) * r.yscale2);
+		r.y2b = SIZE_Y / 2 - (int)(yaw(yfloor, r.t2.z, pyaw) * r.yscale2);
 		print_walls(r, render, nb_wall, ytop, ybottom, var, wt);
 	}
 	SDL_RenderPresent(render);
@@ -368,12 +372,19 @@ void init_map(t_var *var)
 
 void init_player(t_var *var)
 {
-		var->player.pos.x = 50;
-		var->player.pos.y = 50;
-		var->player.pos.z = 10;
-		var->player.angle = 10;
-		var->player.pcos = cos(var->player.angle * RAD);
-		var->player.psin = sin(var->player.angle * RAD);
+	var->player.pos.x = 50;
+	var->player.pos.y = 50;
+	var->player.pos.z = 10;
+	var->player.angle = 0;
+	var->player.pcos = cos(var->player.angle * RAD);
+	var->player.psin = sin(var->player.angle * RAD);
+}
+
+void	edit_player_angle(t_var *var, int x)
+{
+	var->player.angle += x;
+	var->player.pcos = cos(var->player.angle * RAD);
+	var->player.psin = sin(var->player.angle * RAD);
 }
 
 int				main(int ac, char **av)
@@ -409,16 +420,12 @@ int				main(int ac, char **av)
 		{
 			if (ev.key.keysym.sym == SDLK_a)
 			{
-				var.player.angle += 10;
-				var.player.pcos = cos(var.player.angle * RAD);
-				var.player.psin = sin(var.player.angle * RAD);
+				edit_player_angle(&var, -10);
 				neo_display(&var,ren, walll_uint);
 			}
 			else if (ev.key.keysym.sym == SDLK_d)
 			{
-				var.player.angle -= 10;
-				var.player.pcos = cos(var.player.angle * RAD);
-				var.player.psin = sin(var.player.angle * RAD);
+				edit_player_angle(&var, 10);
 				neo_display(&var,ren, walll_uint);
 			}
 		}

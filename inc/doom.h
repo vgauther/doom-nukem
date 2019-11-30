@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/29 23:54:29 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/11/30 23:56:45 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ typedef struct	s_render
 	int		y1b;
 	int		y2a;
 	int		y2b;
+	int 	cya;
+	int 	cyb;
+	int		ya;
+	int		yb;
 }				t_render;
 
 typedef struct	s_ennemy
@@ -144,5 +148,26 @@ typedef struct	s_var
 	int				w_count;
 	int				e_count;
 }				t_var;
+
+/*
+** free_tab.c
+*/
+
+void		free_tab_char(char **tab);
+
+/*
+** min_max_clamp.c
+*/
+
+double		max(double a, double b);
+double		min(double a, double b);
+int			clamp(int a, int b, int c);
+
+/*
+** sdl_tools.c
+*/
+
+void		sdl_clean_screen(SDL_Renderer *rend);
+void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
 
 #endif
