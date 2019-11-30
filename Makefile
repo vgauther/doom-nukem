@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/11/30 22:55:59 by vgauther         ###   ########.fr        #
+#    Updated: 2019/12/01 00:06:07 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ LIBFTFIL            =   libft.a
 SRCFIL				=	main.c \
 						sdl_tools.c \
 						min_max_clamp.c \
-						free_tab.c
+						free_tab.c \
+						pythagore.c \
 
 SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))
 OBJ                 =   $(addprefix $(OBJDIR),$(OBJFIL))

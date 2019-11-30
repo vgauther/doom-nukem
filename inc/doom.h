@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/11/30 23:56:45 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 00:06:41 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,12 @@ void		free_tab_char(char **tab);
 double		max(double a, double b);
 double		min(double a, double b);
 int			clamp(int a, int b, int c);
+
+/*
+** pythagore.c
+*/
+
+double		pythagore(double a, double b);
 
 /*
 ** sdl_tools.c
