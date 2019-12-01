@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/01 00:04:03 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 13:50:39 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,22 @@ static void draw_ceiling_floor(SDL_Renderer *ren, int x, int y1, int y2, int cya
 // {
 //
 // 	int		wall_hei_from_bottom;
+// 	double wall_hei_from_bottom = r->yb - y1;
 // 	double 	wall_height_scale = (15 - 1) / 128;
-// 	wall_hei_from_bottom = r->yb - y1;
+// 	double wall_width_scale = 128 / 2 / r->wall_width;
+// 	int start_x_tex;
+// 	int	end_x_tex;
 //
+// 	if (vabs(r->t2.x - r->t1.x) > vabs(r->t2.z - r->t1.z))
+// 	{
+// 		start_x_tex = (r->t1.x - )
+// 		end_x_tex =
+// 	}
+// 	else
+// 	{
+// 		start_x_tex =
+// 		end_x_tex =
+// 	}
 // }
 //
 // void 		draw_wall_line(SDL_Renderer *ren, int x, int y1, int y2, int *ytop, t_render *r)
@@ -147,10 +160,16 @@ static void vline(SDL_Renderer *ren, int x, int y1, int y2, int r, int v, int b)
 
 void init_wall_calcul(t_render *r, t_var *var, int nb_wall)
 {
+	double tmp1;
+	double tmp2;
+
 	r->v1.x = var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].x - var->player.pos.x;
 	r->v1.y = var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].y - var->player.pos.y;
 	r->v2.x = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].x - var->player.pos.x;
 	r->v2.y = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].y - var->player.pos.y;
+	tmp1 = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].x - var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].x;
+	tmp2 = var->points[var->sectors[var->maps[0].sectors[0]].pts[1 + nb_wall]].y - var->points[var->sectors[var->maps[0].sectors[0]].pts[0 + nb_wall]].y;
+	r->wall_width = pythagore(tmp1, tmp2);
 	r->t1.x = r->v1.x * var->player.psin - r->v1.y * var->player.pcos;
 	r->t1.z = r->v1.x * var->player.pcos + r->v1.y * var->player.psin;
 	r->t2.x = r->v2.x * var->player.psin - r->v2.y * var->player.pcos;
@@ -218,7 +237,9 @@ void print_walls(t_render r, SDL_Renderer *render, int nb_wall, int *ytop, int *
 		r.yb = (x - r.x1) * (r.y2b - r.y1b) / (r.x2 - r.x1) + r.y1b;
 		r.cyb = clamp(r.yb, ytop[x], ybottom[x]); // bottom
 		draw_ceiling_floor(render, x, ytop[x], r.cya - 1, r.cya, r.cyb, var->player, wt);
-		draw_ceiling_floor(render, x, r.cyb + 1, SIZE_Y -1, r.cya, r.cyb, var->player, wt);
+		//draw_ceiling_floor(render, x, r.cyb + 1, SIZE_Y -1, r.cya, r.cyb, var->player, wt);
+		vline(render, x, r.cyb + 1, SIZE_Y - 1, 150, 150, 150);
+
 		//unsigned r = 0x010101 * (255 - z);
 		if (nb_wall == 0)
 			vline(render, x, r.cya, r.cyb, 255, 70, 20);
@@ -387,6 +408,93 @@ void	edit_player_angle(t_var *var, int x)
 	var->player.psin = sin(var->player.angle * RAD);
 }
 
+void edit_key(t_var *var, int key_to_change, int new_key)
+{
+	var->key[key_to_change] = new_key;
+}
+
+void init_key(t_var *var)
+{
+	var->key[MV_FORWARD] = SDLK_w;
+	var->key[MV_BACKWARD] = SDLK_s;
+	var->key[MV_LEFT] = SDLK_a;
+	var->key[MV_RIGHT] = SDLK_d;
+	printf("%f\n", hfov);
+	printf("%f\n", vfov);
+}
+
+void move_forward(t_var *var)
+{
+	double angle;
+
+	angle = var->player.angle * RAD;
+	// if (cos(angle) > 0)
+	// {
+	// 	var->player.pos.x = var->player.pos.x + cos(angle) * 10;
+	// }
+	// else
+	if (cos(angle) != 0)
+	{
+		var->player.pos.x = var->player.pos.x + cos(angle) * 10;
+	}
+	// if (sin(angle) > 0)
+	// {
+	// 	var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+	// }
+	// else
+	if (sin(angle) != 0)
+	{
+		var->player.pos.y = var->player.pos.y + sin(angle) * 10;
+	}
+//	var->player.pos.x = var->player.pos.x - cos((var->player.angle - (hfov / 2)) * RAD);
+//	var->player.pos.y = var->player.pos.y - cos((var->player.angle - (hfov / 2)) * RAD);
+}
+
+void move_backward(t_var *var)
+{
+	double angle;
+
+	angle = var->player.angle * RAD;
+	if (cos(angle) != 0)
+	{
+		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+	}
+	if (sin(angle) != 0)
+	{
+		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+	}
+}
+
+void move_left(t_var *var)
+{
+	double angle;
+
+	angle = (var->player.angle + 90)* RAD;
+	if (cos(angle) != 0)
+	{
+		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+	}
+	if (sin(angle) != 0)
+	{
+		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+	}
+}
+
+void move_right(t_var *var)
+{
+	double angle;
+
+	angle = (var->player.angle - 90) * RAD;
+	if (cos(angle) != 0)
+	{
+		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+	}
+	if (sin(angle) != 0)
+	{
+		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+	}
+}
+
 int				main(int ac, char **av)
 {
 	SDL_Window		*win;
@@ -397,7 +505,7 @@ int				main(int ac, char **av)
 	Uint32			*walll_uint[4];
 
 	SDL_Init(SDL_INIT_EVERYTHING);
-	win = SDL_CreateWindow("DOOM", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
+	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 0);
 	init_map(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
@@ -409,6 +517,7 @@ int				main(int ac, char **av)
 	walll_uint[2] = (Uint32 *)wall[2]->pixels;
 	walll_uint[3] = (Uint32 *)wall[3]->pixels;
 	init_player(&var);
+	init_key(&var);
 	neo_display(&var,ren, walll_uint);
 	while (SDL_WaitEvent(&ev))
 	{
@@ -418,14 +527,34 @@ int				main(int ac, char **av)
 			break ;
 		else if (ev.type == SDL_KEYDOWN)
 		{
-			if (ev.key.keysym.sym == SDLK_a)
+			if (ev.key.keysym.sym == SDLK_b)
 			{
 				edit_player_angle(&var, -10);
 				neo_display(&var,ren, walll_uint);
 			}
-			else if (ev.key.keysym.sym == SDLK_d)
+			else if (ev.key.keysym.sym == SDLK_m)
 			{
 				edit_player_angle(&var, 10);
+				neo_display(&var,ren, walll_uint);
+			}
+			else if (var.key[MV_FORWARD] == ev.key.keysym.sym)
+			{
+				move_forward(&var);
+				neo_display(&var,ren, walll_uint);
+			}
+			else if (var.key[MV_BACKWARD] == ev.key.keysym.sym)
+			{
+				move_backward(&var);
+				neo_display(&var,ren, walll_uint);
+			}
+			else if (var.key[MV_LEFT] == ev.key.keysym.sym)
+			{
+				move_left(&var);
+				neo_display(&var,ren, walll_uint);
+			}
+			else if (var.key[MV_RIGHT] == ev.key.keysym.sym)
+			{
+				move_right(&var);
 				neo_display(&var,ren, walll_uint);
 			}
 		}

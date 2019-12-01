@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/01 00:06:41 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 12:32:51 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct	s_render
 	double 	farz;
 	double 	nearside;
 	double 	farside;
+	double	wall_width;
 	int 	x1;
 	int 	x2;
 	int		y1a;
@@ -126,11 +127,11 @@ typedef struct	s_sector
 
 typedef struct	s_map
 {
-	int 		*sectors; // num des secteur sur la map
-	int			nb_ennemies;
-	int			*ennemies;
-	int 		nb_weapons;
-	int			*weapons;
+	int 			*sectors; // num des secteur sur la map
+	int				nb_ennemies;
+	int				*ennemies;
+	int 			nb_weapons;
+	int				*weapons;
 }				t_map;
 
 typedef struct	s_var
@@ -147,6 +148,7 @@ typedef struct	s_var
 	int 			s_count;
 	int				w_count;
 	int				e_count;
+	int				key[4];
 }				t_var;
 
 /*
