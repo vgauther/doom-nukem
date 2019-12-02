@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/12/01 00:06:07 by vgauther         ###   ########.fr        #
+#    Updated: 2019/12/01 22:39:37 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRCFIL				=	main.c \
 						min_max_clamp.c \
 						free_tab.c \
 						pythagore.c \
+						editor/main.c
 
 SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))
 OBJ                 =   $(addprefix $(OBJDIR),$(OBJFIL))
@@ -68,11 +69,7 @@ $(NAME)             :   $(OBJ) $(LIBFT)
 
 $(OBJDIR)%.o        :   $(SRCDIR)%.c Makefile inc/defines.h inc/doom.h inc/structs.h
 						@mkdir -p $(OBJDIR)
-						@mkdir -p ./obj/src_game
-						@mkdir -p ./obj/src_game/menu
-						@mkdir -p ./obj/src_game/parser
-						@mkdir -p ./obj/src_game/draw
-						@mkdir -p ./obj/src_game/text
+						@mkdir -p ./obj/editor
 						@$(CC) $(CFLAG) -I $(INCDIR) -I $(INCLIBFT) -I $(INCSDL) -o $@ -c $<
 						@echo -ne "[$(NAME)] progress : $(PROGRESS) | $@               \r"
 

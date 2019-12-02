@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/01 13:50:39 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 22:34:14 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,7 +435,7 @@ void move_forward(t_var *var)
 	// else
 	if (cos(angle) != 0)
 	{
-		var->player.pos.x = var->player.pos.x + cos(angle) * 10;
+		var->player.pos.x = var->player.pos.x + cos(angle) * 1;
 	}
 	// if (sin(angle) > 0)
 	// {
@@ -444,7 +444,7 @@ void move_forward(t_var *var)
 	// else
 	if (sin(angle) != 0)
 	{
-		var->player.pos.y = var->player.pos.y + sin(angle) * 10;
+		var->player.pos.y = var->player.pos.y + sin(angle) * 1;
 	}
 //	var->player.pos.x = var->player.pos.x - cos((var->player.angle - (hfov / 2)) * RAD);
 //	var->player.pos.y = var->player.pos.y - cos((var->player.angle - (hfov / 2)) * RAD);
@@ -457,11 +457,11 @@ void move_backward(t_var *var)
 	angle = var->player.angle * RAD;
 	if (cos(angle) != 0)
 	{
-		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+		var->player.pos.x = var->player.pos.x - cos(angle) * 1;
 	}
 	if (sin(angle) != 0)
 	{
-		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+		var->player.pos.y = var->player.pos.y - sin(angle) * 1;
 	}
 }
 
@@ -469,14 +469,14 @@ void move_left(t_var *var)
 {
 	double angle;
 
-	angle = (var->player.angle + 90)* RAD;
+	angle = (var->player.angle + 90) * RAD;
 	if (cos(angle) != 0)
 	{
-		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+		var->player.pos.x = var->player.pos.x - cos(angle) * 1;
 	}
 	if (sin(angle) != 0)
 	{
-		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+		var->player.pos.y = var->player.pos.y - sin(angle) * 1;
 	}
 }
 
@@ -487,11 +487,97 @@ void move_right(t_var *var)
 	angle = (var->player.angle - 90) * RAD;
 	if (cos(angle) != 0)
 	{
-		var->player.pos.x = var->player.pos.x - cos(angle) * 10;
+		var->player.pos.x = var->player.pos.x - cos(angle) * 1;
 	}
 	if (sin(angle) != 0)
 	{
-		var->player.pos.y = var->player.pos.y - sin(angle) * 10;
+		var->player.pos.y = var->player.pos.y - sin(angle) * 1;
+	}
+}
+
+SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
+{
+	SDL_Rect r;
+
+	r.x = x;
+	r.y = y;
+	r.w = w;
+	r.h = h;
+	return (r);
+}
+
+void	put_surface(SDL_Renderer *r, SDL_Surface *s, SDL_Rect dimensions)
+{
+	SDL_Texture	*mon_image;
+
+	mon_image = SDL_CreateTextureFromSurface(r, s);
+	SDL_QueryTexture(mon_image, NULL, NULL, &dimensions.w, &dimensions.h);
+	SDL_SetRenderTarget(r, mon_image);
+	SDL_RenderCopy(r, mon_image, NULL, &dimensions);
+	SDL_DestroyTexture(mon_image);
+}
+
+void option()
+{
+
+}
+
+void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, int test_y, SDL_Surface *main_menu, t_var *var)
+{
+	if (ev.type == SDL_MOUSEMOTION || ev.type == SDL_MOUSEBUTTONDOWN)
+	{
+		put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
+		if (ev.motion.x > SIZE_X / 2 - 150 && ev.motion.x < SIZE_X / 2 + 150)
+		{
+			if (ev.motion.y > 350 && ev.motion.y < 500)
+			{
+				put_surface(ren, axe, create_sdl_rect(SIZE_X / 3 , 350, 0, 0));
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				{
+					var->kind_of_screen = SCREEN_ID_GAME;
+				}
+			}
+		}
+		SDL_RenderPresent(ren);
+	}
+}
+
+void select_map()
+{
+
+}
+
+void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
+{
+	if (var->key[MV_FORWARD] == ev.key.keysym.sym)
+	{
+		move_forward(var);
+		neo_display(var,ren, walll_uint);
+	}
+	else if (var->key[MV_BACKWARD] == ev.key.keysym.sym)
+	{
+		move_backward(var);
+		neo_display(var,ren, walll_uint);
+	}
+	else if (var->key[MV_LEFT] == ev.key.keysym.sym)
+	{
+		move_left(var);
+		neo_display(var,ren, walll_uint);
+	}
+	else if (var->key[MV_RIGHT] == ev.key.keysym.sym)
+	{
+		move_right(var);
+		neo_display(var,ren, walll_uint);
+	}
+	else if (ev.key.keysym.sym == SDLK_b)
+	{
+		edit_player_angle(var, -10);
+		neo_display(var,ren, walll_uint);
+	}
+	else if (ev.key.keysym.sym == SDLK_m)
+	{
+		edit_player_angle(var, 10);
+		neo_display(var,ren, walll_uint);
 	}
 }
 
@@ -503,10 +589,12 @@ int				main(int ac, char **av)
 	t_var			var;
 	SDL_Surface		*wall[4];
 	Uint32			*walll_uint[4];
+	SDL_Surface		*main_menu;
+	SDL_Surface		*axe;
 
 	SDL_Init(SDL_INIT_EVERYTHING);
-	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
-	ren = SDL_CreateRenderer(win, -1, 0);
+	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_FULLSCREEN);
+	ren = SDL_CreateRenderer(win, -1, 1);
 	init_map(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
@@ -516,9 +604,22 @@ int				main(int ac, char **av)
 	walll_uint[1] = (Uint32 *)wall[1]->pixels;
 	walll_uint[2] = (Uint32 *)wall[2]->pixels;
 	walll_uint[3] = (Uint32 *)wall[3]->pixels;
+	axe = SDL_LoadBMP("axe.bmp");
+	main_menu = SDL_LoadBMP("./menu.bmp");
 	init_player(&var);
 	init_key(&var);
-	neo_display(&var,ren, walll_uint);
+	var.kind_of_screen = SCREEN_ID_MENU;
+//	var.kind_of_screen = SCREEN_ID_GAME;
+
+	//neo_display(&var,ren, walll_uint);
+	int test_x = (1920 / 2 - SIZE_X / 2) * -1;
+	int test_y = (1080 / 2 - SIZE_Y / 2 + 90) * -1;
+
+	// int test_x = 0;
+	// int test_y = -90;
+
+	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
+	SDL_RenderPresent(ren);
 	while (SDL_WaitEvent(&ev))
 	{
 		if (ev.type == SDL_QUIT)
@@ -527,37 +628,21 @@ int				main(int ac, char **av)
 			break ;
 		else if (ev.type == SDL_KEYDOWN)
 		{
-			if (ev.key.keysym.sym == SDLK_b)
-			{
-				edit_player_angle(&var, -10);
-				neo_display(&var,ren, walll_uint);
-			}
-			else if (ev.key.keysym.sym == SDLK_m)
-			{
-				edit_player_angle(&var, 10);
-				neo_display(&var,ren, walll_uint);
-			}
-			else if (var.key[MV_FORWARD] == ev.key.keysym.sym)
-			{
-				move_forward(&var);
-				neo_display(&var,ren, walll_uint);
-			}
-			else if (var.key[MV_BACKWARD] == ev.key.keysym.sym)
-			{
-				move_backward(&var);
-				neo_display(&var,ren, walll_uint);
-			}
-			else if (var.key[MV_LEFT] == ev.key.keysym.sym)
-			{
-				move_left(&var);
-				neo_display(&var,ren, walll_uint);
-			}
-			else if (var.key[MV_RIGHT] == ev.key.keysym.sym)
-			{
-				move_right(&var);
-				neo_display(&var,ren, walll_uint);
-			}
+			if (var.kind_of_screen == SCREEN_ID_GAME)
+				game(&var, ev, ren, walll_uint);
 		}
+		else if (var.kind_of_screen == SCREEN_ID_MENU)
+		{
+			main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
+		}
+		// else if (var.kind_of_screen = SCREEN_ID_SELECTMAP)
+		// {
+		// 	select_map();
+		// }
+		// else if (var.kind_of_screen = SCREEN_ID_OPTION)
+		// {
+		// 	option();
+		// }
 	}
 	SDL_Quit();
 	exit(0);

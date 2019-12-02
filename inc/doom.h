@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/01 12:32:51 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/01 20:59:12 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # include <stdlib.h>
 # include <math.h>
 
-# define SIZE_X 608
-# define SIZE_Y 480
+# define SIZE_X 1440
+# define SIZE_Y 900
 
 # define hfov (0.73f * SIZE_Y)
 # define vfov (.2f * SIZE_Y)
@@ -149,6 +149,7 @@ typedef struct	s_var
 	int				w_count;
 	int				e_count;
 	int				key[4];
+	int				kind_of_screen;
 }				t_var;
 
 /*
