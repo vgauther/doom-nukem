@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/12/01 22:39:37 by vgauther         ###   ########.fr        #
+#    Updated: 2019/12/03 13:59:34 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,6 @@ SRCFIL				=	main.c \
 						min_max_clamp.c \
 						free_tab.c \
 						pythagore.c \
-						editor/main.c
 
 SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))
 OBJ                 =   $(addprefix $(OBJDIR),$(OBJFIL))
