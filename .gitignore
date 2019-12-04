@@ -4,3 +4,4 @@ obj/*
 SDL2-2.0.9
 libSDL2
 doom-nukem
+SDL2_mixer-2.0.4
