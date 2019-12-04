@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 11:03:12 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 16:52:39 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@
 ** display.c
 */
 
-void neo_display(t_var *var, SDL_Renderer *render, Uint32 **wt);
+void DrawScreen(t_var *var, SDL_Renderer *ren);
+
+
+//void neo_display(t_var *var, SDL_Renderer *render, Uint32 **wt);
 
 /*
 ** free_tab.c

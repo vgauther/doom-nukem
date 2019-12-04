@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 15:11:15 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:30:47 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void init_map(t_var *var)
 	var->sectors[0].neighbors = malloc(sizeof(int) * 7);
 	var->sectors[1].neighbors = malloc(sizeof(int) * 5);
  	var->sectors[0].nb_pts = 7;
-	var->sectors[1].nb_pts = 7;
+	var->sectors[1].nb_pts = 5;
 
 	var->sectors[0].pts[0] = 0;
 	var->sectors[0].pts[1] = 1;
@@ -110,8 +110,10 @@ void init_player(t_var *var)
 	var->player.pos.y = 150;
 	var->player.pos.z = 10;
 	var->player.angle = 90;
+	var->player.yaw = 0;
 	var->player.pcos = cos(var->player.angle * RAD);
 	var->player.psin = sin(var->player.angle * RAD);
+	var->player.sector = 0;
 }
 
 void	edit_player_angle(t_var *var, int x)
@@ -193,32 +195,33 @@ void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
 	if (var->key[MV_FORWARD] == ev.key.keysym.sym)
 	{
 		move_forward(var);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
+		(void)walll_uint;
 	}
 	else if (var->key[MV_BACKWARD] == ev.key.keysym.sym)
 	{
 		move_backward(var);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
 	}
 	else if (var->key[MV_LEFT] == ev.key.keysym.sym)
 	{
 		move_left(var);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
 	}
 	else if (var->key[MV_RIGHT] == ev.key.keysym.sym)
 	{
 		move_right(var);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
 	}
 	else if (ev.key.keysym.sym == SDLK_b)
 	{
 		edit_player_angle(var, -10);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
 	}
 	else if (ev.key.keysym.sym == SDLK_m)
 	{
 		edit_player_angle(var, 10);
-		neo_display(var,ren, walll_uint);
+		DrawScreen(var, ren);
 	}
 }
 
@@ -252,7 +255,7 @@ int				main(int ac, char **av)
 	var.kind_of_screen = SCREEN_ID_MENU;
 //	var.kind_of_screen = SCREEN_ID_GAME;
 
-	//neo_display(&var,ren, walll_uint);
+	//DrawScreen(&var,ren, walll_uint);
 	int test_x = (1920 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1080 / 2 - SIZE_Y / 2 + 90) * -1;
 

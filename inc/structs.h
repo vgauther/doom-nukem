@@ -6,13 +6,19 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 15:01:59 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:13:54 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
+
+typedef struct s_xy
+{
+	float x;
+	float y;
+}				t_xy;
 
 typedef struct		s_item
 {
@@ -32,9 +38,9 @@ typedef struct		s_reader
 
 typedef struct s_coor
 {
-	double 			x;
-	double 			y;
-	double 			z;
+	float 			x;
+	float 			y;
+	float 			z;
 }				t_coor;
 
 typedef struct 	s_point
@@ -53,11 +59,13 @@ typedef struct	s_sdl
 typedef struct	s_player
 {
 	t_coor 			pos;
-	double 			angle;
-	double 			psin;
-	double 			pcos;
+	float 			angle;
+	float 			psin;
+	float 			pcos;
 	int				xp;
 	int 			lvl;
+	float 			yaw;
+	int sector;
 }				t_player;
 
 typedef struct	s_color
@@ -75,15 +83,15 @@ typedef struct	s_render
 	t_coor 	t2;
 	t_coor	i1;
 	t_coor	i2;
-	double 	xscale1;
-	double 	yscale1;
-	double 	xscale2;
-	double 	yscale2;
-	double 	nearz;
-	double 	farz;
-	double 	nearside;
-	double 	farside;
-	double	wall_width;
+	float 	xscale1;
+	float 	yscale1;
+	float 	xscale2;
+	float 	yscale2;
+	float 	nearz;
+	float 	farz;
+	float 	nearside;
+	float 	farside;
+	float	wall_width;
 	int 	x1;
 	int 	x2;
 	int		y1a;
