@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 21:56:31 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 22:38:00 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void init_map(t_var *var)
 
 	var->points[11].x = 150;
 	var->points[11].y = 250;
-
-
 
 	var->sectors = malloc(sizeof(t_sector) * 2);
 
@@ -226,6 +224,14 @@ void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
 	}
 }
 
+void init_farz_nearz(t_var *v)
+{
+	v->nearz = 1e-4f;
+	v->farz = 5;
+	v->nearside = 1e-5f;
+	v->farside = 20.f;
+}
+
 int				main(int ac, char **av)
 {
 	SDL_Window		*win;
@@ -242,6 +248,7 @@ int				main(int ac, char **av)
 		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 1);
 	init_map(&var);
+	init_farz_nearz(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
 	wall[2] = SDL_LoadBMP("./assets/t3.bmp");

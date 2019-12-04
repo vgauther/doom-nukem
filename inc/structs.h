@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 17:13:54 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 23:19:38 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-typedef struct s_xy
+typedef struct		s_xy
 {
-	float x;
-	float y;
-}				t_xy;
+	double			x;
+	double			y;
+}					t_xy;
 
 typedef struct		s_item
 {
@@ -160,6 +160,33 @@ typedef struct	s_var
 	int				e_count;
 	int				key[4];
 	int				kind_of_screen;
+	double			nearz;
+	double			farz;
+	double			nearside;
+	double			farside;
 }				t_var;
 
+typedef struct s_draw
+{
+	double		vx1;
+	double		vy1;
+	double		vx2;
+	double		vy2;
+	double		tx1;
+	double		tz1;
+	double		tx2;
+	double		tz2;
+	int			y1a;
+	int			y1b;
+	int			y2a;
+	int			y2b;
+	int			ny1a;
+	int			ny1b;
+	int			ny2a;
+	int			ny2b;
+	int			x1;
+	int			x2;
+	int			beginx;
+	int			endx;
+}				t_draw;
 #endif
