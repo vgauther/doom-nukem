@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 17:30:47 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:38:36 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void init_map(t_var *var)
 	var->sectors[1].pts[2] = 9;
 	var->sectors[1].pts[3] = 10;
 	var->sectors[1].pts[4] = 11;
-	var->sectors[1].floor = 0;
-	var->sectors[1].ceilling = 30;
+	var->sectors[1].floor = 5;
+	var->sectors[1].ceilling = 40;
 
 	var->sectors[1].neighbors[0] = -1;
 	var->sectors[1].neighbors[1] = -1;
