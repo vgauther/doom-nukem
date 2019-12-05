@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 10:52:05 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 16:28:51 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,20 +137,15 @@ void init_key(t_var *var)
 	var->key[MV_RIGHT] = SDLK_d;
 }
 
-SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
+void option(SDL_Renderer *ren)
 {
-	SDL_Rect r;
+	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
+	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
+	SDL_Surface *s;
 
-	r.x = x;
-	r.y = y;
-	r.w = w;
-	r.h = h;
-	return (r);
-}
+	s = SDL_LoadBMP("./opt.bmp");
 
-void option()
-{
-
+	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
 }
 
 void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, int test_y, SDL_Surface *main_menu, t_var *var)
@@ -158,14 +153,40 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 	if (ev.type == SDL_MOUSEMOTION || ev.type == SDL_MOUSEBUTTONDOWN)
 	{
 		put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
-		if (ev.motion.x > SIZE_X / 2 - 150 && ev.motion.x < SIZE_X / 2 + 150)
+		if (ev.motion.x > SIZE_X / 2 - 210 && ev.motion.x < SIZE_X / 2 + 200)
 		{
-			if (ev.motion.y > 350 && ev.motion.y < 500)
+			if (ev.motion.y > SIZE_Y / 2 - 140 && ev.motion.y < SIZE_Y / 2 - 20)
 			{
-				put_surface(ren, axe, create_sdl_rect(SIZE_X / 3 , 350, 0, 0));
+				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 - (axe->h / 2) - 85, 0, 0));
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_GAME;
+				}
+			}
+			else if (ev.motion.y > SIZE_Y / 2 - 80 && ev.motion.y < SIZE_Y / 2 + 80)
+			{
+				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 - 20, 0, 0));
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				{
+					var->kind_of_screen = SCREEN_ID_SELECTMAP;
+				}
+			}
+			else if (ev.motion.y > SIZE_Y / 2 - 60 && ev.motion.y < SIZE_Y / 2 + 180)
+			{
+				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 300, SIZE_Y / 2 + 80, 0, 0));
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				{
+					var->kind_of_screen = SCREEN_ID_OPTION;
+					option(ren);
+				}
+			}
+			else if (ev.motion.y > SIZE_Y / 2 + 80 && ev.motion.y < SIZE_Y / 2 + 280)
+			{
+				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 + 180, 0, 0));
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				{
+					SDL_Quit();
+					exit(0);
 				}
 			}
 		}
@@ -175,7 +196,7 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 
 void select_map()
 {
-
+	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 }
 
 void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
@@ -234,7 +255,7 @@ int				main(int ac, char **av)
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
+		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_FULLSCREEN);
 	ren = SDL_CreateRenderer(win, -1, 1);
 	init_map(&var);
 	init_farz_nearz(&var);
@@ -251,9 +272,10 @@ int				main(int ac, char **av)
 	init_player(&var);
 	init_key(&var);
 	var.kind_of_screen = SCREEN_ID_MENU;
+	var.number_of_sector = 2;
 
-	int test_x = (1920 / 2 - SIZE_X / 2) * -1;
-	int test_y = (1080 / 2 - SIZE_Y / 2 + 90) * -1;
+	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
+	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 
 	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 	SDL_RenderPresent(ren);

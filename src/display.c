@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 11:33:21 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 14:31:11 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,15 +209,48 @@ void calc_scale(t_draw *d)
 	d->x2 = SIZE_X / 2 - (int)(d->tx2 * d->xscale2);
 }
 
-void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
+void sectorno_and_network(t_draw *d, double yow)
 {
-	int NumSectors = 2;
+	int s2;
+
+	s2 = SIZE_Y / 2;
+	d->y1a = s2 - (int)(yaw(d->yceil, d->tz1, yow) * d->yscale1);
+	d->y1b = s2 - (int)(yaw(d->yfloor, d->tz1, yow) * d->yscale1);
+	d->y2a = s2 - (int)(yaw(d->yceil, d->tz2, yow) * d->yscale2);
+	d->y2b = s2 - (int)(yaw(d->yfloor, d->tz2, yow) * d->yscale2);
+	d->ny1a = s2 - (int)(yaw(d->nyceil, d->tz1, yow) * d->yscale1);
+	d->ny1b = s2 - (int)(yaw(d->nyfloor, d->tz1, yow) * d->yscale1);
+	d->ny2a = s2 - (int)(yaw(d->nyceil, d->tz2, yow) * d->yscale2);
+	d->ny2b = s2 - (int)(yaw(d->nyfloor, d->tz2, yow) * d->yscale2);
+}
+
+void calc_ny(t_draw *d, int z, t_var *var, int nei)
+{
+	d->nyceil = 0;
+	d->nyfloor = 0;
+	if (nei >= 0)
+	{
+		d->nyceil = var->sectors[nei].ceilling - z;
+		d->nyfloor = var->sectors[nei].floor - z;
+	}
+}
+
+void	troncage(t_draw *d, t_var *var)
+{
 	t_xy i1;
 	t_xy i2;
+
+	i1 = intersect(d->tx1, d->tz1, d->tx2, d->tz2, -var->nearside, var->nearz, -var->farside, var->farz);
+	i2 = intersect(d->tx1, d->tz1, d->tx2, d->tz2, var->nearside, var->nearz, var->farside, var->farz);
+	check_troncage(d, var, i1, i2);
+}
+
+void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
+{
     struct item { int sectorno,sx1,sx2; } queue[MAX_QUEUE], *head=queue, *tail=queue;
     int ytop[SIZE_X];
 	int ybottom[SIZE_X];
-	int renderedsectors[NumSectors];
+	int renderedsectors[var->number_of_sector];
 	int x;
 	t_draw d;
 	int neighbor;
@@ -229,12 +262,9 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 		ybottom[x] = SIZE_Y - 1;
 		x++;
 	}
-	x = 0;
-	while (x < NumSectors)
-	{
+	x = -1;
+	while (++x < var->number_of_sector)
 		renderedsectors[x] = 0;
-		x++;
-	}
     *head = (struct item) { var->player.sector, 0, SIZE_X - 1 };
     if(++head == queue + MAX_QUEUE)
 		head = queue;
@@ -246,38 +276,21 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
     	if(renderedsectors[now.sectorno] & 0x21)
 			continue;
     	++renderedsectors[now.sectorno];
-		for(unsigned int s = 0; s < var->sectors[now.sectorno].nb_pts; ++s)
+		for (unsigned int s = 0; s < var->sectors[now.sectorno].nb_pts - 1; ++s)
     	{
 			init_vertex(&d, var, now.sectorno, s);
         	if(d.tz1 <= 0 && d.tz2 <= 0)
 				continue;
         	if(d.tz1 <= 0 || d.tz2 <= 0)
-        	{
-            	i1 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, -var->nearside, var->nearz, -var->farside, var->farz);
-            	i2 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, var->nearside, var->nearz, var->farside, var->farz);
-				check_troncage(&d, var, i1, i2);
-			}
+				troncage(&d, var);
 			calc_scale(&d);
         	if(d.x1 >= d.x2 || d.x2 < now.sx1 || d.x1 > now.sx2)
 				continue;
         	d.yceil = var->sectors[now.sectorno].ceilling - var->player.pos.z;
         	d.yfloor = var->sectors[now.sectorno].floor - var->player.pos.z;
         	neighbor = var->sectors[now.sectorno].neighbors[s];
-        	d.nyceil = 0;
-			d.nyfloor = 0;
-        	if (neighbor >= 0)
-        	{
-            	d.nyceil = var->sectors[neighbor].ceilling - var->player.pos.z;
-            	d.nyfloor = var->sectors[neighbor].floor - var->player.pos.z;
-        	}
-        	d.y1a = SIZE_Y / 2 - (int)(yaw(d.yceil, d.tz1, var->player.yaw) * d.yscale1);
-			d.y1b = SIZE_Y / 2 - (int)(yaw(d.yfloor, d.tz1, var->player.yaw) * d.yscale1);
-        	d.y2a = SIZE_Y / 2 - (int)(yaw(d.yceil, d.tz2, var->player.yaw) * d.yscale2);
-			d.y2b = SIZE_Y / 2 - (int)(yaw(d.yfloor, d.tz2, var->player.yaw) * d.yscale2);
-        	d.ny1a = SIZE_Y / 2 - (int)(yaw(d.nyceil, d.tz1, var->player.yaw) * d.yscale1);
-			d.ny1b = SIZE_Y / 2 - (int)(yaw(d.nyfloor, d.tz1, var->player.yaw) * d.yscale1);
-        	d.ny2a = SIZE_Y / 2 - (int)(yaw(d.nyceil, d.tz2, var->player.yaw) * d.yscale2);
-			d.ny2b = SIZE_Y / 2 - (int)(yaw(d.nyfloor, d.tz2, var->player.yaw) * d.yscale2);
+			calc_ny(&d, var->player.pos.z, var, neighbor);
+			sectorno_and_network(&d, var->player.yaw);
         	d.beginx = max(d.x1, now.sx1);
 			d.endx = min(d.x2, now.sx2);
 			draw_wals(neighbor, ren, var, wt, d.yfloor, d.yceil, d, ytop, ybottom);

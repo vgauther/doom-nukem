@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 10:52:58 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 13:21:33 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ double		pythagore(double a, double b);
 /*
 ** sdl_tools.c
 */
-
+SDL_Rect	create_sdl_rect(int x, int y, int w, int h);
 void		sdl_clean_screen(SDL_Renderer *rend);
 void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
 void		put_surface(SDL_Renderer *r, SDL_Surface *s, SDL_Rect dimensions);

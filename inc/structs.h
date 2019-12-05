@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 11:21:40 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 11:42:36 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct	s_player
 	float 			pcos;
 	int				xp;
 	int 			lvl;
-	float 			yaw;
+	double 			yaw;
 	int sector;
 }				t_player;
 
@@ -160,6 +160,7 @@ typedef struct	s_var
 	int				e_count;
 	int				key[4];
 	int				kind_of_screen;
+	int 			number_of_sector;
 	double			nearz;
 	double			farz;
 	double			nearside;
