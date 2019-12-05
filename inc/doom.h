@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 21:57:06 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 10:52:58 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@
 */
 
 void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt);
-
-
-//void neo_display(t_var *var, SDL_Renderer *render, Uint32 **wt);
 
 /*
 ** free_tab.c
@@ -68,5 +65,6 @@ double		pythagore(double a, double b);
 
 void		sdl_clean_screen(SDL_Renderer *rend);
 void		ft_clean_quit(SDL_Renderer *render, SDL_Window *window);
+void		put_surface(SDL_Renderer *r, SDL_Surface *s, SDL_Rect dimensions);
 
 #endif

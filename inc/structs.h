@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 23:19:38 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 11:21:40 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,18 @@ typedef struct	s_var
 	double			farside;
 }				t_var;
 
+typedef struct s_draw_walls
+{
+	int			ya;
+	int			cya;
+	int			yb;
+	int			cyb;
+	int			nya;
+	int			cnya;
+	int			nyb;
+	int			cnyb;
+}				t_draw_walls;
+
 typedef struct s_draw
 {
 	double		vx1;
@@ -176,6 +188,14 @@ typedef struct s_draw
 	double		tz1;
 	double		tx2;
 	double		tz2;
+	double		xscale1;
+	double		yscale1;
+	double		xscale2;
+	double		yscale2;
+	double		nyceil;
+	double		nyfloor;
+	double		yceil;
+	double		yfloor;
 	int			y1a;
 	int			y1b;
 	int			y2a;

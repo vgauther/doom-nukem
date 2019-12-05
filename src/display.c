@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 23:27:18 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 11:33:21 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,56 +163,50 @@ void check_troncage(t_draw *d, t_var *var, t_xy i1, t_xy i2)
 
 void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfloor, int yceil, t_draw d, int *ytop, int *ybottom)
 {
-	int ya;
-	int cya;
-	int yb;
-	int cyb;
-	int nya;
-	int cnya;
-	int nyb;
-	int cnyb;
-	
-	for(int x = d.beginx; x <= d.endx; ++x)
-	{
-		/* Calculate the Z coordinate for this point. (Only used for lighting.) */
-		int z = ((x - d.x1) * (d.tz2 - d.tz1) / (d.x2 - d.x1) + d.tz1) * 2;
-		/* Acquire the Y coordinates for our ceiling & floor for this X coordinate. Clamp them. */
-		ya = (x - d.x1) * (d.y2a - d.y1a) / (d.x2 - d.x1) + d.y1a;
-		cya = clamp(ya, ytop[x], ybottom[x]); // top
-		yb = (x - d.x1) * (d.y2b - d.y1b) / (d.x2 - d.x1) + d.y1b;
-		cyb = clamp(yb, ytop[x], ybottom[x]); // bottom
-		/* Render ceiling: everything above this sector's ceiling height. */
-		//vline(ren, x, ytop[x], cya - 1, 0x111111, 0x222222, 0x111111);
-		draw_ceiling(ren, x, ytop[x], cya - 1, cya, cyb, var->player, wt, yfloor, yceil);
+	t_draw_walls dw;
+	int x;
+	int z;
 
-		/* Render floor: everything below this sector's floor height. */
-		draw_ceiling(ren, x, cyb + 1, ybottom[x], cya, cyb, var->player, wt, yfloor, yceil);
-		//vline(ren, x, cyb + 1, ybottom[x], 0x0000FF, 0x0000AA, 0x0000FF);
-		/* Is there another sector behind this edge? */
+	x = d.beginx;
+	while (x++ <= d.endx)
+	{
+		z = ((x - d.x1) * (d.tz2 - d.tz1) / (d.x2 - d.x1) + d.tz1) * 2;
+		dw.ya = (x - d.x1) * (d.y2a - d.y1a) / (d.x2 - d.x1) + d.y1a;
+		dw.cya = clamp(dw.ya, ytop[x], ybottom[x]);
+		dw.yb = (x - d.x1) * (d.y2b - d.y1b) / (d.x2 - d.x1) + d.y1b;
+		dw.cyb = clamp(dw.yb, ytop[x], ybottom[x]);
+		draw_ceiling(ren, x, ytop[x], dw.cya - 1, dw.cya, dw.cyb, var->player, wt, yfloor, yceil);
+		draw_ceiling(ren, x, dw.cyb + 1, ybottom[x], dw.cya, dw.cyb, var->player, wt, yfloor, yceil);
 		if(neighbor >= 0)
 		{
-			/* Same for _their_ floor and ceiling */
-			nya = (x - d.x1) * (d.ny2a - d.ny1a) / (d.x2 - d.x1) + d.ny1a;
-			cnya = clamp(nya, ytop[x], ybottom[x]);
-			nyb = (x - d.x1) * (d.ny2b - d.ny1b) / (d.x2 - d.x1) + d.ny1b;
-			cnyb = clamp(nyb, ytop[x], ybottom[x]);
-			/* If our ceiling is higher than their ceiling, render upper wall */
+			dw.nya = (x - d.x1) * (d.ny2a - d.ny1a) / (d.x2 - d.x1) + d.ny1a;
+			dw.cnya = clamp(dw.nya, ytop[x], ybottom[x]);
+			dw.nyb = (x - d.x1) * (d.ny2b - d.ny1b) / (d.x2 - d.x1) + d.ny1b;
+			dw.cnyb = clamp(dw.nyb, ytop[x], ybottom[x]);
 			unsigned r1 = 0x010101 * (255 - z);
 			unsigned r2 = 0x040007 * (31 - z / 8);
-			vline(ren, x, cya, cnya - 1, 0, x == d.x1 || x == d.x2 ? 0 : r1, 0); // Between our and their ceiling
-			ytop[x] = clamp(max(cya, cnya), ytop[x], SIZE_Y - 1);   // Shrink the remaining window below these ceilings
-			/* If our floor is lower than their floor, render bottom wall */
-			vline(ren, x, cnyb + 1, cyb, 0, x == d.x1 || x == d.x2 ? 0 : r2, 0); // Between their and our floor
-			ybottom[x] = clamp(min(cyb, cnyb), 0, ybottom[x]); // Shrink the remaining window above these floors
+			vline(ren, x, dw.cya, dw.cnya - 1, 0, x == d.x1 || x == d.x2 ? 0 : r1, 0);
+			ytop[x] = clamp(max(dw.cya, dw.nya), ytop[x], SIZE_Y - 1);
+			vline(ren, x, dw.cnyb + 1, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r2, 0);
+			ybottom[x] = clamp(min(dw.cyb, dw.cnyb), 0, ybottom[x]);
 		}
 		else
 		{
-			/* There's no neighbor. Render wall from top (cya = ceiling level) to bottom (cyb = floor level). */
 			z = z > 255 ? 255 : z;
 			unsigned r = 0x010101 * (255 - z);
-			vline(ren, x, cya, cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
 		}
 	}
+}
+
+void calc_scale(t_draw *d)
+{
+	d->xscale1 = hfov / d->tz1;
+	d->yscale1 = vfov / d->tz1;
+	d->x1 = SIZE_X / 2 - (int)(d->tx1 * d->xscale1);
+	d->xscale2 = hfov / d->tz2;
+	d->yscale2 = vfov / d->tz2;
+	d->x2 = SIZE_X / 2 - (int)(d->tx2 * d->xscale2);
 }
 
 void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
@@ -220,24 +214,13 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 	int NumSectors = 2;
 	t_xy i1;
 	t_xy i2;
-	int MaxQueue = 32;  // maximum number of pending portal renders
-    struct item { int sectorno,sx1,sx2; } queue[MaxQueue], *head=queue, *tail=queue;
+    struct item { int sectorno,sx1,sx2; } queue[MAX_QUEUE], *head=queue, *tail=queue;
     int ytop[SIZE_X];
 	int ybottom[SIZE_X];
 	int renderedsectors[NumSectors];
 	int x;
 	t_draw d;
-	double xscale1;
-	double yscale1;
-	double xscale2;
-	double yscale2;
-
-
 	int neighbor;
-	double nyceil;
-	double nyfloor;
-	double yceil;
-	double yfloor;
 
 	x = 0;
     while (x < SIZE_X)
@@ -252,80 +235,60 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 		renderedsectors[x] = 0;
 		x++;
 	}
-    /* Begin whole-screen rendering from where the player is. */
     *head = (struct item) { var->player.sector, 0, SIZE_X - 1 };
-    if(++head == queue + MaxQueue)
+    if(++head == queue + MAX_QUEUE)
 		head = queue;
-
     while(head != tail)
 	{
-    /* Pick a sector & slice from the queue to draw */
-    const struct item now = *tail;
-    if(++tail == queue + MaxQueue)
-		tail = queue;
-    if(renderedsectors[now.sectorno] & 0x21)
-		continue; // Odd = still rendering, 0x20 = give up
-    ++renderedsectors[now.sectorno];
-	//const struct sector* const sect = &sectors[now.sectorno];
-    /* Render each wall of this sector that is facing towards player. */
-	for(unsigned int s = 0; s < var->sectors[now.sectorno].nb_pts - 1; ++s)
-    {
-		init_vertex(&d, var, now.sectorno, s);
-        /* Is the wall at least partially in front of the player? */
-        if(d.tz1 <= 0 && d.tz2 <= 0)
+    	const struct item now = *tail;
+    	if(++tail == queue + MAX_QUEUE)
+			tail = queue;
+    	if(renderedsectors[now.sectorno] & 0x21)
 			continue;
-        /* If it's partially behind the player, clip it against player's view frustrum */
-        if(d.tz1 <= 0 || d.tz2 <= 0)
-        {
-            // Find an intersection between the wall and the approximate edges of player's view
-            i1 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, -var->nearside, var->nearz, -var->farside, var->farz);
-            i2 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, var->nearside, var->nearz, var->farside, var->farz);
-			check_troncage(&d, var, i1, i2);
-		}
-        /* Do perspective transformation */
-        xscale1 = hfov / d.tz1;
-		yscale1 = vfov / d.tz1;
-		d.x1 = SIZE_X / 2 - (int)(d.tx1 * xscale1);
-        xscale2 = hfov / d.tz2;
-		yscale2 = vfov / d.tz2;
-		d.x2 = SIZE_X / 2 - (int)(d.tx2 * xscale2);
-        if(d.x1 >= d.x2 || d.x2 < now.sx1 || d.x1 > now.sx2)
-			continue; // Only render if it's visible
-        /* Acquire the floor and ceiling heights, relative to where the player's view is */
-        yceil = var->sectors[now.sectorno].ceilling - var->player.pos.z;
-        yfloor = var->sectors[now.sectorno].floor - var->player.pos.z;
-        /* Check the edge type. neighbor=-1 means wall, other=boundary between two sectors. */
-        neighbor = var->sectors[now.sectorno].neighbors[s];
-        nyceil = 0;
-		nyfloor = 0;
-        if (neighbor >= 0) // Is another sector showing through this portal?
-        {
-            nyceil = var->sectors[neighbor].ceilling - var->player.pos.z;
-            nyfloor = var->sectors[neighbor].floor - var->player.pos.z;
-        }
-        /* Project our ceiling & floor heights into screen coordinates (Y coordinate) */
-        d.y1a = SIZE_Y / 2 - (int)(yaw(yceil, d.tz1, var->player.yaw) * yscale1);
-		d.y1b = SIZE_Y / 2 - (int)(yaw(yfloor, d.tz1, var->player.yaw) * yscale1);
-        d.y2a = SIZE_Y / 2 - (int)(yaw(yceil, d.tz2, var->player.yaw) * yscale2);
-		d.y2b = SIZE_Y / 2 - (int)(yaw(yfloor, d.tz2, var->player.yaw) * yscale2);
-        /* The same for the neighboring sector */
-        d.ny1a = SIZE_Y / 2 - (int)(yaw(nyceil, d.tz1, var->player.yaw) * yscale1);
-		d.ny1b = SIZE_Y / 2 - (int)(yaw(nyfloor, d.tz1, var->player.yaw) * yscale1);
-        d.ny2a = SIZE_Y / 2 - (int)(yaw(nyceil, d.tz2, var->player.yaw) * yscale2);
-		d.ny2b = SIZE_Y / 2 - (int)(yaw(nyfloor, d.tz2, var->player.yaw) * yscale2);
-
-        /* Render the wall. */
-        d.beginx = max(d.x1, now.sx1);
-		d.endx = min(d.x2, now.sx2);
-		draw_wals(neighbor, ren, var, wt, yfloor, yceil, d, ytop, ybottom);
-        /* Schedule the neighboring sector for rendering within the window formed by this wall. */
-        if(neighbor >= 0 && d.endx >= d.beginx && (head + MaxQueue + 1 - tail) % MaxQueue)
-        {
-            *head = (struct item) { neighbor, d.beginx, d.endx };
-            if(++head == queue+MaxQueue) head = queue;
-        }
-    } // for s in sector's edges
-    ++renderedsectors[now.sectorno];
-    }  // render any other queued sectors
+    	++renderedsectors[now.sectorno];
+		for(unsigned int s = 0; s < var->sectors[now.sectorno].nb_pts; ++s)
+    	{
+			init_vertex(&d, var, now.sectorno, s);
+        	if(d.tz1 <= 0 && d.tz2 <= 0)
+				continue;
+        	if(d.tz1 <= 0 || d.tz2 <= 0)
+        	{
+            	i1 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, -var->nearside, var->nearz, -var->farside, var->farz);
+            	i2 = intersect(d.tx1, d.tz1, d.tx2, d.tz2, var->nearside, var->nearz, var->farside, var->farz);
+				check_troncage(&d, var, i1, i2);
+			}
+			calc_scale(&d);
+        	if(d.x1 >= d.x2 || d.x2 < now.sx1 || d.x1 > now.sx2)
+				continue;
+        	d.yceil = var->sectors[now.sectorno].ceilling - var->player.pos.z;
+        	d.yfloor = var->sectors[now.sectorno].floor - var->player.pos.z;
+        	neighbor = var->sectors[now.sectorno].neighbors[s];
+        	d.nyceil = 0;
+			d.nyfloor = 0;
+        	if (neighbor >= 0)
+        	{
+            	d.nyceil = var->sectors[neighbor].ceilling - var->player.pos.z;
+            	d.nyfloor = var->sectors[neighbor].floor - var->player.pos.z;
+        	}
+        	d.y1a = SIZE_Y / 2 - (int)(yaw(d.yceil, d.tz1, var->player.yaw) * d.yscale1);
+			d.y1b = SIZE_Y / 2 - (int)(yaw(d.yfloor, d.tz1, var->player.yaw) * d.yscale1);
+        	d.y2a = SIZE_Y / 2 - (int)(yaw(d.yceil, d.tz2, var->player.yaw) * d.yscale2);
+			d.y2b = SIZE_Y / 2 - (int)(yaw(d.yfloor, d.tz2, var->player.yaw) * d.yscale2);
+        	d.ny1a = SIZE_Y / 2 - (int)(yaw(d.nyceil, d.tz1, var->player.yaw) * d.yscale1);
+			d.ny1b = SIZE_Y / 2 - (int)(yaw(d.nyfloor, d.tz1, var->player.yaw) * d.yscale1);
+        	d.ny2a = SIZE_Y / 2 - (int)(yaw(d.nyceil, d.tz2, var->player.yaw) * d.yscale2);
+			d.ny2b = SIZE_Y / 2 - (int)(yaw(d.nyfloor, d.tz2, var->player.yaw) * d.yscale2);
+        	d.beginx = max(d.x1, now.sx1);
+			d.endx = min(d.x2, now.sx2);
+			draw_wals(neighbor, ren, var, wt, d.yfloor, d.yceil, d, ytop, ybottom);
+        	if(neighbor >= 0 && d.endx >= d.beginx && (head + MAX_QUEUE + 1 - tail) % MAX_QUEUE)
+        	{
+            	*head = (struct item) { neighbor, d.beginx, d.endx };
+            	if(++head == queue+MAX_QUEUE)
+					head = queue;
+        	}
+    	}
+    	++renderedsectors[now.sectorno];
+    }
 	SDL_RenderPresent(ren);
 }

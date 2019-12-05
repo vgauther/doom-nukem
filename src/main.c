@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/04 22:38:00 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 10:52:05 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,17 +146,6 @@ SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
 	r.w = w;
 	r.h = h;
 	return (r);
-}
-
-void	put_surface(SDL_Renderer *r, SDL_Surface *s, SDL_Rect dimensions)
-{
-	SDL_Texture	*mon_image;
-
-	mon_image = SDL_CreateTextureFromSurface(r, s);
-	SDL_QueryTexture(mon_image, NULL, NULL, &dimensions.w, &dimensions.h);
-	SDL_SetRenderTarget(r, mon_image);
-	SDL_RenderCopy(r, mon_image, NULL, &dimensions);
-	SDL_DestroyTexture(mon_image);
 }
 
 void option()
