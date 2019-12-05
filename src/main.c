@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 16:28:51 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 16:48:53 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,18 @@ void option(SDL_Renderer *ren)
 	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
 }
 
+void select_map(SDL_Renderer *ren)
+{
+	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
+	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
+	SDL_Surface *s;
+
+	s = SDL_LoadBMP("./sm.bmp");
+
+	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
+	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
+}
+
 void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, int test_y, SDL_Surface *main_menu, t_var *var)
 {
 	if (ev.type == SDL_MOUSEMOTION || ev.type == SDL_MOUSEBUTTONDOWN)
@@ -169,6 +181,7 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_SELECTMAP;
+					select_map(ren);
 				}
 			}
 			else if (ev.motion.y > SIZE_Y / 2 - 60 && ev.motion.y < SIZE_Y / 2 + 180)
@@ -192,11 +205,6 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 		}
 		SDL_RenderPresent(ren);
 	}
-}
-
-void select_map()
-{
-	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 }
 
 void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
@@ -255,7 +263,7 @@ int				main(int ac, char **av)
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_FULLSCREEN);
+		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 1);
 	init_map(&var);
 	init_farz_nearz(&var);

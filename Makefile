@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/12/04 11:03:35 by vgauther         ###   ########.fr        #
+#    Updated: 2019/12/05 17:18:06 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,7 @@ all                 :   libft sdl sdlmix $(NAME)
 $(NAME)             :   $(OBJ) $(LIBFT)
 						@$(CC) $(CFLAG) -lm $(LIBFT_FLAG) $(LIBSDL_FLAG) -o $@ $^ -lpthread
 						@echo -e $(MESSAGE)
+						@cd makefile_sources && gcc drawing.c && ./a.out
 
 $(OBJDIR)%.o        :   $(SRCDIR)%.c Makefile inc/defines.h inc/doom.h inc/structs.h
 						@mkdir -p $(OBJDIR)
