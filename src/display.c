@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 14:31:11 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 23:21:09 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,14 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 	int x_tex;
 	int y_tex;
 	int tmp;
+	int w_tex;
+	int h_tex;
+
 
     cy1 = (int)clamp(y1, 0, SIZE_Y - 1);
     cy2 = (int)clamp(y2, 0, SIZE_Y - 1);
+	w_tex = 128;
+	h_tex = 128;
     if(y2 >= y1)
     {
         while(cy1 <= cy2)
@@ -50,14 +55,14 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 			map_x = rot_x + p.pos.x;
 			map_y = rot_y + p.pos.y;
 			if (map_x > 0)
-				x_tex = (map_x * 128) / 6;
+				x_tex = (map_x * w_tex) / 6;
 			else
 				x_tex = 0;
 			if (map_y > 0)
-				y_tex = (map_y * 128) / 6;
+				y_tex = (map_y * w_tex) / 6;
 			else
 				y_tex = 0;
-			tmp = (y_tex % 128) * 128 + (x_tex % 128);
+			tmp = (y_tex % h_tex) * w_tex + (x_tex % w_tex);
 			SDL_SetRenderDrawColor(ren, textur[1][tmp] >> 16 & 255, textur[1][tmp] >> 8 & 255, textur[1][tmp] >> 0 & 255, 0);
 			SDL_RenderDrawPoint(ren, x, cy1);
 			cy1++;

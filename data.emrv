@@ -1,14 +1,22 @@
 # r means resume nb of point, nb of sector,/* nb of texture*/, nb of map, nb of weapon, nb of ennemies
-[r,5,1,1,0,0]
+[r,12,2,1,0,0]
 # p means point, coor x, coor y
 [p,0,0]
 [p,250,0]
 [p,250,250]
+[p,150,250]
+[p,100,250]
 [p,0,250]
 [p,0,0]
+[p,150,250]
+[p,150,350]
+[p,100,350]
+[p,100,250]
+[p,150,250]
 # w means weapon, name[4], magasin, ammo
 # e means ennemy, name[4], hp, xp
 # s means sector, nb of points, point num | floor, ceilling
-[s,5,0,1,2,3,4|0,30]
+[s,7,0,1,2,3,4,5,6|0,30]
+[s,5,7,8,9,10,11|5,25]
 # m means map, nb of sectors, sectors list | number of weapons , weapon coor =  num,x,y | number of ennemies, ennemies coor =  num,x,y
-[m,1,0|0,.|0,.]
+[m,2,0,1|0,.|0,.]

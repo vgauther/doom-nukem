@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 13:21:33 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/05 19:13:26 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,17 @@ void		move_right(t_var *var);
 void		move_left(t_var *var);
 void		move_forward(t_var *var);
 void		move_backward(t_var *var);
+
+/*
+** parsing functions
+*/
+
+void	fill_data_struct(t_var *var);
+void	fill_points(t_var *var, char *buff);
+void	fill_weapons(t_var *var, char *buff);
+void	fill_ennemies(t_var *var, char *buff);
+void	fill_sectors(t_var *var, char *buff);
+
 
 /*
 ** pythagore.c

@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 16:48:53 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/06 09:25:51 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void init_map(t_var *var)
 	var->sectors[0].neighbors = malloc(sizeof(int) * 7);
 	var->sectors[1].neighbors = malloc(sizeof(int) * 5);
 
- 	var->sectors[0].nb_pts = 7;
+	var->sectors[0].nb_pts = 7;
 	var->sectors[1].nb_pts = 5;
 
 	var->sectors[0].pts[0] = 0;
@@ -91,7 +91,6 @@ void init_map(t_var *var)
 	var->sectors[1].pts[4] = 11;
 
 	var->sectors[1].floor = 5;
-	var->sectors[1].ceilling = 25;
 
 	var->sectors[1].neighbors[0] = -1;
 	var->sectors[1].neighbors[1] = -1;
@@ -143,7 +142,7 @@ void option(SDL_Renderer *ren)
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 	SDL_Surface *s;
 
-	s = SDL_LoadBMP("./opt.bmp");
+	s = SDL_LoadBMP("./assets/opt.bmp");
 
 	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
 }
@@ -154,7 +153,7 @@ void select_map(SDL_Renderer *ren)
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 	SDL_Surface *s;
 
-	s = SDL_LoadBMP("./sm.bmp");
+	s = SDL_LoadBMP("./assets/sm.bmp");
 
 	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
 	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
@@ -260,11 +259,17 @@ int				main(int ac, char **av)
 	Uint32			*walll_uint[4];
 	SDL_Surface		*main_menu;
 	SDL_Surface		*axe;
+	Mix_Music 		*musique;
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 1);
+	//fill_data_struct(&var);
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+		return (-1);
+	musique = Mix_LoadMUS("./music/mu.wav");
+	Mix_PlayMusic(musique, -1);
 	init_map(&var);
 	init_farz_nearz(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
@@ -275,8 +280,8 @@ int				main(int ac, char **av)
 	walll_uint[1] = (Uint32 *)wall[1]->pixels;
 	walll_uint[2] = (Uint32 *)wall[2]->pixels;
 	walll_uint[3] = (Uint32 *)wall[3]->pixels;
-	axe = SDL_LoadBMP("axe.bmp");
-	main_menu = SDL_LoadBMP("./menu.bmp");
+	axe = SDL_LoadBMP("./assets/axe.bmp");
+	main_menu = SDL_LoadBMP("./assets/menu.bmp");
 	init_player(&var);
 	init_key(&var);
 	var.kind_of_screen = SCREEN_ID_MENU;
