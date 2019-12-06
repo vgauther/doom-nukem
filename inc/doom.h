@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 19:13:26 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/06 11:57:47 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int			clamp(int a, int b, int c);
 
 void		move_right(t_var *var);
 void		move_left(t_var *var);
-void		move_forward(t_var *var);
+void		move_forward(t_var *var, double i);
 void		move_backward(t_var *var);
 
 /*

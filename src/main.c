@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/06 10:16:29 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/06 12:06:14 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,10 @@ void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint, cons
 {
 	if (inkeys[var->key[MV_FORWARD]])
 	{
-		move_forward(var);
+		if (!inkeys[SDL_SCANCODE_LSHIFT])
+			move_forward(var, 0.50);
+		else
+			move_forward(var, 1.20);
 		DrawScreen(var, ren, walll_uint);
 		(void)walll_uint;
 	}
