@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/06 09:25:51 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/06 10:16:29 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void init_map(t_var *var)
 {
 	var->maps = malloc(sizeof(t_map) * 1);
 
-	var->points = malloc(sizeof(t_point) * 14);
+	var->points = malloc(sizeof(t_point) * 12);
 
 	var->points[0].x = 0;
 	var->points[0].y = 0;
@@ -91,6 +91,7 @@ void init_map(t_var *var)
 	var->sectors[1].pts[4] = 11;
 
 	var->sectors[1].floor = 5;
+	var->sectors[1].ceilling = 30;
 
 	var->sectors[1].neighbors[0] = -1;
 	var->sectors[1].neighbors[1] = -1;
@@ -130,10 +131,10 @@ void edit_key(t_var *var, int key_to_change, int new_key)
 
 void init_key(t_var *var)
 {
-	var->key[MV_FORWARD] = SDLK_w;
-	var->key[MV_BACKWARD] = SDLK_s;
-	var->key[MV_LEFT] = SDLK_a;
-	var->key[MV_RIGHT] = SDLK_d;
+	var->key[MV_FORWARD] = SDL_SCANCODE_W;
+	var->key[MV_BACKWARD] = SDL_SCANCODE_S;
+	var->key[MV_LEFT] = SDL_SCANCODE_A;
+	var->key[MV_RIGHT] = SDL_SCANCODE_D;
 }
 
 void option(SDL_Renderer *ren)
@@ -206,30 +207,30 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 	}
 }
 
-void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint)
+void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint, const Uint8 *inkeys)
 {
-	if (var->key[MV_FORWARD] == ev.key.keysym.sym)
+	if (inkeys[var->key[MV_FORWARD]])
 	{
 		move_forward(var);
 		DrawScreen(var, ren, walll_uint);
 		(void)walll_uint;
 	}
-	else if (var->key[MV_BACKWARD] == ev.key.keysym.sym)
+	if (inkeys[var->key[MV_BACKWARD]])
 	{
 		move_backward(var);
 		DrawScreen(var, ren, walll_uint);
 	}
-	else if (var->key[MV_LEFT] == ev.key.keysym.sym)
+	if (inkeys[var->key[MV_LEFT]])
 	{
 		move_left(var);
 		DrawScreen(var, ren, walll_uint);
 	}
-	else if (var->key[MV_RIGHT] == ev.key.keysym.sym)
+	if (inkeys[var->key[MV_RIGHT]])
 	{
 		move_right(var);
 		DrawScreen(var, ren, walll_uint);
 	}
-	else if (ev.key.keysym.sym == SDLK_b)
+	if (ev.key.keysym.sym == SDLK_b)
 	{
 		edit_player_angle(var, -10);
 		DrawScreen(var, ren, walll_uint);
@@ -260,7 +261,10 @@ int				main(int ac, char **av)
 	SDL_Surface		*main_menu;
 	SDL_Surface		*axe;
 	Mix_Music 		*musique;
+	int stop;
+	const Uint8		*inkeys;
 
+	stop = 1;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
@@ -292,29 +296,39 @@ int				main(int ac, char **av)
 
 	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 	SDL_RenderPresent(ren);
-	while (SDL_WaitEvent(&ev))
+	while(stop)
 	{
-		if (ev.type == SDL_QUIT)
-			break ;
-		else if (ev.key.keysym.sym == SDLK_ESCAPE)
-			break ;
-		else if (ev.type == SDL_KEYDOWN)
+		while (SDL_PollEvent(&ev))
 		{
-			if (var.kind_of_screen == SCREEN_ID_GAME)
-				game(&var, ev, ren, walll_uint);
+			inkeys = SDL_GetKeyboardState(NULL);
+			if (ev.type == SDL_QUIT)
+			{
+				stop = 0;
+				break ;
+			}
+			else if (ev.key.keysym.sym == SDLK_ESCAPE)
+			{
+				stop = 0;
+				break ;
+			}
+			else if (ev.type == SDL_KEYDOWN)
+			{
+				if (var.kind_of_screen == SCREEN_ID_GAME)
+					game(&var, ev, ren, walll_uint, inkeys);
+			}
+			else if (var.kind_of_screen == SCREEN_ID_MENU)
+			{
+				main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
+			}
+			// else if (var.kind_of_screen = SCREEN_ID_SELECTMAP)
+			// {
+			// 	select_map();
+			// }
+			// else if (var.kind_of_screen = SCREEN_ID_OPTION)
+			// {
+			// 	option();
+			// }
 		}
-		else if (var.kind_of_screen == SCREEN_ID_MENU)
-		{
-			main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
-		}
-		// else if (var.kind_of_screen = SCREEN_ID_SELECTMAP)
-		// {
-		// 	select_map();
-		// }
-		// else if (var.kind_of_screen = SCREEN_ID_OPTION)
-		// {
-		// 	option();
-		// }
 	}
 	SDL_Quit();
 	exit(0);
