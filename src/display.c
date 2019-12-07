@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 23:21:09 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 14:47:04 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,21 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
+	double tmp1;
+	double tmp2;
+	double tmp3;
+	double tmp4;
+
+	tmp1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x;
+	tmp2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y;
+	tmp3 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x;
+	tmp4 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y;
+	d->wall_width = pythagore(tmp2 - tmp1, tmp4 - tmp3);
 	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
-	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[0 + s]].x - var->player.pos.x;
-	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[0 + s]].y - var->player.pos.y;
-	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->player.pos.x;
-	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->player.pos.y;
+	d->vx1 = tmp1 - var->player.pos.x;
+	d->vy1 = tmp2 - var->player.pos.y;
+	d->vx2 = tmp3 - var->player.pos.x;
+	d->vy2 = tmp4 - var->player.pos.y;
 	/* Rotate them around the player's view */
 	d->tx1 = d->vx1 * var->player.psin - d->vy1 * var->player.pcos;
 	d->tz1 = d->vx1 * var->player.pcos + d->vy1 * var->player.psin;
@@ -302,7 +312,7 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
         	if(neighbor >= 0 && d.endx >= d.beginx && (head + MAX_QUEUE + 1 - tail) % MAX_QUEUE)
         	{
             	*head = (struct item) { neighbor, d.beginx, d.endx };
-            	if(++head == queue+MAX_QUEUE)
+            	if(++head == queue + MAX_QUEUE)
 					head = queue;
         	}
     	}

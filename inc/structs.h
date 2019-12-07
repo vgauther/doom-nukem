@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/05 11:42:36 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 14:44:05 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,7 @@ typedef struct s_draw
 	double		nyfloor;
 	double		yceil;
 	double		yfloor;
+	double 		wall_width;
 	int			y1a;
 	int			y1b;
 	int			y2a;
