@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 14:47:04 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:04:38 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,26 +124,22 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
-	double tmp1;
-	double tmp2;
-	double tmp3;
-	double tmp4;
-
-	tmp1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x;
-	tmp2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y;
-	tmp3 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x;
-	tmp4 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y;
-	d->wall_width = pythagore(tmp2 - tmp1, tmp4 - tmp3);
+	d->wall_width = pythagore((var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x),
+	(var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y));
 	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
-	d->vx1 = tmp1 - var->player.pos.x;
-	d->vy1 = tmp2 - var->player.pos.y;
-	d->vx2 = tmp3 - var->player.pos.x;
-	d->vy2 = tmp4 - var->player.pos.y;
+	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - var->player.pos.x;
+	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - var->player.pos.y;
+	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->player.pos.x;
+	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->player.pos.y;
 	/* Rotate them around the player's view */
 	d->tx1 = d->vx1 * var->player.psin - d->vy1 * var->player.pcos;
 	d->tz1 = d->vx1 * var->player.pcos + d->vy1 * var->player.psin;
 	d->tx2 = d->vx2 * var->player.psin - d->vy2 * var->player.pcos;
 	d->tz2 = d->vx2 * var->player.pcos + d->vy2 * var->player.psin;
+	d->ttx1 = d->tx1;
+	d->ttz1 = d->tz1;
+	d->ttx2 = d->tx2;
+	d->ttz2 = d->tz2;
 }
 
 void check_troncage(t_draw *d, t_var *var, t_xy i1, t_xy i2)
@@ -173,6 +169,148 @@ void check_troncage(t_draw *d, t_var *var, t_xy i1, t_xy i2)
 			  d->tx2 = i2.x;
 			  d->tz2 = i2.y;
 		   }
+	}
+}
+
+double vabs(double a)
+{
+	return (a < 0 ? a * -1 : a);
+}
+
+void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_walls dw, t_draw d, int *ytop, int *ybottom, int yfloor, int yceil)
+{
+	double y_tex_pos;
+	SDL_Surface *surf;
+	Uint32 *pix;
+	int tex_h;
+	int tex_w;
+	double		wall_height_scale;
+	double		wall_width_scale;
+	double		wall_height_from_bottom;
+	double		start_x_tex;
+	double		end_x_tex;
+	double		y_tex_start;
+	Uint32	color;
+	int x_tex;
+	int y_tex;
+	double y1;
+	double y2;
+
+	surf = SDL_LoadBMP("./assets/t1.bmp");
+	pix = (Uint32 *)surf->pixels;
+	tex_h = surf->h;
+	tex_w = surf->w;
+
+	y_tex_pos = 0;
+	y1 = clamp(starty, 0, SIZE_Y - 1);
+	y2 = clamp(stopy, 0, SIZE_Y - 1);
+	(void)ybottom;
+	if (y2 > y1)
+	{
+		if (clamp(ytop[x], 0, SIZE_Y - 1) == y1 && clamp(ytop[x], 0, SIZE_Y - 1) > 0)
+		{
+			wall_height_from_bottom = (dw.yb - dw.ya) - (starty - dw.ya);
+			wall_height_scale = (yceil - yfloor) / 10;
+			wall_width_scale = 10 / 2 / d.wall_width;
+			//check_start_end_tex(d, work, text);
+			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
+			{
+				start_x_tex = (d.tx1 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
+				end_x_tex = (d.tx2 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
+			}
+			else
+			{
+				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
+				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
+			}
+
+			y_tex_start = (starty - dw.ya);
+			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
+			wall_height_from_bottom += y_tex_start;
+			y_tex_pos += y_tex_start;
+			while (y1 <= y2)
+			{
+				y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
+				if (y_tex < 0)
+					y_tex = 0;
+				if (x_tex < 0)
+					x_tex = 0;
+				//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
+				//{
+					color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
+					//d->color = dark_side(d->color, work);
+					//w->pix[y1 * SIZE_X + x] = d->color;
+					SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
+					SDL_RenderDrawPoint(ren, x, y1);
+				//}
+				y_tex_pos++;
+				y1++;
+			}
+		}
+		else
+		{
+			wall_height_from_bottom = dw.yb - starty;
+			wall_height_scale = (yceil - yfloor) / 10;
+			wall_width_scale = 10 / 2 / d.wall_width;
+			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
+			{
+				start_x_tex = (d.tx1 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
+				end_x_tex = (d.tx2 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
+			}
+			else
+			{
+				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
+				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
+			}
+			y_tex_start = (d.y2a - d.y1a) * ((d.x2 - d.x1) - (x - d.x1)) / (d.x2 - d.x1) - d.y2a;
+			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
+			if ((d.y1a < 0 || d.y2a < 0) && y1 == 0)
+			{
+				wall_height_from_bottom += y_tex_start;
+				y_tex_pos += y_tex_start;
+				while (y1 <= y2)
+				{
+					y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
+					if (y_tex < 0)
+						y_tex = 0;
+					if (x_tex < 0)
+						x_tex = 0;
+					//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
+					//{
+						color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
+						//d->color = dark_side(d->color, work);
+						//w->pix[y1 * SIZE_X + x] = d->color;
+						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
+						SDL_RenderDrawPoint(ren, x, y1);
+
+					//}
+					y_tex_pos++;
+					y1++;
+				}
+			}
+			else
+			{
+				wall_height_from_bottom = dw.yb - dw.ya;
+				while (y1 <= y2)
+				{
+					y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
+					if (y_tex < 0)
+						y_tex = 0;
+					if (x_tex < 0)
+						x_tex = 0;
+					//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
+					//{
+						color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
+						//d->color = dark_side(d->color, work);
+						//w->pix[y1 * SIZE_X + x] = d->color;
+						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
+						SDL_RenderDrawPoint(ren, x, y1);
+					// }
+					y_tex_pos++;
+					y1++;
+				}
+			}
+		}
 	}
 }
 
@@ -208,8 +346,10 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 		else
 		{
 			z = z > 255 ? 255 : z;
-			unsigned r = 0x010101 * (255 - z);
-			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			//unsigned r = 0x010101 * (255 - z);
+			//vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil);
+
 		}
 	}
 }
@@ -312,7 +452,7 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
         	if(neighbor >= 0 && d.endx >= d.beginx && (head + MAX_QUEUE + 1 - tail) % MAX_QUEUE)
         	{
             	*head = (struct item) { neighbor, d.beginx, d.endx };
-            	if(++head == queue + MAX_QUEUE)
+            	if(++head == queue+MAX_QUEUE)
 					head = queue;
         	}
     	}

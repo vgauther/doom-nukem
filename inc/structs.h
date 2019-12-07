@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 14:44:05 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:05:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,10 @@ typedef struct s_draw
 	double		tz1;
 	double		tx2;
 	double		tz2;
+	double		ttx1;
+	double		ttz1;
+	double		ttx2;
+	double		ttz2;
 	double		xscale1;
 	double		yscale1;
 	double		xscale2;

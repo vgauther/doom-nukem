@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_fill_struct.c                                :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/17 11:51:53 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/12/05 19:20:17 by mamisdra         ###   ########.fr       */
+/*   Updated: 2019/12/07 14:55:59 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,9 @@ void fill_sectors(t_var *var, char *buff)
   i = 3;
   x = 0;
   var->sectors[var->s_count].nb_pts = (unsigned int)ft_atoi(buff + i);
-  if (!(var->sectors[var->s_count].pts = malloc(sizeof(int * ft_atoi(buff + i) + 1))))
-    exit(1);
-  if (!(var->sectors[var->s_count].neighbors = malloc(sizeof(int * ft_atoi(buff + i) + 1))))
-    exit(1);
-  if (!(var->sectors[var->s_count].textures = malloc(sizeof(int * ft_atoi(buff + i) + 1))))
-    exit(1);
+  var->sectors[var->s_count].pts = malloc(sizeof(int * ft_atoi(buff + i) + 1));
+  var->sectors[var->s_count].neighbors = malloc(sizeof(int * ft_atoi(buff + i) + 1));
+  var->sectors[var->s_count].textures = malloc(sizeof(int * ft_atoi(buff + i) + 1))
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
   i++;
@@ -173,10 +170,10 @@ void  fill_maps(t_var *var, char *buff)
 
   i = 3;
   x = 0;
-  var->map[var->m_count].nb_sectors = (unsigned int)ft_atoi(buff + i);
+  var->maps[var->m_count].nb_sectors = (unsigned int)ft_atoi(buff + i);
   if (!(var->maps[var->m_count].sectors = malloc(sizeof(int * ft_atoi(buff + i) + 1))))
     exit(1);
-  while (buff[i] != '\0' && x < var->map[var->m_count].nb_sectors)
+  while (buff[i] != '\0' && x < var->maps[var->m_count].nb_sectors)
   {
     var->maps[var->m_count].sectors[x] = ft_atoi(buff + i);
     while (buff[i] != '\0' && buff[i] != ',' && buff[i] != '|')
@@ -185,8 +182,8 @@ void  fill_maps(t_var *var, char *buff)
     x++;
   }
   x = 0;
-  var->map[var->m_count].nb_weapons = (unsigned int)ft_atoi(buff + i);
-  if (var->map[var->m_count].nb_weapons == 0)
+  var->maps[var->m_count].nb_weapons = (unsigned int)ft_atoi(buff + i);
+  if (var->maps[var->m_count].nb_weapons == 0)
     i += 4;
   else
   {
@@ -210,12 +207,12 @@ void  fill_maps(t_var *var, char *buff)
     }
   }
   x = 0;
-  var->map[var->m_count].nb_ennemies = (unsigned int)ft_atoi(buff + i);
-  if (var->map[var->m_count].nb_ennemies != 0)
+  var->maps[var->m_count].nb_ennemies = (unsigned int)ft_atoi(buff + i);
+  if (var->maps[var->m_count].nb_ennemies != 0)
   {
     if (!(var->maps[var->m_count].ennemies = malloc(sizeof(int * ft_atoi(buff + i) + 1))))
       exit(1);
-    while (buff[i] != '\0' && x < var->map[var->m_count].nb_ennemies)
+    while (buff[i] != '\0' && x < var->maps[var->m_count].nb_ennemies)
     {
       var->maps[var->m_count].ennemies[x] = ft_atoi(buff + i);
       while (buff[i] != '\0' && buff[i] != ',')
@@ -226,7 +223,7 @@ void  fill_maps(t_var *var, char *buff)
         i++;
       i++;
       var->ennemies[var->maps[var->m_count].ennemies[x]].y = ft_atoi(buff + i);
-      while (buff[i] != '\0' && buff[i] != ',' && buff[i] != '|')
+      while (buff[i] != '\0' && buff[i] != ',' && buff[i] != ']')
         i++;
       i++;
       x++;
