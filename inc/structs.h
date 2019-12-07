@@ -128,20 +128,22 @@ typedef struct	s_weapon
 
 typedef struct	s_sector
 {
-	int 			*pts; // num points du secteur
 	unsigned int	nb_pts; // nombre de point du secteur
-	int 			floor;
-	int 			ceilling;
-	int				*neighbors;	// num des secteurs voisins
+	int 					*pts; // num points du secteur
+	int						*neighbors;	// num des secteurs voisins
+	int 					*textures; // num des textures
+	int 					floor;
+	int 					ceilling;
 }				t_sector;
 
 typedef struct	s_map
 {
-	int 			*sectors; // num des secteur sur la map
-	int				nb_ennemies;
-	int				*ennemies;
-	int 			nb_weapons;
-	int				*weapons;
+	unsigned int 	nb_sectors;
+	unsigned int	nb_ennemies;
+	unsigned int 	nb_weapons;
+	int 					*sectors; // num des secteur sur la map
+	int						*ennemies;
+	int						*weapons;
 }				t_map;
 
 typedef struct	s_var
