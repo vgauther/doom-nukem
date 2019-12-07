@@ -265,11 +265,3 @@ void	fill_data_struct(t_var *var)
 	}
 	close(fd);
 }
-
-int main(void)
-{
-	t_var			var;
-
-	fill_data_struct(&var);
-	return 0;
-}
