@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:05:07 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:33:53 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ typedef struct	s_weapon
 
 typedef struct	s_sector
 {
-	unsigned int	nb_pts; // nombre de point du secteur
+	int						nb_pts; // nombre de point du secteur
 	int 					*pts; // num points du secteur
 	int						*neighbors;	// num des secteurs voisins
 	int 					*textures; // num des textures
@@ -138,12 +138,12 @@ typedef struct	s_sector
 
 typedef struct	s_map
 {
-	unsigned int 	nb_sectors;
-	unsigned int	nb_ennemies;
-	unsigned int 	nb_weapons;
-	int 					*sectors; // num des secteur sur la map
-	int						*ennemies;
-	int						*weapons;
+	int 	nb_sectors;
+	int		nb_ennemies;
+	int 	nb_weapons;
+	int 	*sectors; // num des secteur sur la map
+	int		*ennemies;
+	int		*weapons;
 }				t_map;
 
 typedef struct	s_var

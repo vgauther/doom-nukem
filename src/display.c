@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:13:03 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:27:19 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,18 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
+	printf("%s\n", "ici");
 	d->wall_width = pythagore((var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x),
 	(var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y));
 	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
+	printf("%s\n", "la");
+
 	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - var->player.pos.x;
 	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - var->player.pos.y;
 	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->player.pos.x;
 	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->player.pos.y;
 	/* Rotate them around the player's view */
+
 	d->tx1 = d->vx1 * var->player.psin - d->vy1 * var->player.pcos;
 	d->tz1 = d->vx1 * var->player.pcos + d->vy1 * var->player.psin;
 	d->tx2 = d->vx2 * var->player.psin - d->vy2 * var->player.pcos;
@@ -431,7 +435,7 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
     	if(renderedsectors[now.sectorno] & 0x21)
 			continue;
     	++renderedsectors[now.sectorno];
-		for (unsigned int s = 0; s < var->sectors[now.sectorno].nb_pts - 1; ++s)
+		for (int s = 0; s < var->sectors[now.sectorno].nb_pts - 1; ++s)
     	{
 			init_vertex(&d, var, now.sectorno, s);
         	if(d.tz1 <= 0 && d.tz2 <= 0)

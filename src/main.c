@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:16:37 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:33:03 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,12 +272,12 @@ int				main(int ac, char **av)
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 1);
-	//fill_data_struct(&var);
+	fill_data_struct(&var);
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		return (-1);
 	musique = Mix_LoadMUS("./music/mu.wav");
 	Mix_PlayMusic(musique, -1);
-	init_map(&var);
+	//init_map(&var);
 	init_farz_nearz(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
@@ -296,7 +296,6 @@ int				main(int ac, char **av)
 
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
-	printf("%d\n", O_RDONLY);
 	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 	SDL_RenderPresent(ren);
 	while(stop)
