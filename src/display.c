@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:04:38 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:13:03 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,13 +177,13 @@ double vabs(double a)
 	return (a < 0 ? a * -1 : a);
 }
 
-void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_walls dw, t_draw d, int *ytop, int *ybottom, int yfloor, int yceil)
+void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_walls dw, t_draw d, int *ytop, int *ybottom, double yfloor, double yceil)
 {
-	double y_tex_pos;
 	SDL_Surface *surf;
 	Uint32 *pix;
 	int tex_h;
 	int tex_w;
+	double y_tex_pos;
 	double		wall_height_scale;
 	double		wall_width_scale;
 	double		wall_height_from_bottom;
@@ -193,8 +193,8 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 	Uint32	color;
 	int x_tex;
 	int y_tex;
-	double y1;
-	double y2;
+	int y1;
+	int y2;
 
 	surf = SDL_LoadBMP("./assets/t1.bmp");
 	pix = (Uint32 *)surf->pixels;

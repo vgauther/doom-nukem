@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 14:58:49 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 15:16:37 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ void init_map(t_var *var)
 
 void init_player(t_var *var)
 {
-	var->player.pos.x = 150;
-	var->player.pos.y = 150;
+	var->player.pos.x = 240;
+	var->player.pos.y = 240;
 	var->player.pos.z = 10;
 	var->player.angle = 90;
 	var->player.yaw = 0;
@@ -296,7 +296,7 @@ int				main(int ac, char **av)
 
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
-
+	printf("%d\n", O_RDONLY);
 	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 	SDL_RenderPresent(ren);
 	while(stop)
