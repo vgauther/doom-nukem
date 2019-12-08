@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:33:53 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/08 14:24:25 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ typedef struct	s_player
 	int				xp;
 	int 			lvl;
 	double 			yaw;
-	int sector;
+	int 			sector;
+	int				map;
 }				t_player;
 
 typedef struct	s_color
@@ -144,7 +145,18 @@ typedef struct	s_map
 	int 	*sectors; // num des secteur sur la map
 	int		*ennemies;
 	int		*weapons;
+	int 	spawn_x;
+	int 	spawn_y;
+	int 	end_lv_x;
+	int 	end_lv_y;
 }				t_map;
+
+typedef struct	s_img
+{
+	int			h;
+	int			w;
+	Uint32		*pixels;
+}				t_img;
 
 typedef struct	s_var
 {
@@ -167,6 +179,7 @@ typedef struct	s_var
 	double			farz;
 	double			nearside;
 	double			farside;
+	t_img			wall_texture[4];
 }				t_var;
 
 typedef struct s_draw_walls

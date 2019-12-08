@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/06 11:57:47 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 18:59:41 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt);
 */
 
 void		free_tab_char(char **tab);
+
+/*
+** let_the_music_play.c
+*/
+
+int			let_the_music_play(void);
 
 /*
 ** min_max_clamp.c

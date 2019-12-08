@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:27:19 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/07 23:42:18 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,9 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
-	printf("%s\n", "ici");
 	d->wall_width = pythagore((var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x),
 	(var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y));
 	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
-	printf("%s\n", "la");
 
 	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - var->player.pos.x;
 	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - var->player.pos.y;
@@ -181,40 +179,44 @@ double vabs(double a)
 	return (a < 0 ? a * -1 : a);
 }
 
-void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_walls dw, t_draw d, int *ytop, int *ybottom, double yfloor, double yceil)
+void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_walls dw, t_draw d, int *ytop, int *ybottom, double yfloor, double yceil, Uint32 *pix)
 {
-	SDL_Surface *surf;
-	Uint32 *pix;
-	int tex_h;
-	int tex_w;
-	double y_tex_pos;
+	// SDL_Surface *surf;
+	// Uint32 		*pix;
+	int 		tex_h;
+	int 		tex_w;
+	double 		y_tex_pos;
 	double		wall_height_scale;
 	double		wall_width_scale;
 	double		wall_height_from_bottom;
 	double		start_x_tex;
 	double		end_x_tex;
 	double		y_tex_start;
-	Uint32	color;
+	Uint32		color;
 	int x_tex;
 	int y_tex;
 	int y1;
 	int y2;
 
-	surf = SDL_LoadBMP("./assets/t1.bmp");
-	pix = (Uint32 *)surf->pixels;
-	tex_h = surf->h;
-	tex_w = surf->w;
+	// surf = SDL_LoadBMP("./assets/t1.bmp");
+	// pix = (Uint32 *)surf->pixels;
+	tex_h = 1450;
+	tex_w = 1490;
 
 	y_tex_pos = 0;
 	y1 = clamp(starty, 0, SIZE_Y - 1);
 	y2 = clamp(stopy, 0, SIZE_Y - 1);
 	(void)ybottom;
+
 	if (y2 > y1)
 	{
 		if (clamp(ytop[x], 0, SIZE_Y - 1) == y1 && clamp(ytop[x], 0, SIZE_Y - 1) > 0)
 		{
+
 			wall_height_from_bottom = (dw.yb - dw.ya) - (starty - dw.ya);
+
 			wall_height_scale = (yceil - yfloor) / 10;
+
 			wall_width_scale = 10 / 2 / d.wall_width;
 			//check_start_end_tex(d, work, text);
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
@@ -239,14 +241,15 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 					y_tex = 0;
 				if (x_tex < 0)
 					x_tex = 0;
-				//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
-				//{
+				if (tex_h >= 0 && tex_w >= 0)
+				{
 					color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
 					//d->color = dark_side(d->color, work);
 					//w->pix[y1 * SIZE_X + x] = d->color;
 					SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 					SDL_RenderDrawPoint(ren, x, y1);
-				//}
+
+				}
 				y_tex_pos++;
 				y1++;
 			}
@@ -256,6 +259,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			wall_height_from_bottom = dw.yb - starty;
 			wall_height_scale = (yceil - yfloor) / 10;
 			wall_width_scale = 10 / 2 / d.wall_width;
+
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
 			{
 				start_x_tex = (d.tx1 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
@@ -263,13 +267,17 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			}
 			else
 			{
+
 				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 			}
+
 			y_tex_start = (d.y2a - d.y1a) * ((d.x2 - d.x1) - (x - d.x1)) / (d.x2 - d.x1) - d.y2a;
 			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
+
 			if ((d.y1a < 0 || d.y2a < 0) && y1 == 0)
 			{
+
 				wall_height_from_bottom += y_tex_start;
 				y_tex_pos += y_tex_start;
 				while (y1 <= y2)
@@ -279,15 +287,15 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 						y_tex = 0;
 					if (x_tex < 0)
 						x_tex = 0;
-					//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
-					//{
+					if (tex_h >= 0 && tex_w >= 0)
+					{
 						color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
-						//d->color = dark_side(d->color, work);
-						//w->pix[y1 * SIZE_X + x] = d->color;
+						// d->color = dark_side(d->color, work);
+						// w->pix[y1 * SIZE_X + x] = d->color;
 						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 						SDL_RenderDrawPoint(ren, x, y1);
 
-					//}
+					}
 					y_tex_pos++;
 					y1++;
 				}
@@ -295,21 +303,23 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			else
 			{
 				wall_height_from_bottom = dw.yb - dw.ya;
+
 				while (y1 <= y2)
 				{
 					y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
+
 					if (y_tex < 0)
 						y_tex = 0;
 					if (x_tex < 0)
 						x_tex = 0;
-					//if (tex_h >= 0 && tex_w >= 0 && pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)] != (Uint32)-1)
-					//{
+					if (tex_h >= 0 && tex_w >= 0)
+					{
 						color = pix[((y_tex % tex_h) * tex_w) + (x_tex % tex_w)];
-						//d->color = dark_side(d->color, work);
+						//color = dark_side(d->color, work);
 						//w->pix[y1 * SIZE_X + x] = d->color;
 						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 						SDL_RenderDrawPoint(ren, x, y1);
-					// }
+					}
 					y_tex_pos++;
 					y1++;
 				}
@@ -318,7 +328,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 	}
 }
 
-void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfloor, int yceil, t_draw d, int *ytop, int *ybottom)
+void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfloor, int yceil, t_draw d, int *ytop, int *ybottom, Uint32 *t)
 {
 	t_draw_walls dw;
 	int x;
@@ -350,10 +360,10 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 		else
 		{
 			z = z > 255 ? 255 : z;
-			//unsigned r = 0x010101 * (255 - z);
-			//vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
-			line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil);
-
+			unsigned r = 0x010101 * (255 - z);
+			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			//line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
+			(void)t;
 		}
 	}
 }
@@ -415,6 +425,10 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 	int neighbor;
 
 	x = 0;
+	SDL_Surface *t;
+	if (!(t = SDL_LoadBMP("./assets/wall.bmp")))
+		exit(0);
+	Uint32 *tmp = (Uint32 *)t->pixels;
     while (x < SIZE_X)
 	{
 		ytop[x] = 0;
@@ -452,7 +466,7 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 			sectorno_and_network(&d, var->player.yaw);
         	d.beginx = max(d.x1, now.sx1);
 			d.endx = min(d.x2, now.sx2);
-			draw_wals(neighbor, ren, var, wt, d.yfloor, d.yceil, d, ytop, ybottom);
+			draw_wals(neighbor, ren, var, wt, d.yfloor, d.yceil, d, ytop, ybottom, tmp);
         	if(neighbor >= 0 && d.endx >= d.beginx && (head + MAX_QUEUE + 1 - tail) % MAX_QUEUE)
         	{
             	*head = (struct item) { neighbor, d.beginx, d.endx };

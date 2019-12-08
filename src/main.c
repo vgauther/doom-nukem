@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 15:33:03 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/08 22:15:01 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void init_map(t_var *var)
 {
-	var->maps = malloc(sizeof(t_map) * 1);
+	var->maps = malloc(sizeof(t_map) * 2);
+	var->m_count = 2;
 
 	var->points = malloc(sizeof(t_point) * 12);
 
@@ -90,19 +91,37 @@ void init_map(t_var *var)
 	var->sectors[1].pts[3] = 10;
 	var->sectors[1].pts[4] = 11;
 
-	var->sectors[1].floor = 5;
+	var->sectors[1].floor = 2;
 	var->sectors[1].ceilling = 30;
 
 	var->sectors[1].neighbors[0] = -1;
 	var->sectors[1].neighbors[1] = -1;
 	var->sectors[1].neighbors[2] = -1;
-	var->sectors[1].neighbors[3] = -1;
-	var->sectors[1].neighbors[4] = 0;
+	var->sectors[1].neighbors[3] = 0;
+	var->sectors[1].neighbors[4] = -1;
 
 	var->maps[0].sectors = malloc(sizeof(int) * 2);
 
+	var->maps[1].sectors = malloc(sizeof(int) * 2);
+
+	var->maps[0].spawn_x = 240;
+	var->maps[0].spawn_y = 240;
+
+	var->maps[0].end_lv_x = 0;
+	var->maps[0].end_lv_y = 0;
+
+	var->maps[1].spawn_x = 50;
+	var->maps[1].spawn_y = 50;
+
+	var->maps[1].end_lv_x = 240;
+	var->maps[1].end_lv_y = 240;
+
 	var->maps[0].sectors[0] = 0;
 	var->maps[0].sectors[1] = 1;
+
+	var->maps[1].sectors[0] = 0;
+	var->maps[1].sectors[1] = 1;
+
 }
 
 void init_player(t_var *var)
@@ -114,7 +133,9 @@ void init_player(t_var *var)
 	var->player.yaw = 0;
 	var->player.pcos = cos(var->player.angle * RAD);
 	var->player.psin = sin(var->player.angle * RAD);
-	var->player.sector = 0;
+	var->player.map = 0;
+	var->player.sector = var->maps[var->player.map].sectors[0];
+
 }
 
 void	edit_player_angle(t_var *var, int x)
@@ -253,6 +274,32 @@ void init_farz_nearz(t_var *v)
 	v->farside = 20.f;
 }
 
+void sdl_quit_exit(void)
+{
+	SDL_Quit();
+	exit(0);
+}
+
+// int				open_wall_texture(t_var *v)
+// {
+// 	SDL_Surface		*wall[4];
+// 	int i;
+//
+// 	i = 0;
+// 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
+// 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
+// 	wall[2] = SDL_LoadBMP("./assets/t3.bmp");
+// 	wall[3] = SDL_LoadBMP("./assets/t4.bmp");
+// 	while (i < 4)
+// 	{
+// 		v->wall_texture[i].h = (Uint32 *)wall[i].h;
+// 		v->wall_texture[i].w = (Uint32 *)wall[i].w;
+// 		v->wall_texture[i].pixels = (Uint32 *)wall[i].pixels;
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
 int				main(int ac, char **av)
 {
 	SDL_Window		*win;
@@ -272,12 +319,12 @@ int				main(int ac, char **av)
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
 	ren = SDL_CreateRenderer(win, -1, 1);
-	fill_data_struct(&var);
+	//fill_data_struct(&var);
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		return (-1);
 	musique = Mix_LoadMUS("./music/mu.wav");
 	Mix_PlayMusic(musique, -1);
-	//init_map(&var);
+	init_map(&var);
 	init_farz_nearz(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
@@ -300,9 +347,9 @@ int				main(int ac, char **av)
 	SDL_RenderPresent(ren);
 	while(stop)
 	{
+		inkeys = SDL_GetKeyboardState(NULL);
 		while (SDL_PollEvent(&ev))
 		{
-			inkeys = SDL_GetKeyboardState(NULL);
 			if (ev.type == SDL_QUIT)
 			{
 				stop = 0;
@@ -322,6 +369,10 @@ int				main(int ac, char **av)
 			{
 				main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
 			}
+		}
+
+
+
 			// else if (var.kind_of_screen = SCREEN_ID_SELECTMAP)
 			// {
 			// 	select_map();
@@ -330,7 +381,6 @@ int				main(int ac, char **av)
 			// {
 			// 	option();
 			// }
-		}
 	}
 	SDL_Quit();
 	exit(0);
