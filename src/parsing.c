@@ -6,7 +6,7 @@
 /*   By: mamisdra <mamisdra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/17 11:51:53 by mamisdra          #+#    #+#             */
-/*   Updated: 2019/12/07 15:36:00 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/09 16:12:14 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,27 @@ void  fill_resume(t_var *var, char *buff)
   int i;
 
   i = 3;
-  if (!(var->points = malloc(sizeof(t_point) * ft_atoi(buff + i) + 1)))
+  if (!(var->points = malloc(sizeof(t_point) * ft_atoi(buff + i))))
     exit(1);
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
   i++;
-  if (!(var->sectors = malloc(sizeof(t_sector) * ft_atoi(buff + i) + 1)))
+  if (!(var->sectors = malloc(sizeof(t_sector) * ft_atoi(buff + i))))
     exit(1);
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
   i++;
-  if (!(var->maps = malloc(sizeof(t_map) * ft_atoi(buff + i) + 1)))
+  if (!(var->maps = malloc(sizeof(t_map) * ft_atoi(buff + i))))
     exit(1);
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
   i++;
-  if (!(var->weapons = malloc(sizeof(t_weapon) * ft_atoi(buff + i) + 1)))
+  if (!(var->weapons = malloc(sizeof(t_weapon) * ft_atoi(buff + i))))
     exit(1);
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
   i++;
-  if (!(var->ennemies = malloc(sizeof(t_ennemy) * ft_atoi(buff + i) + 1)))
+  if (!(var->ennemies = malloc(sizeof(t_ennemy) * ft_atoi(buff + i))))
     exit(1);
 
 }
@@ -119,12 +119,13 @@ void fill_sectors(t_var *var, char *buff)
 
   i = 3;
   x = 0;
-  var->sectors[var->s_count].nb_pts = ( int)ft_atoi(buff + i);
-  if (!(var->sectors[var->s_count].pts = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+  var->sectors[var->s_count].nb_pts = ft_atoi(buff + i);
+  printf("%d\n", var->sectors[var->s_count].nb_pts);
+  if (!(var->sectors[var->s_count].pts = malloc(sizeof(int) * ft_atoi(buff + i))))
     exit(1);
-  if (!(var->sectors[var->s_count].neighbors = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+  if (!(var->sectors[var->s_count].neighbors = malloc(sizeof(int) * (ft_atoi(buff + i) - 1))))
     exit(1);
-  if (!(var->sectors[var->s_count].textures = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+  if (!(var->sectors[var->s_count].textures = malloc(sizeof(int) * (ft_atoi(buff + i)- 1))))
     exit(1);
   while (buff[i] != '\0' && buff[i] != ',')
     i++;
@@ -173,8 +174,8 @@ void  fill_maps(t_var *var, char *buff)
 
 	i = 3;
 	x = 0;
-	var->maps[var->m_count].nb_sectors = ( int)ft_atoi(buff + i);
-  	if (!(var->maps[var->m_count].sectors = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+	var->maps[var->m_count].nb_sectors = ft_atoi(buff + i);
+  	if (!(var->maps[var->m_count].sectors = malloc(sizeof(int) * ft_atoi(buff + i))))
     	exit(1);
 	while (buff[i] != '\0' && buff[i] != ',')
 		i++;
@@ -189,12 +190,12 @@ void  fill_maps(t_var *var, char *buff)
     x++;
   }
   x = 0;
-  var->maps[var->m_count].nb_weapons = ( int)ft_atoi(buff + i);
+  var->maps[var->m_count].nb_weapons = ft_atoi(buff + i);
   if (var->maps[var->m_count].nb_weapons == 0)
     i += 4;
   else
   {
-    if (!(var->maps[var->m_count].weapons = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+    if (!(var->maps[var->m_count].weapons = malloc(sizeof(int) * ft_atoi(buff + i))))
       exit(1);
     while (buff[i] != '\0' && x < var->maps[var->m_count].nb_weapons)
     {
@@ -214,10 +215,10 @@ void  fill_maps(t_var *var, char *buff)
     }
   }
   x = 0;
-  var->maps[var->m_count].nb_ennemies = ( int)ft_atoi(buff + i);
+  var->maps[var->m_count].nb_ennemies = ft_atoi(buff + i);
   if (var->maps[var->m_count].nb_ennemies != 0)
   {
-    if (!(var->maps[var->m_count].ennemies = malloc(sizeof(int) * ft_atoi(buff + i) + 1)))
+    if (!(var->maps[var->m_count].ennemies = malloc(sizeof(int) * ft_atoi(buff + i))))
       exit(1);
     while (buff[i] != '\0' && x < var->maps[var->m_count].nb_ennemies)
     {
@@ -267,6 +268,5 @@ void	fill_data_struct(t_var *var)
 		}
     free(buff);
 	}
-	printf("%d\n", var->maps[0].sectors[0]);
 	close(fd);
 }

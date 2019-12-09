@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2019/12/07 18:57:02 by vgauther         ###   ########.fr        #
+#    Updated: 2019/12/09 15:45:25 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SHELL = bash
 CC = gcc
 
 NAME                =   doom-nukem
-CFLAG       		=   -Wall -Wextra -Werror
+CFLAG       		=   -Wall -Wextra -Werror -g
 MESSAGE     		=   "\033[38;5;79m[$(NAME)] compiled on normal rules ! Have fun\033[0m                          "
 
 INCDIR              =   ./inc/
@@ -32,7 +32,6 @@ SRCFIL				=	main.c \
 						pythagore.c \
 						move.c\
 						display.c\
-						filler_funct.c\
 						parsing.c \
 						let_the_music_play.c
 

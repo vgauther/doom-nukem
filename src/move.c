@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:54:34 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/08 22:10:40 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/08 22:35:52 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void contact_wall(t_var *var, double save_x, double save_y)
 	new_y = var->player.pos.y;
 	map = var->player.map;
 	sector = var->player.sector;
-	while (w < var->sectors[sector].nb_pts)
+	while (w < var->sectors[sector].nb_pts - 1)
 	{
 		xa = var->points[var->sectors[sector].pts[w]].x;
 		xb = var->points[var->sectors[sector].pts[w + 1]].x;

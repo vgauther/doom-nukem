@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/08 22:15:01 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/09 19:40:44 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void init_map(t_var *var)
 	var->sectors[0].pts = malloc(sizeof(int) * 7);
 	var->sectors[1].pts = malloc(sizeof(int) * 5);
 
-	var->sectors[0].neighbors = malloc(sizeof(int) * 7);
-	var->sectors[1].neighbors = malloc(sizeof(int) * 5);
+	var->sectors[0].neighbors = malloc(sizeof(int) * 6);
+	var->sectors[1].neighbors = malloc(sizeof(int) * 4);
 
 	var->sectors[0].nb_pts = 7;
 	var->sectors[1].nb_pts = 5;
@@ -83,7 +83,6 @@ void init_map(t_var *var)
 	var->sectors[0].neighbors[3] = 1;
 	var->sectors[0].neighbors[4] = -1;
 	var->sectors[0].neighbors[5] = -1;
-	var->sectors[0].neighbors[6] = -1;
 
 	var->sectors[1].pts[0] = 7;
 	var->sectors[1].pts[1] = 8;
@@ -98,11 +97,10 @@ void init_map(t_var *var)
 	var->sectors[1].neighbors[1] = -1;
 	var->sectors[1].neighbors[2] = -1;
 	var->sectors[1].neighbors[3] = 0;
-	var->sectors[1].neighbors[4] = -1;
 
 	var->maps[0].sectors = malloc(sizeof(int) * 2);
 
-	var->maps[1].sectors = malloc(sizeof(int) * 2);
+	var->maps[1].sectors = malloc(sizeof(int) * 1);
 
 	var->maps[0].spawn_x = 240;
 	var->maps[0].spawn_y = 240;
@@ -169,15 +167,37 @@ void option(SDL_Renderer *ren)
 	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
 }
 
-void select_map(SDL_Renderer *ren)
+void select_map(SDL_Renderer *ren, SDL_Event ev)
 {
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 	SDL_Surface *s;
 
-	s = SDL_LoadBMP("./assets/sm.bmp");
+	SDL_Surface *t1;
+	SDL_Surface *t2;
 
+	s = SDL_LoadBMP("./assets/sm.bmp");
 	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
+
+	t1 = SDL_CreateRGBSurface(0, 50, 50, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+	t2 = SDL_CreateRGBSurface(0, 50, 50, 32, 0x000000ff, 0x0000ff00, 0, 0xff000000);
+	if (ev.type == SDL_MOUSEMOTION || ev.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if ( SIZE_Y / 2 - 50 > ev.motion.y && ev.motion.y < SIZE_Y / 2)
+		{
+			if (SIZE_X / 2 - 25 > ev.motion.x && ev.motion.x < SIZE_X / 2 + 25)
+			{
+				put_surface(ren, t1, create_sdl_rect(SIZE_X / 2 - 25, SIZE_Y / 2 - 50, 0, 0));
+				ft_putstr("dans le carre");
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				{
+					ft_putstr("go in game");
+				}
+			}
+		}
+	}
+	SDL_RenderPresent(ren);
+
 	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 }
 
@@ -202,7 +222,7 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_SELECTMAP;
-					select_map(ren);
+					select_map(ren, ev);
 				}
 			}
 			else if (ev.motion.y > SIZE_Y / 2 - 60 && ev.motion.y < SIZE_Y / 2 + 180)
@@ -315,16 +335,37 @@ int				main(int ac, char **av)
 	const Uint8		*inkeys;
 
 	stop = 1;
-	SDL_Init(SDL_INIT_EVERYTHING);
-	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
-	ren = SDL_CreateRenderer(win, -1, 1);
-	//fill_data_struct(&var);
+	bzero(&ev, sizeof(SDL_Event));
+	bzero(&win, sizeof(SDL_Window *));
+	bzero(&ren, sizeof(SDL_Renderer *));
+	bzero(&var, sizeof(t_var));
+
+
+	// SDL_Init(SDL_INIT_VIDEO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+	// win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
+	// ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+
+	var.kind_of_screen = SCREEN_ID_MENU;
+	var.number_of_sector = 2;
+
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+	{
+		ft_putstr("error init video");
+		exit (1);
+	}
+	ft_putstr("SDL_INITED\n");
+	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, SDL_WINDOW_SHOWN);
+	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		return (-1);
 	musique = Mix_LoadMUS("./music/mu.wav");
 	Mix_PlayMusic(musique, -1);
+	//fill_data_struct(&var);
 	init_map(&var);
+
+	init_key(&var);
+	init_player(&var);
 	init_farz_nearz(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
@@ -336,10 +377,7 @@ int				main(int ac, char **av)
 	walll_uint[3] = (Uint32 *)wall[3]->pixels;
 	axe = SDL_LoadBMP("./assets/axe.bmp");
 	main_menu = SDL_LoadBMP("./assets/menu.bmp");
-	init_player(&var);
-	init_key(&var);
-	var.kind_of_screen = SCREEN_ID_MENU;
-	var.number_of_sector = 2;
+
 
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
@@ -369,19 +407,19 @@ int				main(int ac, char **av)
 			{
 				main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
 			}
+			else if (var.kind_of_screen == SCREEN_ID_SELECTMAP)
+			{
+				select_map(ren, ev);
+			}
 		}
 
-
-
-			// else if (var.kind_of_screen = SCREEN_ID_SELECTMAP)
-			// {
-			// 	select_map();
-			// }
 			// else if (var.kind_of_screen = SCREEN_ID_OPTION)
 			// {
 			// 	option();
 			// }
 	}
+	SDL_DestroyRenderer(ren);
+	SDL_DestroyWindow(win);
 	SDL_Quit();
 	exit(0);
 	(void)ac;

@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/08 14:24:25 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/09 14:45:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct		s_reader
 	t_item			*tail;
 	t_item			now;
 }					t_reader;
-
 
 typedef struct s_coor
 {
