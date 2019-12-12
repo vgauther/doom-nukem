@@ -134,7 +134,14 @@ typedef struct	s_sector
 	int 					*textures; // num des textures
 	int 					floor;
 	int 					ceilling;
-}				t_sector;
+}								t_sector;
+
+typedef struct	s_texture
+{
+	int 					width;
+	int 					length;
+	t_color				**colors;
+}								t_texture;
 
 typedef struct	s_map
 {
@@ -165,12 +172,14 @@ typedef struct	s_var
 	t_ennemy 		*ennemies;
 	t_map 			*maps; // liste de toutes les maps
 	t_weapon 		*weapons;
+	t_texture 	*textures;
 	t_player		player;
 	int 			p_count;
 	int 			m_count;
 	int 			s_count;
 	int				w_count;
 	int				e_count;
+	int				t_count;
 	int				key[4];
 	int				kind_of_screen;
 	int 			number_of_sector;

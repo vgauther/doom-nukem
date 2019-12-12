@@ -21,6 +21,7 @@ void	init_count(t_var *var)
 	var->e_count = 0;
 	var->s_count = 0;
 	var->m_count = 0;
+	var->t_count = 0;
 }
 
 void  fill_resume(t_var *var, char *buff)
@@ -50,7 +51,11 @@ void  fill_resume(t_var *var, char *buff)
   i++;
   if (!(var->ennemies = malloc(sizeof(t_ennemy) * ft_atoi(buff + i))))
     exit(1);
-
+	while (buff[i] != '\0' && buff[i] != ',')
+		i++;
+	i++;
+	if (!(var->textures = malloc(sizeof(t_texture) * ft_atoi(buff + i))))
+		exit(1);
 }
 
 void  fill_points(t_var *var, char *buff)
@@ -240,6 +245,55 @@ void  fill_maps(t_var *var, char *buff)
   var->m_count++;
 }
 
+void fill_textures(t_var *var, char *buff)
+{
+	int i;
+	int x;
+	int y;
+
+  i = 3;
+	x = 0;
+	y = 0;
+  var->textures[var->t_count].length = ft_atoi(buff + i);
+  while (buff[i] != '\0' && buff[i] != ',')
+    i++;
+  i++;
+	var->textures[var->t_count].width = ft_atoi(buff + i);
+	if (!(var->textures[var->t_count].colors = malloc(sizeof(t_color *) * var->textures[var->t_count].length)))
+		exit(1);
+	while (x < var->textures[var->t_count].length)
+	{
+		if (!(var->textures[var->t_count].colors[x] = malloc(sizeof(t_color) * var->textures[var->t_count].width)))
+			exit(1);
+		x++;
+	}
+	while (buff[i] != '\0' && buff[i] != '|')
+		i++;
+	i++;
+	while (y < var->textures[var->t_count].length)
+	{
+		x = 0;
+		while (x < var->textures[var->t_count].width)
+		{
+			var->textures[var->t_count].colors[y][x].r = ft_atoi(buff + i);
+			while (buff[i] != '\0' && buff[i] != ',')
+				i++;
+			i++;
+			var->textures[var->t_count].colors[y][x].v = ft_atoi(buff + i);
+			while (buff[i] != '\0' && buff[i] != ',')
+				i++;
+			i++;
+			var->textures[var->t_count].colors[y][x].b = ft_atoi(buff + i);
+			while (buff[i] != '\0' && buff[i] != ',' && buff[i] != '|')
+				i++;
+			i++;
+			x++;
+		}
+		y++;
+	}
+  var->t_count++;
+}
+
 void	fill_data_struct(t_var *var)
 {
 	char	*buff;
@@ -265,6 +319,8 @@ void	fill_data_struct(t_var *var)
 				fill_sectors(var, buff);
 			else if (buff[0] == '[' && buff[1] == 'm')
 				fill_maps(var, buff);
+			else if (buff[0] == '[' && buff[1] == 't')
+				fill_textures(var, buff);
 		}
     free(buff);
 	}

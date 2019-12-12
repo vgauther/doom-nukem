@@ -1,5 +1,5 @@
-# r means resume, nb of point, nb of sector,nb of map, nb of weapon, nb of ennemies
-[r,12,2,2,1,1]
+# r means resume, nb of point, nb of sector,nb of map, nb of weapon, nb of ennemies, nb of textures
+[r,12,2,2,1,1,1]
 # p means point, coor x, coor y
 [p,0,0]
 [p,250,0]
@@ -23,3 +23,5 @@
 # m means map, nb of sectors, sectors list | number of weapons , weapon coor =  num,x,y | number of ennemies, ennemies coor =  num,x,y
 [m,2,0,1|0,.|0,.]
 [m,1,1|1,0,50,50|1,0,40,40]
+# t means texture, length, width | r,g,b,r,g,b ... (no need for x & y only colors in rgb)
+[t,10,3|255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255,0,0,255]
