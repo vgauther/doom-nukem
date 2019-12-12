@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/07 23:42:18 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/10 10:51:08 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 	double		start_x_tex;
 	double		end_x_tex;
 	double		y_tex_start;
-	Uint32		color;
+	int		color;
 	int x_tex;
 	int y_tex;
 	int y1;
@@ -200,8 +200,8 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 
 	// surf = SDL_LoadBMP("./assets/t1.bmp");
 	// pix = (Uint32 *)surf->pixels;
-	tex_h = 1450;
-	tex_w = 1490;
+	tex_h = 128;
+	tex_w = 128;
 
 	y_tex_pos = 0;
 	y1 = clamp(starty, 0, SIZE_Y - 1);
@@ -361,9 +361,10 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 		{
 			z = z > 255 ? 255 : z;
 			unsigned r = 0x010101 * (255 - z);
-			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
-			//line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
+			//vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
 			(void)t;
+			(void)r;
 		}
 	}
 }
@@ -426,7 +427,7 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 
 	x = 0;
 	SDL_Surface *t;
-	if (!(t = SDL_LoadBMP("./assets/wall.bmp")))
+	if (!(t = SDL_LoadBMP("./assets/t1.bmp")))
 		exit(0);
 	Uint32 *tmp = (Uint32 *)t->pixels;
     while (x < SIZE_X)

@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/09 19:40:44 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:36:20 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,23 +322,16 @@ void sdl_quit_exit(void)
 
 int				main(int ac, char **av)
 {
-	SDL_Window		*win;
-	SDL_Renderer	*ren;
-	SDL_Event		ev;
+
 	t_var			var;
-	SDL_Surface		*wall[4];
 	Uint32			*walll_uint[4];
-	SDL_Surface		*main_menu;
-	SDL_Surface		*axe;
-	Mix_Music 		*musique;
-	int stop;
-	const Uint8		*inkeys;
+	int				stop;
 
 	stop = 1;
-	bzero(&ev, sizeof(SDL_Event));
-	bzero(&win, sizeof(SDL_Window *));
-	bzero(&ren, sizeof(SDL_Renderer *));
-	bzero(&var, sizeof(t_var));
+	// bzero(&ev, sizeof(SDL_Event));
+	// bzero(&win, sizeof(SDL_Window *));
+	// bzero(&ren, sizeof(SDL_Renderer *));
+	// bzero(&var, sizeof(t_var));
 
 
 	// SDL_Init(SDL_INIT_VIDEO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -348,21 +341,28 @@ int				main(int ac, char **av)
 	var.kind_of_screen = SCREEN_ID_MENU;
 	var.number_of_sector = 2;
 
-
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		ft_putstr("error init video");
 		exit (1);
 	}
 	ft_putstr("SDL_INITED\n");
+	SDL_Window		*win;
+	SDL_Renderer	*ren;
+	SDL_Surface		*main_menu;
+	SDL_Surface		*axe;
+	Mix_Music 		*musique;
+	SDL_Event		eve;
+
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		return (-1);
+	SDL_Surface		*wall[4];
 	musique = Mix_LoadMUS("./music/mu.wav");
 	Mix_PlayMusic(musique, -1);
-	//fill_data_struct(&var);
-	init_map(&var);
+	fill_data_struct(&var);
+	//init_map(&var);
 
 	init_key(&var);
 	init_player(&var);
@@ -383,33 +383,34 @@ int				main(int ac, char **av)
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 	put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 	SDL_RenderPresent(ren);
+	const Uint8			*inkeys;
 	while(stop)
 	{
 		inkeys = SDL_GetKeyboardState(NULL);
-		while (SDL_PollEvent(&ev))
+		while (SDL_PollEvent(&eve))
 		{
-			if (ev.type == SDL_QUIT)
+			if (eve.type == SDL_QUIT)
 			{
 				stop = 0;
 				break ;
 			}
-			else if (ev.key.keysym.sym == SDLK_ESCAPE)
+			else if (eve.key.keysym.sym == SDLK_ESCAPE)
 			{
 				stop = 0;
 				break ;
 			}
-			else if (ev.type == SDL_KEYDOWN)
+			else if (eve.type == SDL_KEYDOWN)
 			{
 				if (var.kind_of_screen == SCREEN_ID_GAME)
-					game(&var, ev, ren, walll_uint, inkeys);
+					game(&var, eve, ren, walll_uint, inkeys);
 			}
 			else if (var.kind_of_screen == SCREEN_ID_MENU)
 			{
-				main_menu_g(ev, axe, ren, test_x, test_y, main_menu, &var);
+				main_menu_g(eve, axe, ren, test_x, test_y, main_menu, &var);
 			}
 			else if (var.kind_of_screen == SCREEN_ID_SELECTMAP)
 			{
-				select_map(ren, ev);
+				select_map(ren, eve);
 			}
 		}
 
@@ -420,6 +421,7 @@ int				main(int ac, char **av)
 	}
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
+	Mix_CloseAudio();
 	SDL_Quit();
 	exit(0);
 	(void)ac;
