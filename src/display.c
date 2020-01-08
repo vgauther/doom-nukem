@@ -6,16 +6,11 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/10 10:51:08 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/15 17:12:54 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom.h"
-
-double yaw(double a, double b, double c)
-{
-	return (a + b * c);
-}
 
 static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int cyb, t_player p, Uint32 **textur, int floor, int ceil)
 {
@@ -68,11 +63,6 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 			cy1++;
 		}
     }
-}
-
-double v_c_p(double x1, double y1, double x2, double y2)
-{
-	return (x1 * y2 - x2 * y1);
 }
 
 static void vline(SDL_Renderer *ren, int x, int y1,int y2, int top,int middle,int bottom)
@@ -198,11 +188,8 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 	int y1;
 	int y2;
 
-	// surf = SDL_LoadBMP("./assets/t1.bmp");
-	// pix = (Uint32 *)surf->pixels;
 	tex_h = 128;
 	tex_w = 128;
-
 	y_tex_pos = 0;
 	y1 = clamp(starty, 0, SIZE_Y - 1);
 	y2 = clamp(stopy, 0, SIZE_Y - 1);
@@ -361,8 +348,8 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 		{
 			z = z > 255 ? 255 : z;
 			unsigned r = 0x010101 * (255 - z);
-			//vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
-			line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
+			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			//line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
 			(void)t;
 			(void)r;
 		}

@@ -6,10 +6,9 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/09 14:45:07 by vgauther         ###   ########.fr       */
+/*   Updated: 2019/12/16 14:01:41 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
@@ -44,8 +43,8 @@ typedef struct s_coor
 
 typedef struct 	s_point
 {
-	int x;
-	int y;
+	double x;
+	double y;
 }				t_point;
 
 typedef struct	s_sdl
