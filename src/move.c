@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:54:34 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/13 14:39:33 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/08 15:24:02 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,9 +138,9 @@ void move_backward(t_var *var)
 	save_y = var->player.pos.y;
 	angle = var->player.angle * RAD;
 	if (cos(angle) != 0)
-		var->player.pos.x = var->player.pos.x - cos(angle) * 0.5;
+		var->player.pos.x = var->player.pos.x - cos(angle) * 0.7;
 	if (sin(angle) != 0)
-		var->player.pos.y = var->player.pos.y - sin(angle) * 0.5;
+		var->player.pos.y = var->player.pos.y - sin(angle) * 0.7;
 	contact_wall(var, save_x, save_y);
 	end_of_level(var);
 }
@@ -172,9 +172,9 @@ void move_right(t_var *var)
 	save_y = var->player.pos.y;
 	angle = (var->player.angle - 90) * RAD;
 	if (cos(angle) != 0)
-		var->player.pos.x = var->player.pos.x - cos(angle) * 1;
+		var->player.pos.x = var->player.pos.x - cos(angle) * 1.3;
 	if (sin(angle) != 0)
-		var->player.pos.y = var->player.pos.y - sin(angle) * 1;
+		var->player.pos.y = var->player.pos.y - sin(angle) * 1.3;
 	contact_wall(var, save_x, save_y);
 	end_of_level(var);
 }
