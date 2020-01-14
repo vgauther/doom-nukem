@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/10 16:18:42 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/14 12:38:55 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 	int w_tex;
 	int h_tex;
 
+
     cy1 = (int)clamp(y1, 0, SIZE_Y - 1);
     cy2 = (int)clamp(y2, 0, SIZE_Y - 1);
 	w_tex = 128;
@@ -48,8 +49,14 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
 			rot_y = map_y * p.psin - map_x * p.pcos;
 			map_x = rot_x + p.pos.x;
 			map_y = rot_y + p.pos.y;
-			x_tex = map_x > 0 ? (map_x * w_tex) / 6 : 0;
-			y_tex = map_y > 0 ? (map_y * w_tex) / 6 : 0;
+			if (map_x > 0)
+				x_tex = (map_x * w_tex) / 6;
+			else
+				x_tex = 0;
+			if (map_y > 0)
+				y_tex = (map_y * w_tex) / 6;
+			else
+				y_tex = 0;
 			tmp = (y_tex % h_tex) * w_tex + (x_tex % w_tex);
 			SDL_SetRenderDrawColor(ren, textur[1][tmp] >> 16 & 255, textur[1][tmp] >> 8 & 255, textur[1][tmp] >> 0 & 255, 0);
 			SDL_RenderDrawPoint(ren, x, cy1);
@@ -58,7 +65,7 @@ static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int 
     }
 }
 
-static void vline(SDL_Renderer *ren, int x, int y1, int y2, int top, int middle, int bottom)
+static void vline(SDL_Renderer *ren, int x, int y1,int y2, int top,int middle,int bottom)
 {
 	int y;
 
@@ -105,38 +112,22 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 	return (ret);
 }
 
-void calc_wall_width(t_draw *d, int s, int sectorno, t_var *var)
-{
-	double p1;
-	double p2;
-
-	p1 = (var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x
-		- var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x);
-	p2 = (var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y
-		- var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y);
-	d->wall_width = pythagore(p1, p2);
-}
-
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
-	double plr_x;
-	double plr_y;
-	double plr_sin;
-	double plr_cos;
+	d->wall_width = pythagore((var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x),
+	(var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y));
+	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
 
-	plr_x = var->player.pos.x;
-	plr_y = var->player.pos.y;
-	plr_cos = var->player.pcos;
-	plr_sin = var->player.psin;
-	calc_wall_width(d, s, sectorno, var);
-	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - plr_x;
-	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - plr_y;
-	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - plr_x;
-	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - plr_y;
-	d->tx1 = d->vx1 * plr_sin - d->vy1 * plr_cos;
-	d->tz1 = d->vx1 * plr_cos + d->vy1 * plr_sin;
-	d->tx2 = d->vx2 * plr_sin - d->vy2 * plr_cos;
-	d->tz2 = d->vx2 * plr_cos + d->vy2 * plr_sin;
+	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - var->player.pos.x;
+	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - var->player.pos.y;
+	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->player.pos.x;
+	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->player.pos.y;
+	/* Rotate them around the player's view */
+
+	d->tx1 = d->vx1 * var->player.psin - d->vy1 * var->player.pcos;
+	d->tz1 = d->vx1 * var->player.pcos + d->vy1 * var->player.psin;
+	d->tx2 = d->vx2 * var->player.psin - d->vy2 * var->player.pcos;
+	d->tz2 = d->vx2 * var->player.pcos + d->vy2 * var->player.psin;
 	d->ttx1 = d->tx1;
 	d->ttz1 = d->tz1;
 	d->ttx2 = d->tx2;
@@ -210,7 +201,9 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 		{
 
 			wall_height_from_bottom = (dw.yb - dw.ya) - (starty - dw.ya);
+
 			wall_height_scale = (yceil - yfloor) / 10;
+
 			wall_width_scale = 10 / 2 / d.wall_width;
 			//check_start_end_tex(d, work, text);
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
@@ -253,6 +246,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			wall_height_from_bottom = dw.yb - starty;
 			wall_height_scale = (yceil - yfloor) / 10;
 			wall_width_scale = 10 / 2 / d.wall_width;
+
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
 			{
 				start_x_tex = (d.tx1 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
@@ -260,13 +254,17 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			}
 			else
 			{
+
 				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 			}
+
 			y_tex_start = (d.y2a - d.y1a) * ((d.x2 - d.x1) - (x - d.x1)) / (d.x2 - d.x1) - d.y2a;
 			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
+
 			if ((d.y1a < 0 || d.y2a < 0) && y1 == 0)
 			{
+
 				wall_height_from_bottom += y_tex_start;
 				y_tex_pos += y_tex_start;
 				while (y1 <= y2)
@@ -283,6 +281,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 						// w->pix[y1 * SIZE_X + x] = d->color;
 						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 						SDL_RenderDrawPoint(ren, x, y1);
+
 					}
 					y_tex_pos++;
 					y1++;
@@ -291,9 +290,11 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			else
 			{
 				wall_height_from_bottom = dw.yb - dw.ya;
+
 				while (y1 <= y2)
 				{
 					y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
+
 					if (y_tex < 0)
 						y_tex = 0;
 					if (x_tex < 0)
@@ -401,19 +402,6 @@ void	troncage(t_draw *d, t_var *var)
 	check_troncage(d, var, i1, i2);
 }
 
-void init_ytop_ybottom(int *ytop, int *ybottom)
-{
-	int x;
-
-	x = 0;
-	while (x < SIZE_X)
-	{
-		ytop[x] = 0;
-		ybottom[x] = SIZE_Y - 1;
-		x++;
-	}
-}
-
 void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 {
     struct item { int sectorno,sx1,sx2; } queue[MAX_QUEUE], *head=queue, *tail=queue;
@@ -423,21 +411,24 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
 	int x;
 	t_draw d;
 	int neighbor;
-	int s;
-	SDL_Surface *t;
-	Uint32 *tmp;
 
+	x = 0;
+	SDL_Surface *t;
 	if (!(t = SDL_LoadBMP("./assets/t1.bmp")))
 		exit(0);
-	tmp = (Uint32 *)t->pixels;
-	init_ytop_ybottom(mytop, mybottom);
+	Uint32 *tmp = (Uint32 *)t->pixels;
+    while (x < SIZE_X)
+	{
+		ytop[x] = 0;
+		ybottom[x] = SIZE_Y - 1;
+		x++;
+	}
 	x = -1;
 	while (++x < var->number_of_sector)
 		renderedsectors[x] = 0;
     *head = (struct item) { var->player.sector, 0, SIZE_X - 1 };
     if(++head == queue + MAX_QUEUE)
 		head = queue;
-	s = 0;
     while(head != tail)
 	{
     	const struct item now = *tail;
@@ -446,23 +437,16 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
     	if(renderedsectors[now.sectorno] & 0x21)
 			continue;
     	++renderedsectors[now.sectorno];
-		s = 0;
-		while ( s < var->sectors[now.sectorno].nb_pts - 1)
+		for (int s = 0; s < var->sectors[now.sectorno].nb_pts - 1; ++s)
     	{
 			init_vertex(&d, var, now.sectorno, s);
-        	if(d.tz1 < 0 && d.tz2 < 0)
-			{
-				s++;
+        	if(d.tz1 <= 0 && d.tz2 <= 0)
 				continue;
-			}
-        	if(d.tz1 < 0 || d.tz2 < 0)
+        	if(d.tz1 <= 0 || d.tz2 <= 0)
 				troncage(&d, var);
 			calc_scale(&d);
         	if(d.x1 >= d.x2 || d.x2 < now.sx1 || d.x1 > now.sx2)
-			{
-				s++;
 				continue;
-			}
         	d.yceil = var->sectors[now.sectorno].ceilling - var->player.pos.z;
         	d.yfloor = var->sectors[now.sectorno].floor - var->player.pos.z;
         	neighbor = var->sectors[now.sectorno].neighbors[s];
@@ -474,10 +458,9 @@ void DrawScreen(t_var *var, SDL_Renderer *ren, Uint32 **wt)
         	if(neighbor >= 0 && d.endx >= d.beginx && (head + MAX_QUEUE + 1 - tail) % MAX_QUEUE)
         	{
             	*head = (struct item) { neighbor, d.beginx, d.endx };
-            	if(++head == queue + MAX_QUEUE)
+            	if(++head == queue+MAX_QUEUE)
 					head = queue;
         	}
-			s++;
     	}
     	++renderedsectors[now.sectorno];
     }

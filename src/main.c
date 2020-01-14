@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/15 17:14:34 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/14 14:15:05 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,12 +271,12 @@ void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, Uint32 **walll_uint, cons
 	}
 	if (ev.key.keysym.sym == SDLK_b)
 	{
-		edit_player_angle(var, -10);
+		edit_player_angle(var, -15);
 		DrawScreen(var, ren, walll_uint);
 	}
 	else if (ev.key.keysym.sym == SDLK_m)
 	{
-		edit_player_angle(var, 10);
+		edit_player_angle(var, 15);
 		DrawScreen(var, ren, walll_uint);
 	}
 }
