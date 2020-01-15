@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/14 14:15:05 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/14 14:35:36 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void init_map(t_var *var)
 	var->maps = malloc(sizeof(t_map) * 2);
 	var->m_count = 2;
 
-	var->points = malloc(sizeof(t_point) * 12);
+	var->points = malloc(sizeof(t_point) * 19);
 
 	var->points[0].x = 0;
 	var->points[0].y = 0;
@@ -55,16 +55,40 @@ void init_map(t_var *var)
 	var->points[11].x = 150;
 	var->points[11].y = 250;
 
-	var->sectors = malloc(sizeof(t_sector) * 2);
+	var->points[12].x = 100;
+	var->points[12].y = 350;
+
+	var->points[13].x = 150;
+	var->points[13].y = 350;
+
+	var->points[14].x = 250;
+	var->points[14].y = 350;
+
+	var->points[15].x = 250;
+	var->points[15].y = 450;
+
+	var->points[16].x = 0;
+	var->points[16].y = 450;
+
+	var->points[17].x = 0;
+	var->points[17].y = 350;
+
+	var->points[18].x = 100;
+	var->points[18].y = 350;
+
+	var->sectors = malloc(sizeof(t_sector) * 3);
 
 	var->sectors[0].pts = malloc(sizeof(int) * 7);
 	var->sectors[1].pts = malloc(sizeof(int) * 5);
+	var->sectors[2].pts = malloc(sizeof(int) * 7);
 
 	var->sectors[0].neighbors = malloc(sizeof(int) * 6);
 	var->sectors[1].neighbors = malloc(sizeof(int) * 4);
+	var->sectors[2].neighbors = malloc(sizeof(int) * 6);
 
 	var->sectors[0].nb_pts = 7;
 	var->sectors[1].nb_pts = 5;
+	var->sectors[2].nb_pts = 7;
 
 	var->sectors[0].pts[0] = 0;
 	var->sectors[0].pts[1] = 1;
@@ -94,11 +118,11 @@ void init_map(t_var *var)
 	var->sectors[1].ceilling = 30;
 
 	var->sectors[1].neighbors[0] = -1;
-	var->sectors[1].neighbors[1] = -1;
+	var->sectors[1].neighbors[1] = 2;
 	var->sectors[1].neighbors[2] = -1;
 	var->sectors[1].neighbors[3] = 0;
 
-	var->maps[0].sectors = malloc(sizeof(int) * 2);
+	var->maps[0].sectors = malloc(sizeof(int) * 3);
 
 	var->maps[1].sectors = malloc(sizeof(int) * 1);
 
@@ -116,9 +140,27 @@ void init_map(t_var *var)
 
 	var->maps[0].sectors[0] = 0;
 	var->maps[0].sectors[1] = 1;
+	var->maps[0].sectors[2] = 2;
 
 	var->maps[1].sectors[0] = 0;
-	var->maps[1].sectors[1] = 1;
+
+	var->sectors[2].pts[0] = 12;
+	var->sectors[2].pts[1] = 13;
+	var->sectors[2].pts[2] = 14;
+	var->sectors[2].pts[3] = 15;
+	var->sectors[2].pts[4] = 16;
+	var->sectors[2].pts[5] = 17;
+	var->sectors[2].pts[6] = 18;
+
+	var->sectors[2].floor = 3;
+	var->sectors[2].ceilling = 30;
+
+	var->sectors[2].neighbors[0] = 1;
+	var->sectors[2].neighbors[1] = -1;
+	var->sectors[2].neighbors[2] = -1;
+	var->sectors[2].neighbors[3] = -1;
+	var->sectors[2].neighbors[4] = -1;
+	var->sectors[2].neighbors[5] = -1;
 
 }
 

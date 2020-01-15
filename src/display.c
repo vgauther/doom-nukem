@@ -6,70 +6,17 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/14 12:38:55 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/14 17:00:35 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom.h"
 
-static void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int cyb, t_player p, Uint32 **textur, int floor, int ceil)
-{
-
-	double cy1;
-	double cy2;
-	int side;
-	double map_y;
-	double map_x;
-	double rot_x;
-	double rot_y;
-	int x_tex;
-	int y_tex;
-	int tmp;
-	int w_tex;
-	int h_tex;
-
-
-    cy1 = (int)clamp(y1, 0, SIZE_Y - 1);
-    cy2 = (int)clamp(y2, 0, SIZE_Y - 1);
-	w_tex = 128;
-	h_tex = 128;
-    if(y2 >= y1)
-    {
-        while(cy1 <= cy2)
-		{
-			if (cy1 >= cya && cy1 <= cyb && cy1 != cy2)
-			{
-				cy1 = cyb;
-				continue;
-			}
-			side = cy1 < cya ? ceil : floor;
-			map_y = side * SIZE_Y * (vfov / (double)SIZE_Y) / ((SIZE_Y / 2 - cy1) - 0 * SIZE_Y * (vfov / (double)SIZE_Y));
-			map_x = map_y * (SIZE_X / 2 - x) / (SIZE_X * hfov / (double)SIZE_X);
-			rot_x = map_y * p.pcos + map_x * p.psin;
-			rot_y = map_y * p.psin - map_x * p.pcos;
-			map_x = rot_x + p.pos.x;
-			map_y = rot_y + p.pos.y;
-			if (map_x > 0)
-				x_tex = (map_x * w_tex) / 6;
-			else
-				x_tex = 0;
-			if (map_y > 0)
-				y_tex = (map_y * w_tex) / 6;
-			else
-				y_tex = 0;
-			tmp = (y_tex % h_tex) * w_tex + (x_tex % w_tex);
-			SDL_SetRenderDrawColor(ren, textur[1][tmp] >> 16 & 255, textur[1][tmp] >> 8 & 255, textur[1][tmp] >> 0 & 255, 0);
-			SDL_RenderDrawPoint(ren, x, cy1);
-			cy1++;
-		}
-    }
-}
-
-static void vline(SDL_Renderer *ren, int x, int y1,int y2, int top,int middle,int bottom)
+static void vline(SDL_Renderer *ren, int x, int y1,int y2,int mi)
 {
 	int y;
 
-	SDL_SetRenderDrawColor(ren, middle >> 16 & 255, middle >> 8 & 255, middle >> 0 & 255, 0);
+	SDL_SetRenderDrawColor(ren, mi >> 16 & 255, mi >> 8 & 255, mi >> 0 & 255, 0);
     y1 = clamp(y1, 0, SIZE_X - 1);
     y2 = clamp(y2, 0, SIZE_X - 1);
     if(y2 == y1)
@@ -85,11 +32,9 @@ static void vline(SDL_Renderer *ren, int x, int y1,int y2, int top,int middle,in
 		}
 		SDL_RenderDrawPoint(ren, x, y2);
     }
-	(void)top;
-	(void)bottom;
 }
 
-t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float x4, float y4)
+t_xy	intersect(double x1, double y1, double x2, double y2, double x3, double y3,double x4, double y4)
 {
 	t_xy ret;
 	double c1;
@@ -114,16 +59,15 @@ t_xy	intersect(float x1, float y1, float x2, float y2, float x3, float y3,float 
 
 void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
-	d->wall_width = pythagore((var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x),
-	(var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y));
-	/* Acquire the x,y coordinates of the two endpoints (vertices) of this edge of the sector */
+	int sector;
 
-	d->vx1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].x - var->player.pos.x;
-	d->vy1 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[s]].y - var->player.pos.y;
-	d->vx2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].x - var->player.pos.x;
-	d->vy2 = var->points[var->sectors[var->maps[0].sectors[sectorno]].pts[1 + s]].y - var->player.pos.y;
-	/* Rotate them around the player's view */
-
+	sector = var->maps[0].sectors[sectorno];
+	d->wall_width = pythagore((var->points[var->sectors[sector].pts[1 + s]].x - var->points[var->sectors[sector].pts[s]].x),
+							  (var->points[var->sectors[sector].pts[1 + s]].y - var->points[var->sectors[sector].pts[s]].y));
+	d->vx1 = var->points[var->sectors[sector].pts[s]].x - var->player.pos.x;
+	d->vy1 = var->points[var->sectors[sector].pts[s]].y - var->player.pos.y;
+	d->vx2 = var->points[var->sectors[sector].pts[1 + s]].x - var->player.pos.x;
+	d->vy2 = var->points[var->sectors[sector].pts[1 + s]].y - var->player.pos.y;
 	d->tx1 = d->vx1 * var->player.psin - d->vy1 * var->player.pcos;
 	d->tz1 = d->vx1 * var->player.pcos + d->vy1 * var->player.psin;
 	d->tx2 = d->vx2 * var->player.psin - d->vy2 * var->player.pcos;
@@ -201,9 +145,7 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 		{
 
 			wall_height_from_bottom = (dw.yb - dw.ya) - (starty - dw.ya);
-
 			wall_height_scale = (yceil - yfloor) / 10;
-
 			wall_width_scale = 10 / 2 / d.wall_width;
 			//check_start_end_tex(d, work, text);
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
@@ -216,7 +158,6 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 			}
-
 			y_tex_start = (starty - dw.ya);
 			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
 			wall_height_from_bottom += y_tex_start;
@@ -235,7 +176,6 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 					//w->pix[y1 * SIZE_X + x] = d->color;
 					SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 					SDL_RenderDrawPoint(ren, x, y1);
-
 				}
 				y_tex_pos++;
 				y1++;
@@ -246,7 +186,6 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			wall_height_from_bottom = dw.yb - starty;
 			wall_height_scale = (yceil - yfloor) / 10;
 			wall_width_scale = 10 / 2 / d.wall_width;
-
 			if (vabs(d.tx2 - d.tx1) > vabs(d.tz2 - d.tz1))
 			{
 				start_x_tex = (d.tx1 - d.ttx1) * tex_w / wall_width_scale / (d.ttx2 - d.ttx1);
@@ -254,17 +193,13 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			}
 			else
 			{
-
 				start_x_tex = (d.tz1 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 				end_x_tex = (d.tz2 - d.ttz1) * tex_w / wall_width_scale /  (d.ttz2 - d.ttz1);
 			}
-
 			y_tex_start = (d.y2a - d.y1a) * ((d.x2 - d.x1) - (x - d.x1)) / (d.x2 - d.x1) - d.y2a;
 			x_tex = ((start_x_tex * ((d.x2 - x) * d.tz2) + end_x_tex * ((x - d.x1) * d.tz1)) / ((d.x2 - x) * d.tz2 + (x - d.x1) * d.tz1));
-
 			if ((d.y1a < 0 || d.y2a < 0) && y1 == 0)
 			{
-
 				wall_height_from_bottom += y_tex_start;
 				y_tex_pos += y_tex_start;
 				while (y1 <= y2)
@@ -281,7 +216,6 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 						// w->pix[y1 * SIZE_X + x] = d->color;
 						SDL_SetRenderDrawColor(ren, color >> 16 & 255, color >> 8 & 255, color >> 0 & 255, 0);
 						SDL_RenderDrawPoint(ren, x, y1);
-
 					}
 					y_tex_pos++;
 					y1++;
@@ -290,11 +224,9 @@ void line_tex(SDL_Renderer *ren, int x, double starty, double stopy, t_draw_wall
 			else
 			{
 				wall_height_from_bottom = dw.yb - dw.ya;
-
 				while (y1 <= y2)
 				{
 					y_tex = (y_tex_pos / wall_height_from_bottom * wall_height_scale) * tex_h;
-
 					if (y_tex < 0)
 						y_tex = 0;
 					if (x_tex < 0)
@@ -339,16 +271,16 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 			dw.cnyb = clamp(dw.nyb, ytop[x], ybottom[x]);
 			unsigned r1 = 0x010101 * (255 - z);
 			unsigned r2 = 0x040007 * (31 - z / 8);
-			vline(ren, x, dw.cya, dw.cnya - 1, 0, x == d.x1 || x == d.x2 ? 0 : r1, 0);
+			vline(ren, x, dw.cya, dw.cnya - 1, x == d.x1 || x == d.x2 ? 0 : r1);
 			ytop[x] = clamp(max(dw.cya, dw.nya), ytop[x], SIZE_Y - 1);
-			vline(ren, x, dw.cnyb + 1, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r2, 0);
+			vline(ren, x, dw.cnyb + 1, dw.cyb, x == d.x1 || x == d.x2 ? 0 : r2);
 			ybottom[x] = clamp(min(dw.cyb, dw.cnyb), 0, ybottom[x]);
 		}
 		else
 		{
 			z = z > 255 ? 255 : z;
 			unsigned r = 0x010101 * (255 - z);
-			vline(ren, x, dw.cya, dw.cyb, 0, x == d.x1 || x == d.x2 ? 0 : r, 0);
+			vline(ren, x, dw.cya, dw.cyb, x == d.x1 || x == d.x2 ? 0 : r);
 			//line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
 			(void)t;
 			(void)r;
