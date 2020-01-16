@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 11:01:35 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/14 17:00:35 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/16 13:49:29 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void init_vertex(t_draw *d, t_var *var, int sectorno, int s)
 {
 	int sector;
 
-	sector = var->maps[0].sectors[sectorno];
+	sector = var->maps[var->player.map].sectors[sectorno];
 	d->wall_width = pythagore((var->points[var->sectors[sector].pts[1 + s]].x - var->points[var->sectors[sector].pts[s]].x),
 							  (var->points[var->sectors[sector].pts[1 + s]].y - var->points[var->sectors[sector].pts[s]].y));
 	d->vx1 = var->points[var->sectors[sector].pts[s]].x - var->player.pos.x;
@@ -280,8 +280,8 @@ void draw_wals(int neighbor, SDL_Renderer *ren, t_var *var, Uint32 **wt, int yfl
 		{
 			z = z > 255 ? 255 : z;
 			unsigned r = 0x010101 * (255 - z);
-			vline(ren, x, dw.cya, dw.cyb, x == d.x1 || x == d.x2 ? 0 : r);
-			//line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
+			//vline(ren, x, dw.cya, dw.cyb, x == d.x1 || x == d.x2 ? 0 : r);
+			line_tex(ren, x, dw.cya, dw.cyb, dw, d, ytop, ybottom,  d.yfloor, d.yceil, t);
 			(void)t;
 			(void)r;
 		}

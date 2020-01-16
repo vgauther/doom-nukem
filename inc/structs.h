@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2019/12/16 14:01:41 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:10:15 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,14 +179,18 @@ typedef struct	s_var
 	int				w_count;
 	int				e_count;
 	int				t_count;
-	int				key[4];
+	int				key[4]; // les codes des touches de deplacement
 	int				kind_of_screen;
 	int 			number_of_sector;
+	int 			index_key; //permet de modifier les touche de deplacement
 	double			nearz;
 	double			farz;
 	double			nearside;
 	double			farside;
 	t_img			wall_texture[4];
+	SDL_Surface 	*axe;
+	SDL_Surface		*main_menu;
+	SDL_Surface		*option_menu;
 }				t_var;
 
 typedef struct s_draw_walls

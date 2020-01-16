@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/14 14:35:36 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:26:16 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,33 +197,6 @@ void init_key(t_var *var)
 	var->key[MV_RIGHT] = SDL_SCANCODE_D;
 }
 
-void option(SDL_Renderer *ren)
-{
-	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
-	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
-	SDL_Surface *s;
-	SDL_Surface *s1;
-	SDL_Rect r = create_sdl_rect(0, 0, 0,0);
-
-	s = SDL_LoadBMP("./assets/opt.bmp");
-	s1 = SDL_CreateRGBSurface(0, 50, 50, 32, 0, 0, 0, 0);
-	//SDL_FillRect(s1, &r, 10000000);
-	Uint32 *tmp = (Uint32*)s1->pixels;
-	int z;
-
-	z = 0;
-	while (z < 50 * 50 - 50)
-	{
-		tmp[z] = (200 << 24) + (0 << 16) + (0 << 8) + (255 << 0 );
-		z++;
-		ft_putstr("m\n");
-	}
-	s1->pixels = (void *)tmp;
-
-	put_surface(ren, s1, r);
-	put_surface(ren, s, create_sdl_rect(test_x, test_y, 0, 0));
-}
-
 void select_map(SDL_Renderer *ren, SDL_Event ev)
 {
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
@@ -238,16 +211,16 @@ void select_map(SDL_Renderer *ren, SDL_Event ev)
 	//put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
 }
 
-void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, int test_y, SDL_Surface *main_menu, t_var *var)
+void main_menu_g(SDL_Event ev, SDL_Renderer *ren, int test_x, int test_y, t_var *var, const Uint8 *inkeys)
 {
 	if (ev.type == SDL_MOUSEMOTION || ev.type == SDL_MOUSEBUTTONDOWN)
 	{
-		put_surface(ren, main_menu, create_sdl_rect(test_x,test_y,0,0));
+		put_surface(ren, var->main_menu, create_sdl_rect(test_x,test_y,0,0));
 		if (ev.motion.x > SIZE_X / 2 - 210 && ev.motion.x < SIZE_X / 2 + 200)
 		{
 			if (ev.motion.y > SIZE_Y / 2 - 140 && ev.motion.y < SIZE_Y / 2 - 20)
 			{
-				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 - (axe->h / 2) - 85, 0, 0));
+				put_surface(ren, var->axe, create_sdl_rect(SIZE_X / 2 - (var->axe->w / 2) - 210, SIZE_Y / 2 - (var->axe->h / 2) - 85, 0, 0));
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_GAME;
@@ -255,7 +228,7 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 			}
 			else if (ev.motion.y > SIZE_Y / 2 - 80 && ev.motion.y < SIZE_Y / 2 + 80)
 			{
-				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 - 20, 0, 0));
+				put_surface(ren, var->axe, create_sdl_rect(SIZE_X / 2 - (var->axe->w / 2) - 210, SIZE_Y / 2 - 20, 0, 0));
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_SELECTMAP;
@@ -264,16 +237,16 @@ void main_menu_g(SDL_Event ev, SDL_Surface *axe, SDL_Renderer *ren, int test_x, 
 			}
 			else if (ev.motion.y > SIZE_Y / 2 - 60 && ev.motion.y < SIZE_Y / 2 + 180)
 			{
-				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 300, SIZE_Y / 2 + 80, 0, 0));
+				put_surface(ren, var->axe, create_sdl_rect(SIZE_X / 2 - (var->axe->w / 2) - 300, SIZE_Y / 2 + 80, 0, 0));
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					var->kind_of_screen = SCREEN_ID_OPTION;
-					option(ren);
+					option(ren, var, ev, inkeys);
 				}
 			}
 			else if (ev.motion.y > SIZE_Y / 2 + 80 && ev.motion.y < SIZE_Y / 2 + 280)
 			{
-				put_surface(ren, axe, create_sdl_rect(SIZE_X / 2 - (axe->w / 2) - 210, SIZE_Y / 2 + 180, 0, 0));
+				put_surface(ren, var->axe, create_sdl_rect(SIZE_X / 2 - (var->axe->w / 2) - 210, SIZE_Y / 2 + 180, 0, 0));
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
 					SDL_Quit();
@@ -352,53 +325,49 @@ int		open_audio_fail(SDL_Window *win, SDL_Renderer *ren)
 	return (-1);
 }
 
+void load_bmp_asset(t_var *var)
+{
+	var->axe = SDL_LoadBMP("./assets/axe.bmp");
+	var->option_menu = SDL_LoadBMP("./assets/opt.bmp");
+	var->main_menu = SDL_LoadBMP("./assets/menu.bmp");
+}
+
 int				main(int ac, char **av)
 {
 
 	t_var			var;
 	Uint32			*walll_uint[4];
+	SDL_Surface		*wall[4];
 	int				stop;
+	SDL_Window		*win;
+	SDL_Renderer	*ren;
+	Mix_Music 		*musique;
+	SDL_Event		eve;
+	const Uint8			*inkeys;
 
 	stop = 1;
-	// bzero(&ev, sizeof(SDL_Event));
-	// bzero(&win, sizeof(SDL_Window *));
-	// bzero(&ren, sizeof(SDL_Renderer *));
-	// bzero(&var, sizeof(t_var));
-
-
-	// SDL_Init(SDL_INIT_VIDEO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-	// win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, SDL_WINDOW_OPENGL);
-	// ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-
 	var.kind_of_screen = SCREEN_ID_MENU;
 	var.number_of_sector = 2;
+	var.index_key = -1;
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		ft_putstr("error init video");
 		return (-1);
 	}
 	ft_putstr("SDL_INITED\n");
-	SDL_Window		*win;
-	SDL_Renderer	*ren;
-	SDL_Surface		*main_menu;
-	SDL_Surface		*axe;
-	Mix_Music 		*musique;
-	SDL_Event		eve;
-
 	win = SDL_CreateWindow("DOOM NUKEM", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SIZE_X, SIZE_Y, SDL_WINDOW_SHOWN);
 	if (!(ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED)))
 		return (ren_create_fail(win));
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		return (open_audio_fail(win, ren));
-	SDL_Surface		*wall[4];
 	musique = Mix_LoadMUS("./music/mu.wav");
 	Mix_PlayMusic(musique, -1);
 	//fill_data_struct(&var);
 	init_map(&var);
-
 	init_key(&var);
 	init_player(&var);
 	init_farz_nearz(&var);
+	load_bmp_asset(&var);
 	wall[0] = SDL_LoadBMP("./assets/t1.bmp");
 	wall[1] = SDL_LoadBMP("./assets/t2.bmp");
 	wall[2] = SDL_LoadBMP("./assets/t3.bmp");
@@ -407,12 +376,10 @@ int				main(int ac, char **av)
 	walll_uint[1] = (Uint32 *)wall[1]->pixels;
 	walll_uint[2] = (Uint32 *)wall[2]->pixels;
 	walll_uint[3] = (Uint32 *)wall[3]->pixels;
-	axe = SDL_LoadBMP("./assets/axe.bmp");
-	main_menu = SDL_LoadBMP("./assets/menu.bmp");
+
 	int test_x = (2560 / 2 - SIZE_X / 2) * -1;
 	int test_y = (1440 / 2 - SIZE_Y / 2) * -1;
 
-	const Uint8			*inkeys;
 	while(stop)
 	{
 		inkeys = SDL_GetKeyboardState(NULL);
@@ -435,7 +402,7 @@ int				main(int ac, char **av)
 			}
 			else if (var.kind_of_screen == SCREEN_ID_MENU)
 			{
-				main_menu_g(eve, axe, ren, test_x, test_y, main_menu, &var);
+				main_menu_g(eve, ren, test_x, test_y, &var, inkeys);
 			}
 			else if (var.kind_of_screen == SCREEN_ID_SELECTMAP)
 			{
@@ -443,7 +410,7 @@ int				main(int ac, char **av)
 			}
 			else if (var.kind_of_screen == SCREEN_ID_OPTION)
 			{
-				option(ren);
+				option(ren, &var, eve, inkeys);
 			}
 		}
 	}
@@ -452,8 +419,9 @@ int				main(int ac, char **av)
 	walll_uint[2] = NULL;
 	walll_uint[3] = NULL;
 	Mix_FreeMusic(musique);
-	SDL_FreeSurface(axe);
-	SDL_FreeSurface(main_menu);
+	SDL_FreeSurface(var.axe);
+	SDL_FreeSurface(var.option_menu);
+	SDL_FreeSurface(var.main_menu);
 	SDL_FreeSurface(wall[0]);
 	SDL_FreeSurface(wall[1]);
 	SDL_FreeSurface(wall[2]);
