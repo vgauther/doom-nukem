@@ -6,7 +6,7 @@
 #    By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/29 23:55:39 by vgauther          #+#    #+#              #
-#    Updated: 2020/01/16 14:25:19 by vgauther         ###   ########.fr        #
+#    Updated: 2020/01/16 15:28:17 by vgauther         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCFIL				=	main.c \
 						vcp_yaw.c \
 						contact_wall.c \
 						draw_ceiling.c \
+						menu.c \
 						menu_option.c
 
 SRC                 =   $(addprefix $(SRCDIR),$(SRCFIL))

@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:27 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/16 14:45:44 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:38:07 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@
 # include <stdlib.h>
 # include <math.h>
 
+void select_map(SDL_Renderer *ren, SDL_Event ev);
 void draw_ceiling(SDL_Renderer *ren, int x, int y1, int y2, int cya, int cyb, t_player p, Uint32 **textur, int floor, int ceil);
 void option(SDL_Renderer *ren, t_var *var, SDL_Event ev, const Uint8 *inkeys);
 void main_menu_g(SDL_Event ev, SDL_Renderer *ren, int test_x, int test_y, t_var *var,const Uint8 *inkeys);
+void game(t_var *var, SDL_Event ev, SDL_Renderer *ren, const Uint8 *inkeys);
 
 /*
 ** contact_wall.c

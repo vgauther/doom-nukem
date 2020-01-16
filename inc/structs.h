@@ -6,7 +6,7 @@
 /*   By: vgauther <vgauther@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 23:54:46 by vgauther          #+#    #+#             */
-/*   Updated: 2020/01/16 15:10:15 by vgauther         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:33:31 by vgauther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,8 @@ typedef struct	s_var
 	SDL_Surface 	*axe;
 	SDL_Surface		*main_menu;
 	SDL_Surface		*option_menu;
+	Uint32			*walll_uint[4];
+	
 }				t_var;
 
 typedef struct s_draw_walls
